@@ -14,4 +14,8 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ActiviGo.Domain\ActiviGo.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
