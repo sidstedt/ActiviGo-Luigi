@@ -39,6 +39,7 @@ namespace ActiviGo.WebApi
             app.MapControllers();
 
             app.Run();
+
         }
     }
 }
