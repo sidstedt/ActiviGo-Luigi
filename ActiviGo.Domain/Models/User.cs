@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace ActiviGo.Domain.Models
 {
-    public class User : IdentityUser
+    public class User : IdentityUser<Guid>
     {
         [Required]
         public int Id { get; set; }
