@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
 namespace ActiviGo.Domain.Models
 {
@@ -30,7 +29,7 @@ namespace ActiviGo.Domain.Models
         public Zone Zone { get; set; }
 
         [Required]
-        public int? StaffId { get; set; }
+        public Guid? StaffId { get; set; }
         public User? Staff { get; set; }
 
         public ICollection<ActivityOccurence> Occurences { get; set; } = new List<ActivityOccurence>();

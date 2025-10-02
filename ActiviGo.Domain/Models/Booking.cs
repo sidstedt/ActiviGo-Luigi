@@ -6,7 +6,7 @@ namespace ActiviGo.Domain.Models
     public class Booking : BaseEntity
     {
         [Required]
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public User User { get; set; }
 
         [Required]
