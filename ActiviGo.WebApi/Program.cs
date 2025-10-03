@@ -33,8 +33,6 @@ namespace ActiviGo.WebApi
                 {
                     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-            builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
-            builder.Services.AddScoped<IActivityService, ActivityService>();
             builder.Services.AddAutoMapper(cfg => { }, typeof(ActivityProfile));
             builder.Services.AddControllers();
 
@@ -116,7 +114,8 @@ namespace ActiviGo.WebApi
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
-
+            builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+            builder.Services.AddScoped<IActivityService, ActivityService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
