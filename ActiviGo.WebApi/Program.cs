@@ -1,15 +1,12 @@
 
 using ActiviGo.Application.Interfaces;
+using ActiviGo.Application.Mapping;
 using ActiviGo.Application.Services;
 using ActiviGo.Domain.Interfaces;
 using ActiviGo.Domain.Models;
+using ActiviGo.Infrastructure.Data;
 using ActiviGo.Infrastructure.Repositories;
 using ActiviGo.WebApi.Auth;
-using ActiviGo.Domain.Interfaces;
-using ActiviGo.Application.Services;
-using ActiviGo.Application.Interfaces;
-using ActiviGo.Infrastructure.Repositories;
-using ActiviGo.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +14,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
-using ActiviGo.Application.Mapping;
 
 namespace ActiviGo.WebApi
 {
@@ -116,6 +112,7 @@ namespace ActiviGo.WebApi
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+            builder.Services.AddScoped<IActivityService, ActivityService>();
             builder.Services.AddScoped<IActivityService, ActivityService>();
             var app = builder.Build();
 

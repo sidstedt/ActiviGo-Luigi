@@ -11,48 +11,85 @@ namespace ActiviGo.WebApi.Controllers
     [Authorize]
     public class BookingsController : ControllerBase
     {
-        private readonly IBookingService _bookings;
-        public BookingsController(IBookingService bookings)
+        private readonly IBookingService _bookingService;
+
+        public BookingsController(IBookingService bookingService)
         {
-            _bookings = bookings;
+            _bookingService = bookingService;
         }
 
         private Guid GetUserId() => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        [HttpGet("get-all-bookings")]
-        [Authorize(Roles="User")]
-        public async Task<ActionResult<IEnumerable<BookingDto>>> GetAllBookings(CancellationToken ct)
+        // ---------------------------
+        // Create booking
+        // ---------------------------
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateBookingDto dto, CancellationToken ct)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = GetUserId();
+            var booking = await _bookingService.CreateBookingAsync(userId, dto, ct);
+
+            return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
+        }
+
+        // ---------------------------
+        // Read all bookings for user
+        // ---------------------------
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetAll(CancellationToken ct)
         {
             var userId = GetUserId();
-            var bookings = await _bookings.GetAllBookingsAsync(userId, ct);
+            var bookings = await _bookingService.GetAllBookingsAsync(userId, ct);
             return Ok(bookings);
         }
 
+        // ---------------------------
+        // Read booking by id
+        // ---------------------------
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<BookingDto>> GetBookingById(int id, CancellationToken ct)
+        public async Task<IActionResult> GetById(int id, CancellationToken ct)
         {
             var userId = GetUserId();
-            var booking = await _bookings.GetBookingByIdAsync(userId, id, ct);
+            var booking = await _bookingService.GetBookingByIdAsync(userId, id, ct);
+
             if (booking == null)
-                return NotFound(new { message = "Booking not found" });
+                return NotFound(new { message = "Booking not found." });
+
             return Ok(booking);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<CreatedBookingDto>> CreateBooking([FromBody] CreateBookingDto dto, CancellationToken ct)
+        // ---------------------------
+        // Update booking
+        // ---------------------------
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateBookingDto dto, CancellationToken ct)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
             var userId = GetUserId();
-            var booking = await _bookings.CreateBookingAsync(userId, dto, ct);
-            return CreatedAtAction(nameof(GetBookingById), new { id = booking.Id }, booking);
+            var updatedBooking = await _bookingService.UpdateBookingAsync(userId, id, dto, ct);
+
+            if (updatedBooking == null)
+                return NotFound(new { message = "Booking not found." });
+
+            return Ok(updatedBooking);
         }
 
-        [HttpDelete("{bookingId:int}")]
-        public async Task<IActionResult> CancelBooking(int bookingId, CancellationToken ct)
+        // ---------------------------
+        // Cancel booking
+        // ---------------------------
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Cancel(int id, CancellationToken ct)
         {
             var userId = GetUserId();
-            var result = await _bookings.CancelBookingAsync(userId, bookingId, ct);
+            var result = await _bookingService.CancelBookingAsync(userId, id, ct);
+
             if (!result)
-                return NotFound(new { message = "Bokning hittades inte." });
+                return NotFound(new { message = "Booking not found." });
+
             return NoContent();
         }
     }

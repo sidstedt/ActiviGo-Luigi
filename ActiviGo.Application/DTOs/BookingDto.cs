@@ -31,4 +31,9 @@ namespace ActiviGo.Application.DTOs
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
     }
+
+    public class UpdateBookingDto
+    {
+        public BookingStatus Status { get; set; }
+    }
 }
