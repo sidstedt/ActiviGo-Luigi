@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using ActiviGo.Application.Mapping;
 
 namespace ActiviGo.WebApi
 {
@@ -35,7 +36,7 @@ namespace ActiviGo.WebApi
                 });
             builder.Services.AddAutoMapper(cfg => { }, typeof(ActivityProfile));
             builder.Services.AddControllers();
-
+            
 
             // Database
             builder.Services.AddDbContext<ActiviGoDbContext>(options =>
