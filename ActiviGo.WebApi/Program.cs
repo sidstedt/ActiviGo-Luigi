@@ -1,6 +1,9 @@
 
-using ActiviGo.Application.Mapping;
+using ActiviGo.Application.Interfaces;
+using ActiviGo.Application.Services;
+using ActiviGo.Domain.Interfaces;
 using ActiviGo.Domain.Models;
+using ActiviGo.Infrastructure.Repositories;
 using ActiviGo.WebApi.Auth;
 using ActiviGo.Domain.Interfaces;
 using ActiviGo.Application.Services;
@@ -13,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
+using ActiviGo.Application.Mapping;
 
 namespace ActiviGo.WebApi
 {
@@ -23,10 +28,15 @@ namespace ActiviGo.WebApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
-            builder.Services.AddScoped<IActivityService, ActivityService>();
+
+            builder.Services.AddControllers()
+                .AddJsonOptions(o =>
+                {
+                    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
             builder.Services.AddAutoMapper(cfg => { }, typeof(ActivityProfile));
             builder.Services.AddControllers();
+            
 
             // Database
             builder.Services.AddDbContext<ActiviGoDbContext>(options =>
@@ -66,7 +76,12 @@ namespace ActiviGo.WebApi
             // -------------------------------
             // Identity
             // -------------------------------
-            builder.Services.AddIdentity<User, IdentityRole<Guid>>()
+            builder.Services.AddIdentityCore<User>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+                opt.Password.RequiredLength = 6;
+            })
+                .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<ActiviGoDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -98,7 +113,10 @@ namespace ActiviGo.WebApi
             // Repositories & Services
             // -------------------------------
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+            builder.Services.AddScoped<IActivityService, ActivityService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
