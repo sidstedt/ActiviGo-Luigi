@@ -17,6 +17,7 @@ namespace ActiviGo.Application.Services
             _bookingRepo = bookingRepo;
             _mapper = mapper;
         }
+
         public async Task<CreatedBookingDto> CreateBookingAsync(Guid userId, CreateBookingDto dto, CancellationToken ct)
         {
             var activityOccurence = await _bookingRepo.GetActivityOccurenceByIdAsync(dto.ActivityOccurenceId, ct);
@@ -61,24 +62,6 @@ namespace ActiviGo.Application.Services
         public async Task<bool> CancelBookingAsync(Guid userId, int bookingId, CancellationToken ct)
         {
             return await _bookingRepo.CancelBookingAsync(userId, bookingId, ct);
-        }
-
-        public async Task<BookingDto?> UpdateBookingAsync(Guid userId, int bookingId, UpdateBookingDto dto, CancellationToken ct)
-        {
-            // Hämta befintlig bokning
-            var existing = await _bookingRepo.GetBookingByIdAsync(userId, bookingId, ct);
-            if (existing == null) return null;
-
-            // Uppdatera fält via AutoMapper
-            _mapper.Map(dto, existing);
-            existing.UpdatedAt = DateTime.UtcNow;
-
-            // Spara ändringar
-            await _bookingRepo.UpdateAsync(existing);
-
-            // Hämta bokning igen för att inkludera relaterade entiteter
-            var updated = await _bookingRepo.GetBookingByIdAsync(userId, bookingId, ct);
-            return updated == null ? null : _mapper.Map<BookingDto>(updated);
         }
     }
 }

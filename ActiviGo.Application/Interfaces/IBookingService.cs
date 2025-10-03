@@ -8,6 +8,5 @@ namespace ActiviGo.Application.Interfaces
         Task<BookingDto?> GetBookingByIdAsync(Guid userId, int bookingId, CancellationToken ct);
         Task<CreatedBookingDto> CreateBookingAsync(Guid userId, CreateBookingDto dto, CancellationToken ct);
         Task<bool> CancelBookingAsync(Guid userId, int bookingId, CancellationToken ct);
-        Task<BookingDto?> UpdateBookingAsync(Guid userId, int bookingId, UpdateBookingDto dto, CancellationToken ct);
     }
 }

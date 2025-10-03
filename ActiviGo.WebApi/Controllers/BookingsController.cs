@@ -64,19 +64,7 @@ namespace ActiviGo.WebApi.Controllers
         // ---------------------------
         // Update booking
         // ---------------------------
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateBookingDto dto, CancellationToken ct)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var userId = GetUserId();
-            var updatedBooking = await _bookingService.UpdateBookingAsync(userId, id, dto, ct);
-
-            if (updatedBooking == null)
-                return NotFound(new { message = "Booking not found." });
-
-            return Ok(updatedBooking);
-        }
+        
 
         // ---------------------------
         // Cancel booking

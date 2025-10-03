@@ -6,11 +6,11 @@ using ActiviGo.Infrastructure.Data;
 
 namespace ActiviGo.Infrastructure.Repositories
 {
-    public class BookingRepository : GenericRepository<Booking>, IBookingRepository
+    public class BookingRepository : IBookingRepository
     {
         private readonly ActiviGoDbContext _dbContext;
 
-        public BookingRepository(ActiviGoDbContext dbContext) : base(dbContext)
+        public BookingRepository(ActiviGoDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -46,7 +46,7 @@ namespace ActiviGo.Infrastructure.Repositories
 
         public async Task<Booking> CreateBookingAsync(Guid userId, Booking booking, CancellationToken ct)
         {
-            _dbSet.Add(booking);
+            _dbContext.Add(booking);
             await _dbContext.SaveChangesAsync(ct);
 
             await _dbContext.Entry(booking).Reference(b => b.ActivityOccurence).LoadAsync(ct);

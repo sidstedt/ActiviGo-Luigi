@@ -2,7 +2,7 @@
 
 namespace ActiviGo.Domain.Interfaces
 {
-    public interface IBookingRepository : IGenericRepository<Booking>
+    public interface IBookingRepository
     {
         Task<ActivityOccurence?> GetActivityOccurenceByIdAsync(int activityOccurenceId, CancellationToken ct);
         Task<List<Booking>> GetAllBookingsAsync(Guid userId, CancellationToken ct);
