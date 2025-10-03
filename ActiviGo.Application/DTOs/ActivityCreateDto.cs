@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ActiviGo.Application.DTOs
 {
-    public class CreateActivityDto
+    public class ActivityCreateDto
     {
         [Required, StringLength(100)]
         public string Name { get; set; }
@@ -21,6 +21,7 @@ namespace ActiviGo.Application.DTOs
         public bool IsOutdoor { get; set; } = false;
         public int StandardDurationMinutes { get; set; } = 60;
         public bool IsActive { get; set; }  = true;
+        public bool IsAvailable { get; set; } = true;
         [Required]
         public int CategoryId { get; set; }
         [Required]
