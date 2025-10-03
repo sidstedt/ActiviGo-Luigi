@@ -1,6 +1,11 @@
 
+using ActiviGo.Application.Mapping;
 using ActiviGo.Domain.Models;
 using ActiviGo.WebApi.Auth;
+using ActiviGo.Domain.Interfaces;
+using ActiviGo.Application.Services;
+using ActiviGo.Application.Interfaces;
+using ActiviGo.Infrastructure.Repositories;
 using BookingSystem.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +23,9 @@ namespace ActiviGo.WebApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+            builder.Services.AddScoped<IActivityService, ActivityService>();
+            builder.Services.AddAutoMapper(cfg => { }, typeof(ActivityProfile));
             builder.Services.AddControllers();
 
             // Database
@@ -100,6 +107,8 @@ namespace ActiviGo.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
