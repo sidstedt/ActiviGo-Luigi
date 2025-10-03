@@ -12,7 +12,7 @@ namespace ActiviGo.Infrastructure.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Activity> Activities { get; set; }
-        public DbSet<ActivityOccurence> ActivityOccurences { get; set; }
+        public DbSet<ActivityOccurrence> ActivityOccurrences { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Zone> Zones { get; set; }
@@ -37,7 +37,7 @@ namespace ActiviGo.Infrastructure.Data
 
             // Unik index för att hindra dubbelbokning (User + Occurrence)
             modelBuilder.Entity<Booking>()
-                .HasIndex(b => new { b.UserId, b.ActivityOccurenceId })
+                .HasIndex(b => new { b.UserId, b.ActivityOccurrenceId })
                 .IsUnique();
 
             // Activity ↔ Category
@@ -62,9 +62,9 @@ namespace ActiviGo.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Activity ↔ Occurrences
-            modelBuilder.Entity<ActivityOccurence>()
+            modelBuilder.Entity<ActivityOccurrence>()
                 .HasOne(o => o.Activity)
-                .WithMany(a => a.Occurences)
+                .WithMany(a => a.Occurrences)
                 .HasForeignKey(o => o.ActivityId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -77,9 +77,9 @@ namespace ActiviGo.Infrastructure.Data
 
             // Booking ↔ Occurrence
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.ActivityOccurence)
+                .HasOne(b => b.ActivityOccurrence)
                 .WithMany(o => o.Bookings)
-                .HasForeignKey(b => b.ActivityOccurenceId)
+                .HasForeignKey(b => b.ActivityOccurrenceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             SeedData(modelBuilder);
@@ -212,32 +212,32 @@ namespace ActiviGo.Infrastructure.Data
             );
 
             // ActivityOccurrences 
-            modelBuilder.Entity<ActivityOccurence>().HasData(
-                new ActivityOccurence { Id = 1, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 10, 10, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 10, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
-                new ActivityOccurence { Id = 2, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 12, 2, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 2, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
-                new ActivityOccurence { Id = 3, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 3, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 3, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+            modelBuilder.Entity<ActivityOccurrence>().HasData(
+                new ActivityOccurrence { Id = 1, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 10, 10, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 10, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 2, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 12, 2, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 2, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 3, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 3, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 3, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // Fulltest
-                new ActivityOccurence { Id = 11, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 5, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 5, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 11, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 5, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 5, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // MaxParticipants = 1 
-                new ActivityOccurence { Id = 12, ActivityId = 11, ZoneId = 1, StartTime = new DateTime(2025, 12, 6, 9, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 6, 10, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 12, ActivityId = 11, ZoneId = 1, StartTime = new DateTime(2025, 12, 6, 9, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 6, 10, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // Förflutet pass
-                new ActivityOccurence { Id = 13, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 1, 15, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 1, 15, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 13, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 1, 15, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 1, 15, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // Boundary + överlappning
-                new ActivityOccurence { Id = 14, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
-                new ActivityOccurence { Id = 15, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 30, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 30, 0, DateTimeKind.Utc), DurationMinutes = 60 }
+                new ActivityOccurrence { Id = 14, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 15, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 30, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 30, 0, DateTimeKind.Utc), DurationMinutes = 60 }
             );
 
             // Bookings (olika status + canceled + reserved + pending + confirmed)
             var seedBookingTime = new DateTime(2025, 10, 1, 0, 0, 0, DateTimeKind.Utc);
             modelBuilder.Entity<Booking>().HasData(
-                new Booking { Id = 1, UserId = user1Id, ActivityOccurenceId = 11, Status = BookingStatus.Reserved, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
-                new Booking { Id = 2, UserId = user2Id, ActivityOccurenceId = 1, Status = BookingStatus.Canceled, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
-                new Booking { Id = 3, UserId = user1Id, ActivityOccurenceId = 2, Status = BookingStatus.Confirmed, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
-                new Booking { Id = 4, UserId = user2Id, ActivityOccurenceId = 3, Status = BookingStatus.Pending, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime }
+                new Booking { Id = 1, UserId = user1Id, ActivityOccurrenceId = 11, Status = BookingStatus.Reserved, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
+                new Booking { Id = 2, UserId = user2Id, ActivityOccurrenceId = 1, Status = BookingStatus.Canceled, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
+                new Booking { Id = 3, UserId = user1Id, ActivityOccurrenceId = 2, Status = BookingStatus.Confirmed, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
+                new Booking { Id = 4, UserId = user2Id, ActivityOccurrenceId = 3, Status = BookingStatus.Pending, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime }
             );
         }
     }

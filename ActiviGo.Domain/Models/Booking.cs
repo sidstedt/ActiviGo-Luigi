@@ -10,8 +10,8 @@ namespace ActiviGo.Domain.Models
         public User User { get; set; }
 
         [Required]
-        public int ActivityOccurenceId { get; set; }
-        public ActivityOccurence ActivityOccurence { get; set; }
+        public int ActivityOccurrenceId { get; set; }
+        public ActivityOccurrence ActivityOccurrence { get; set; }
         
         [Required]
         public BookingStatus Status { get; set; }

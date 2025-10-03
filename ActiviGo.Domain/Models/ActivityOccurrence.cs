@@ -2,7 +2,7 @@
 
 namespace ActiviGo.Domain.Models
 {
-    public class ActivityOccurence : BaseEntity
+    public class ActivityOccurrence : BaseEntity
     {
         [Required]
         public DateTime StartTime { get; set; }

@@ -21,7 +21,7 @@ namespace ActiviGo.Application.Services
         public async Task<CreatedBookingDto> CreateBookingAsync(Guid userId, CreateBookingDto dto, CancellationToken ct)
         {
             // Hämta ActivityOccurence från repository för att validera att den finns
-            var activityOccurence = await _bookingRepo.GetActivityOccurenceByIdAsync(dto.ActivityOccurenceId, ct);
+            var activityOccurence = await _bookingRepo.GetActivityOccurrenceByIdAsync(dto.ActivityOccurrenceId, ct);
             if (activityOccurence == null)
                 throw new ArgumentException("ActivityOccurence not found");
 
@@ -31,14 +31,14 @@ namespace ActiviGo.Application.Services
                 throw new InvalidOperationException("ActivityOccurence is full.");
 
             // Kontroll för att förhindra dubbelbokning
-            var existing = await _bookingRepo.GetBookingForOccurenceAsync(userId, dto.ActivityOccurenceId, ct);
+            var existing = await _bookingRepo.GetBookingForOccurrenceAsync(userId, dto.ActivityOccurrenceId, ct);
             if (existing != null)
                 throw new InvalidOperationException("Booking already exists for this occurence.");
 
             var booking = new Booking
             {
                 UserId = userId,
-                ActivityOccurenceId = dto.ActivityOccurenceId,
+                ActivityOccurrenceId = dto.ActivityOccurrenceId,
                 Status = BookingStatus.Reserved,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
@@ -49,7 +49,7 @@ namespace ActiviGo.Application.Services
             return new CreatedBookingDto
             {
                 Id = created.Id,
-                ActivityOccurenceId = created.ActivityOccurenceId,
+                ActivityOccurrenceId = created.ActivityOccurrenceId,
                 ActivityId = activityOccurence.ActivityId,
                 StartTime = activityOccurence.StartTime,
                 EndTime = activityOccurence.EndTime
@@ -63,15 +63,15 @@ namespace ActiviGo.Application.Services
             {
                 Id = b.Id,
                 UserId = b.UserId,
-                ActivityOccurenceId = b.ActivityOccurenceId,
-                ActivityId = b.ActivityOccurence.ActivityId,
-                ActivityName = b.ActivityOccurence.Activity.Name,
-                ActivityDescription = b.ActivityOccurence.Activity.Description,
-                ActivityPrice = b.ActivityOccurence.Activity.Price,
-                StartTime = b.ActivityOccurence.StartTime,
-                EndTime = b.ActivityOccurence.EndTime,
-                ZoneName = b.ActivityOccurence.Zone.Name,
-                CategoryName = b.ActivityOccurence.Activity.Category.Name,
+                ActivityOccurrenceId = b.ActivityOccurrenceId,
+                ActivityId = b.ActivityOccurrence.ActivityId,
+                ActivityName = b.ActivityOccurrence.Activity.Name,
+                ActivityDescription = b.ActivityOccurrence.Activity.Description,
+                ActivityPrice = b.ActivityOccurrence.Activity.Price,
+                StartTime = b.ActivityOccurrence.StartTime,
+                EndTime = b.ActivityOccurrence.EndTime,
+                ZoneName = b.ActivityOccurrence.Zone.Name,
+                CategoryName = b.ActivityOccurrence.Activity.Category.Name,
                 Status = b.Status
             }).ToList();
         }
@@ -86,15 +86,15 @@ namespace ActiviGo.Application.Services
             {
                 Id = b.Id,
                 UserId = b.UserId,
-                ActivityOccurenceId = b.ActivityOccurenceId,
-                ActivityId = b.ActivityOccurence.ActivityId,
-                ActivityName = b.ActivityOccurence.Activity.Name,
-                ActivityDescription = b.ActivityOccurence.Activity.Description,
-                ActivityPrice = b.ActivityOccurence.Activity.Price,
-                StartTime = b.ActivityOccurence.StartTime,
-                EndTime = b.ActivityOccurence.EndTime,
-                ZoneName = b.ActivityOccurence.Zone.Name,
-                CategoryName = b.ActivityOccurence.Activity.Category.Name,
+                ActivityOccurrenceId = b.ActivityOccurrenceId,
+                ActivityId = b.ActivityOccurrence.ActivityId,
+                ActivityName = b.ActivityOccurrence.Activity.Name,
+                ActivityDescription = b.ActivityOccurrence.Activity.Description,
+                ActivityPrice = b.ActivityOccurrence.Activity.Price,
+                StartTime = b.ActivityOccurrence.StartTime,
+                EndTime = b.ActivityOccurrence.EndTime,
+                ZoneName = b.ActivityOccurrence.Zone.Name,
+                CategoryName = b.ActivityOccurrence.Activity.Category.Name,
                 Status = b.Status
             };
         }
