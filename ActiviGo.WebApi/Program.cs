@@ -1,13 +1,18 @@
 
+using ActiviGo.Application.Interfaces;
+using ActiviGo.Application.Services;
+using ActiviGo.Domain.Interfaces;
 using ActiviGo.Domain.Models;
+using ActiviGo.Infrastructure.Repositories;
 using ActiviGo.WebApi.Auth;
-using BookingSystem.Data;
+using ActiviGo.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ActiviGo.WebApi
 {
@@ -19,7 +24,12 @@ namespace ActiviGo.WebApi
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(o =>
+                {
+                    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
+
 
             // Database
             builder.Services.AddDbContext<ActiviGoDbContext>(options =>
@@ -59,7 +69,12 @@ namespace ActiviGo.WebApi
             // -------------------------------
             // Identity
             // -------------------------------
-            builder.Services.AddIdentity<User, IdentityRole<Guid>>()
+            builder.Services.AddIdentityCore<User>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+                opt.Password.RequiredLength = 6;
+            })
+                .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<ActiviGoDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -91,6 +106,8 @@ namespace ActiviGo.WebApi
             // Repositories & Services
             // -------------------------------
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             var app = builder.Build();
 

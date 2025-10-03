@@ -1,6 +1,6 @@
 ﻿using ActiviGo.Domain.Models;
 using ActiviGo.WebApi.Auth;
-using BookingSystem.Data;
+using ActiviGo.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
