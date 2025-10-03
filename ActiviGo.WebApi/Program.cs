@@ -6,7 +6,7 @@ using ActiviGo.Domain.Interfaces;
 using ActiviGo.Application.Services;
 using ActiviGo.Application.Interfaces;
 using ActiviGo.Infrastructure.Repositories;
-using BookingSystem.Data;
+using ActiviGo.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

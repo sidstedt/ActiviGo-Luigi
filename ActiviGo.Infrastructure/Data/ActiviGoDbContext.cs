@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookingSystem.Data
+namespace ActiviGo.Infrastructure.Data
 {
     public class ActiviGoDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {

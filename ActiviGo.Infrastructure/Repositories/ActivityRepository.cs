@@ -1,5 +1,5 @@
 ﻿using ActiviGo.Domain.Interfaces;
-using BookingSystem.Data;
+using ActiviGo.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Activity = ActiviGo.Domain.Models.Activity;
 
