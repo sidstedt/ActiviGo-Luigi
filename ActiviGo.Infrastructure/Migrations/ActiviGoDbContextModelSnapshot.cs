@@ -95,7 +95,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 15,
                             Name = "Yoga",
                             Price = 15m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 1
                         },
@@ -111,7 +111,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 15,
                             Name = "Pilates",
                             Price = 15m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 1
                         },
@@ -127,7 +127,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 20,
                             Name = "Spinning",
                             Price = 20m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 2
                         },
@@ -143,7 +143,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 22,
                             Name = "Football Practice",
                             Price = 10m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 5
                         },
@@ -159,7 +159,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 8,
                             Name = "Tennis Practice",
                             Price = 12m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 4
                         },
@@ -175,7 +175,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 10,
                             Name = "Climbing",
                             Price = 18m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 3
                         },
@@ -191,7 +191,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 12,
                             Name = "Swimming Training",
                             Price = 15m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 6
                         },
@@ -207,7 +207,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 15,
                             Name = "Water Aerobics",
                             Price = 15m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 6
                         },
@@ -223,7 +223,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 15,
                             Name = "Meditation",
                             Price = 10m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 7
                         },
@@ -239,7 +239,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 20,
                             Name = "Athletics",
                             Price = 12m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 5
                         },
@@ -255,7 +255,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             MaxParticipants = 1,
                             Name = "One-on-One Coaching",
                             Price = 50m,
-                            StaffId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            StaffId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ZoneId = 1
                         });
@@ -429,7 +429,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Status = 1,
                             UpdatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = new Guid("381978e8-de89-4656-a430-1943204f8836")
+                            UserId = new Guid("9b4cdb10-66b2-437d-87a1-606424b8fff9")
                         },
                         new
                         {
@@ -438,7 +438,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Status = 4,
                             UpdatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = new Guid("6463453a-4df0-4622-97a7-daff920f84d3")
+                            UserId = new Guid("666b951c-1931-4fdd-b5b6-96b27d99daff")
                         },
                         new
                         {
@@ -447,7 +447,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Status = 3,
                             UpdatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = new Guid("381978e8-de89-4656-a430-1943204f8836")
+                            UserId = new Guid("9b4cdb10-66b2-437d-87a1-606424b8fff9")
                         },
                         new
                         {
@@ -456,7 +456,7 @@ namespace ActiviGo.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Status = 2,
                             UpdatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = new Guid("6463453a-4df0-4622-97a7-daff920f84d3")
+                            UserId = new Guid("666b951c-1931-4fdd-b5b6-96b27d99daff")
                         });
                 });
 
@@ -622,10 +622,10 @@ namespace ActiviGo.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("381978e8-de89-4656-a430-1943204f8836"),
+                            Id = new Guid("9b4cdb10-66b2-437d-87a1-606424b8fff9"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7a1b53f0-16eb-4af2-8cd5-a5b73c9e7abc",
-                            CreatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ConcurrencyStamp = "8a1b36e4-6939-4ee7-bfc5-af19b3f14685",
+                            CreatedAt = new DateTime(2025, 10, 3, 13, 45, 33, 335, DateTimeKind.Utc).AddTicks(5471),
                             Email = "user1@example.com",
                             EmailConfirmed = true,
                             FirstName = "User",
@@ -634,18 +634,18 @@ namespace ActiviGo.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER1@EXAMPLE.COM",
                             NormalizedUserName = "USER1@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKbaVtpMVd8sTuPyCGHI8lVU7Rmm7ufRp7ftH0St26j/YCAxlo8hleIxo5S0CEVTYQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDaqy1Zm8XTLCGQSHrOx9DS9t8u8v3gsOiQq9lj/OoAAxbaV6H7LnRV85tVmmIpoLA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 10, 3, 13, 45, 33, 335, DateTimeKind.Utc).AddTicks(5473),
                             UserName = "user1@example.com"
                         },
                         new
                         {
-                            Id = new Guid("6463453a-4df0-4622-97a7-daff920f84d3"),
+                            Id = new Guid("666b951c-1931-4fdd-b5b6-96b27d99daff"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c13a42e8-59ea-4fed-bcde-2665a997419c",
-                            CreatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ConcurrencyStamp = "936b1349-3dfa-47ef-92fb-c76763fd5f40",
+                            CreatedAt = new DateTime(2025, 10, 3, 13, 45, 33, 391, DateTimeKind.Utc).AddTicks(696),
                             Email = "user2@example.com",
                             EmailConfirmed = true,
                             FirstName = "User",
@@ -654,18 +654,18 @@ namespace ActiviGo.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER2@EXAMPLE.COM",
                             NormalizedUserName = "USER2@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHzEQMVvebRk78o37e4U4DX66DgflJcUJYQdPvlBhPtzB8BCfcoBCb3cksfCu1rLxw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPR1+4puhjP6lBvaMcjzKPDGgyXgUnxFQ1Z+/f14zjkeLYg739iv4TdazYp6gk90fQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 10, 3, 13, 45, 33, 391, DateTimeKind.Utc).AddTicks(700),
                             UserName = "user2@example.com"
                         },
                         new
                         {
-                            Id = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
+                            Id = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "13bd6483-d68c-42fa-a043-d8e5580e2eb8",
-                            CreatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ConcurrencyStamp = "7feecf4f-585d-4fa4-9c55-f7ac2ae5ad23",
+                            CreatedAt = new DateTime(2025, 10, 3, 13, 45, 33, 447, DateTimeKind.Utc).AddTicks(6222),
                             Email = "staff@example.com",
                             EmailConfirmed = true,
                             FirstName = "Staff",
@@ -674,18 +674,18 @@ namespace ActiviGo.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STAFF@EXAMPLE.COM",
                             NormalizedUserName = "STAFF@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDGa0VLvL1MAL4thC4c1JuK5L2Zy4cnBx7oqnKb1jN3oX2Hf10eLuHcJeTg9uWvO1w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE+qunP72gVlvHhgsqmHwwEUD3gnWt0F4Prr8ZGB4dDMlUXNm5UYk00HohI+yI+geQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 10, 3, 13, 45, 33, 447, DateTimeKind.Utc).AddTicks(6226),
                             UserName = "staff@example.com"
                         },
                         new
                         {
-                            Id = new Guid("a18a9e76-1b38-42e4-b692-0b751069ea40"),
+                            Id = new Guid("36c2e3b3-f782-4430-b6c5-90019ee655de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "40bc3218-f678-442f-8df2-9239be1dfe44",
-                            CreatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ConcurrencyStamp = "0cc7fe97-bad0-4dbf-a72b-c3a93fa19da2",
+                            CreatedAt = new DateTime(2025, 10, 3, 13, 45, 33, 502, DateTimeKind.Utc).AddTicks(2710),
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -694,10 +694,10 @@ namespace ActiviGo.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELfxR3ElUUzoNEnvlnxVWKgiTKGhUaH4S5tYmd/V94bDqSH/sEyyWe3iZYr2updoYQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOXKiH6ILd8XgJKc/W76pRRRY9LaW6MYOBN2lYEJxFb52QsTH1prZn7EorLsKh4COA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 10, 3, 13, 45, 33, 502, DateTimeKind.Utc).AddTicks(2714),
                             UserName = "admin@example.com"
                         });
                 });
@@ -849,19 +849,19 @@ namespace ActiviGo.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6a9042c6-f66e-415e-b8b2-a9602c551ed5"),
+                            Id = new Guid("e07700c7-2186-4fa7-9f3d-b143a12e5d2b"),
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = new Guid("9819fa13-09e3-4150-88f5-c3020b76c7bc"),
+                            Id = new Guid("3cc6725b-de16-42f5-a23a-9bd7ddd67d93"),
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = new Guid("b8af1b20-7957-4648-a802-be366856ce20"),
+                            Id = new Guid("7751ee66-ad39-4801-adde-1050edf45eb2"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -953,23 +953,23 @@ namespace ActiviGo.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("381978e8-de89-4656-a430-1943204f8836"),
-                            RoleId = new Guid("6a9042c6-f66e-415e-b8b2-a9602c551ed5")
+                            UserId = new Guid("9b4cdb10-66b2-437d-87a1-606424b8fff9"),
+                            RoleId = new Guid("e07700c7-2186-4fa7-9f3d-b143a12e5d2b")
                         },
                         new
                         {
-                            UserId = new Guid("6463453a-4df0-4622-97a7-daff920f84d3"),
-                            RoleId = new Guid("6a9042c6-f66e-415e-b8b2-a9602c551ed5")
+                            UserId = new Guid("666b951c-1931-4fdd-b5b6-96b27d99daff"),
+                            RoleId = new Guid("e07700c7-2186-4fa7-9f3d-b143a12e5d2b")
                         },
                         new
                         {
-                            UserId = new Guid("b06d419b-5d68-47a4-b4b4-56c95de952cb"),
-                            RoleId = new Guid("9819fa13-09e3-4150-88f5-c3020b76c7bc")
+                            UserId = new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"),
+                            RoleId = new Guid("3cc6725b-de16-42f5-a23a-9bd7ddd67d93")
                         },
                         new
                         {
-                            UserId = new Guid("a18a9e76-1b38-42e4-b692-0b751069ea40"),
-                            RoleId = new Guid("b8af1b20-7957-4648-a802-be366856ce20")
+                            UserId = new Guid("36c2e3b3-f782-4430-b6c5-90019ee655de"),
+                            RoleId = new Guid("7751ee66-ad39-4801-adde-1050edf45eb2")
                         });
                 });
 

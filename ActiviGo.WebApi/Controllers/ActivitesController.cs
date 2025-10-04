@@ -1,92 +1,83 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Application.Interfaces;
-using ActiviGo.Application.DTOs;
-using System.Collections.Generic;
-using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ActiviGo.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ActivitesController : ControllerBase
+    public class ActivitiesController : ControllerBase
     {
         private readonly IActivityService _activityService;
 
-        public ActivitesController(IActivityService activityService)
+        public ActivitiesController(IActivityService activityService)
         {
             _activityService = activityService;
         }
+
+        // ---------------------------
+        // Create
+        // ---------------------------
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateActivity([FromBody] ActivityCreateDto activityDto)
+        public async Task<IActionResult> Create([FromBody] ActivityCreateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            try
-            {
-                var newActivity = await _activityService.CreateActivityAsync(activityDto);
-
-                return CreatedAtAction(nameof(GetActivityById), new { id = newActivity.Id }, newActivity);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Message = "Internt fel vid skapande.", Error = ex.Message });
-            }
+            var created = await _activityService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
+
+        // ---------------------------
+        // Read all
+        // ---------------------------
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ICollection<ActivityResponseDto>>> GetAllActivities()
+        public async Task<IActionResult> GetAll()
         {
-            {
-                var activities = await _activityService.GetAllActivitiesAsync();
-                return Ok(activities);
-            }
+            var activities = await _activityService.GetAllAsync();
+            return Ok(activities);
         }
-        [HttpGet("{id}")]
+
+        // ---------------------------
+        // Read by Id
+        // ---------------------------
+        [HttpGet("{id:int}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ActivityResponseDto>> GetActivityById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var activity = await _activityService.GetActivityByIdAsync(id);
-            if (activity == null)
-            {
-                return NotFound(new { Message = $"Aktivitet med Id {id} hittades inte." });
-            }
+            var activity = await _activityService.GetByIdAsync(id);
+            if (activity == null) return NotFound(new { Message = $"Activity with Id {id} not found." });
             return Ok(activity);
         }
-        [HttpPut("{id}")]
+
+        // ---------------------------
+        // Update
+        // ---------------------------
+        [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateActivity(int id, [FromBody] ActivityUpdateDto activityDto)
+        public async Task<IActionResult> Update(int id, [FromBody] ActivityUpdateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            try
-            {
-                var updatedActivity = await _activityService.UpdateActivityAsync(id, activityDto);
-                return Ok(updatedActivity);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
 
+            var updated = await _activityService.UpdateAsync(id, dto);
+            if (updated == null) return NotFound(new { Message = $"Activity with Id {id} not found." });
+
+            return Ok(updated);
         }
-        [HttpDelete("{id}")]
+
+        // ---------------------------
+        // Delete
+        // ---------------------------
+        [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteActivity(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _activityService.DeleteActivityAsync(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { Message = ex.Message });
-            }
+            var deleted = await _activityService.DeleteAsync(id);
+            if (!deleted) return NotFound(new { Message = $"Activity with Id {id} not found." });
+
+            return NoContent();
         }
     }
 }

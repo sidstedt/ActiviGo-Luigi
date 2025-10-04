@@ -1,12 +1,6 @@
-﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Domain.Models;
-using ActiviGo.Application.DTOs;
+using AutoMapper;
 
 namespace ActiviGo.Application.Mapping
 {
