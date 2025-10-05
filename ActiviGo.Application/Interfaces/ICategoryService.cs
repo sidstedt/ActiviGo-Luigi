@@ -8,9 +8,9 @@ namespace ActiviGo.Application.Interfaces
     {
         Task<IEnumerable<CategoryReadDto>> GetAllCategoriesAsync();
         Task<Category?> GetCategoryByIdAsync(int categoryId, CancellationToken ct);
-        Task<Category?> GetCategoryWithActivities(Guid categoryId, CancellationToken ct);
+        Task<Category?> GetCategoryWithActivities(int categoryId, CancellationToken ct);
         Task<Category> CreateCategoryAsync(CreateCategoryDto createCategoryDto, CancellationToken ct);
-        Task DeleteCategoryAsync(int categoryId);
+        Task<bool> DeleteCategoryAsync(int categoryId);
         Task<CategoryReadDto> UpdateCategoryAsync(int id, CategoryUpdateDto updateCategoryDto, CancellationToken ct);
     }
 }
