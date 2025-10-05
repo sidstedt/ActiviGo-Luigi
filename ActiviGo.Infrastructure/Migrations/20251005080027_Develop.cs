@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ActiviGo.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedUsersFix : Migration
+    public partial class Develop : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -233,6 +233,7 @@ namespace ActiviGo.Infrastructure.Migrations
                     IsPrivate = table.Column<bool>(type: "bit", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
                     MaxParticipants = table.Column<int>(type: "int", nullable: false),
+                    DurationMinutes = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     ZoneId = table.Column<int>(type: "int", nullable: false),
                     StaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -263,7 +264,7 @@ namespace ActiviGo.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ActivityOccurences",
+                name: "ActivityOccurrences",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -278,15 +279,15 @@ namespace ActiviGo.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActivityOccurences", x => x.Id);
+                    table.PrimaryKey("PK_ActivityOccurrences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ActivityOccurences_Activities_ActivityId",
+                        name: "FK_ActivityOccurrences_Activities_ActivityId",
                         column: x => x.ActivityId,
                         principalTable: "Activities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ActivityOccurences_Zones_ZoneId",
+                        name: "FK_ActivityOccurrences_Zones_ZoneId",
                         column: x => x.ZoneId,
                         principalTable: "Zones",
                         principalColumn: "Id",
@@ -300,7 +301,7 @@ namespace ActiviGo.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ActivityOccurenceId = table.Column<int>(type: "int", nullable: false),
+                    ActivityOccurrenceId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -309,9 +310,9 @@ namespace ActiviGo.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bookings_ActivityOccurences_ActivityOccurenceId",
-                        column: x => x.ActivityOccurenceId,
-                        principalTable: "ActivityOccurences",
+                        name: "FK_Bookings_ActivityOccurrences_ActivityOccurrenceId",
+                        column: x => x.ActivityOccurrenceId,
+                        principalTable: "ActivityOccurrences",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -327,9 +328,9 @@ namespace ActiviGo.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("3cc6725b-de16-42f5-a23a-9bd7ddd67d93"), null, "Staff", "STAFF" },
-                    { new Guid("7751ee66-ad39-4801-adde-1050edf45eb2"), null, "Admin", "ADMIN" },
-                    { new Guid("e07700c7-2186-4fa7-9f3d-b143a12e5d2b"), null, "User", "USER" }
+                    { new Guid("44a26efb-d599-470d-9a51-f99d87478a32"), null, "User", "USER" },
+                    { new Guid("dfecd3a0-be11-463b-a9d1-43207bed86dd"), null, "Staff", "STAFF" },
+                    { new Guid("f5e68241-9243-4d30-9903-77f123cbb68f"), null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -337,10 +338,10 @@ namespace ActiviGo.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UpdatedAt", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), 0, "7feecf4f-585d-4fa4-9c55-f7ac2ae5ad23", new DateTime(2025, 10, 3, 13, 45, 33, 447, DateTimeKind.Utc).AddTicks(6222), "staff@example.com", true, "Staff", true, "Member", false, null, "STAFF@EXAMPLE.COM", "STAFF@EXAMPLE.COM", "AQAAAAIAAYagAAAAEE+qunP72gVlvHhgsqmHwwEUD3gnWt0F4Prr8ZGB4dDMlUXNm5UYk00HohI+yI+geQ==", null, false, null, false, new DateTime(2025, 10, 3, 13, 45, 33, 447, DateTimeKind.Utc).AddTicks(6226), "staff@example.com" },
-                    { new Guid("36c2e3b3-f782-4430-b6c5-90019ee655de"), 0, "0cc7fe97-bad0-4dbf-a72b-c3a93fa19da2", new DateTime(2025, 10, 3, 13, 45, 33, 502, DateTimeKind.Utc).AddTicks(2710), "admin@example.com", true, "Admin", true, "Super", false, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEOXKiH6ILd8XgJKc/W76pRRRY9LaW6MYOBN2lYEJxFb52QsTH1prZn7EorLsKh4COA==", null, false, null, false, new DateTime(2025, 10, 3, 13, 45, 33, 502, DateTimeKind.Utc).AddTicks(2714), "admin@example.com" },
-                    { new Guid("666b951c-1931-4fdd-b5b6-96b27d99daff"), 0, "936b1349-3dfa-47ef-92fb-c76763fd5f40", new DateTime(2025, 10, 3, 13, 45, 33, 391, DateTimeKind.Utc).AddTicks(696), "user2@example.com", true, "User", true, "Two", false, null, "USER2@EXAMPLE.COM", "USER2@EXAMPLE.COM", "AQAAAAIAAYagAAAAEPR1+4puhjP6lBvaMcjzKPDGgyXgUnxFQ1Z+/f14zjkeLYg739iv4TdazYp6gk90fQ==", null, false, null, false, new DateTime(2025, 10, 3, 13, 45, 33, 391, DateTimeKind.Utc).AddTicks(700), "user2@example.com" },
-                    { new Guid("9b4cdb10-66b2-437d-87a1-606424b8fff9"), 0, "8a1b36e4-6939-4ee7-bfc5-af19b3f14685", new DateTime(2025, 10, 3, 13, 45, 33, 335, DateTimeKind.Utc).AddTicks(5471), "user1@example.com", true, "User", true, "One", false, null, "USER1@EXAMPLE.COM", "USER1@EXAMPLE.COM", "AQAAAAIAAYagAAAAEDaqy1Zm8XTLCGQSHrOx9DS9t8u8v3gsOiQq9lj/OoAAxbaV6H7LnRV85tVmmIpoLA==", null, false, null, false, new DateTime(2025, 10, 3, 13, 45, 33, 335, DateTimeKind.Utc).AddTicks(5473), "user1@example.com" }
+                    { new Guid("0d338ba9-b479-4c6f-a413-7c3f48895b9c"), 0, "1b5ccd67-714b-4f0e-a65d-0f42fae58c7a", new DateTime(2025, 10, 5, 8, 0, 26, 497, DateTimeKind.Utc).AddTicks(7592), "admin@example.com", true, "Admin", true, "Super", false, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEIOH6cqA+HJFhxfnDOdGaTLm70M5DXngt0ixbI79hOIbLzSywQriW1VEhNap0Fg25A==", null, false, null, false, new DateTime(2025, 10, 5, 8, 0, 26, 497, DateTimeKind.Utc).AddTicks(7597), "admin@example.com" },
+                    { new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), 0, "4338873d-6190-439e-9515-c5b559910e64", new DateTime(2025, 10, 5, 8, 0, 26, 416, DateTimeKind.Utc).AddTicks(7130), "staff@example.com", true, "Staff", true, "Member", false, null, "STAFF@EXAMPLE.COM", "STAFF@EXAMPLE.COM", "AQAAAAIAAYagAAAAEIg9zQQ9oVJ0IU81xoN5v7hOLxAYpkClY2Rkrc1VbCJoE3klT1q/NaNaHzpadLakgg==", null, false, null, false, new DateTime(2025, 10, 5, 8, 0, 26, 416, DateTimeKind.Utc).AddTicks(7135), "staff@example.com" },
+                    { new Guid("a9e1e3b6-6c2e-4454-afd0-320d7b63454e"), 0, "33dbdabc-f586-4deb-a516-9bfecd2bb296", new DateTime(2025, 10, 5, 8, 0, 26, 345, DateTimeKind.Utc).AddTicks(1269), "user2@example.com", true, "User", true, "Two", false, null, "USER2@EXAMPLE.COM", "USER2@EXAMPLE.COM", "AQAAAAIAAYagAAAAENLll1GWipmhfAuiBj7orFdFJfZP7Sl7nJ9WAvLZzBfZXw4qWL8LqKWLVrQJRAmB4A==", null, false, null, false, new DateTime(2025, 10, 5, 8, 0, 26, 345, DateTimeKind.Utc).AddTicks(1273), "user2@example.com" },
+                    { new Guid("bf31ff1f-35bd-4197-b213-984c1f6ff6b0"), 0, "59a229a6-af68-486f-8c93-0c7fa0650525", new DateTime(2025, 10, 5, 8, 0, 26, 270, DateTimeKind.Utc).AddTicks(3196), "user1@example.com", true, "User", true, "One", false, null, "USER1@EXAMPLE.COM", "USER1@EXAMPLE.COM", "AQAAAAIAAYagAAAAEJ4YPdEMz5SsiXACttcxraf/r6s65e4pgsg5PYRtZI8+eYe3ll9F1z8TrcX75KSqMg==", null, false, null, false, new DateTime(2025, 10, 5, 8, 0, 26, 270, DateTimeKind.Utc).AddTicks(3199), "user1@example.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -371,20 +372,20 @@ namespace ActiviGo.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Activities",
-                columns: new[] { "Id", "CategoryId", "CreatedAt", "Description", "IsActive", "IsAvailable", "IsPrivate", "MaxParticipants", "Name", "Price", "StaffId", "UpdatedAt", "ZoneId" },
+                columns: new[] { "Id", "CategoryId", "CreatedAt", "Description", "DurationMinutes", "IsActive", "IsAvailable", "IsPrivate", "MaxParticipants", "Name", "Price", "StaffId", "UpdatedAt", "ZoneId" },
                 values: new object[,]
                 {
-                    { 1, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Relaxing yoga session", true, true, false, 15, "Yoga", 15m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 2, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Core Pilates class", true, true, false, 15, "Pilates", 15m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 3, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "High intensity spinning", true, true, false, 20, "Spinning", 20m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 },
-                    { 4, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Outdoor football training", true, true, false, 22, "Football Practice", 10m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 5, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Tennis training session", true, true, false, 8, "Tennis Practice", 12m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4 },
-                    { 6, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Indoor climbing", true, true, false, 10, "Climbing", 18m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 3 },
-                    { 7, 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lap swimming session", true, true, false, 12, "Swimming Training", 15m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 6 },
-                    { 8, 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Fun aquatic exercise", true, true, false, 15, "Water Aerobics", 15m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 6 },
-                    { 9, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mindfulness meditation", true, true, false, 15, "Meditation", 10m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 7 },
-                    { 10, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Track and field practice", true, true, false, 20, "Athletics", 12m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 11, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Individuell coachning", true, true, true, 1, "One-on-One Coaching", 50m, new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 }
+                    { 1, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Relaxing yoga session", 0, true, true, false, 15, "Yoga", 15m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 2, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Core Pilates class", 0, true, true, false, 15, "Pilates", 15m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 3, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "High intensity spinning", 0, true, true, false, 20, "Spinning", 20m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 },
+                    { 4, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Outdoor football training", 0, true, true, false, 22, "Football Practice", 10m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
+                    { 5, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Tennis training session", 0, true, true, false, 8, "Tennis Practice", 12m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4 },
+                    { 6, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Indoor climbing", 0, true, true, false, 10, "Climbing", 18m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 3 },
+                    { 7, 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lap swimming session", 0, true, true, false, 12, "Swimming Training", 15m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 6 },
+                    { 8, 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Fun aquatic exercise", 0, true, true, false, 15, "Water Aerobics", 15m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 6 },
+                    { 9, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mindfulness meditation", 0, true, true, false, 15, "Meditation", 10m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 7 },
+                    { 10, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Track and field practice", 0, true, true, false, 20, "Athletics", 12m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
+                    { 11, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Individuell coachning", 0, true, true, true, 1, "One-on-One Coaching", 50m, new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -392,14 +393,14 @@ namespace ActiviGo.Infrastructure.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("3cc6725b-de16-42f5-a23a-9bd7ddd67d93"), new Guid("2585c70e-64e9-4c0b-a80e-e409897ee3c9") },
-                    { new Guid("7751ee66-ad39-4801-adde-1050edf45eb2"), new Guid("36c2e3b3-f782-4430-b6c5-90019ee655de") },
-                    { new Guid("e07700c7-2186-4fa7-9f3d-b143a12e5d2b"), new Guid("666b951c-1931-4fdd-b5b6-96b27d99daff") },
-                    { new Guid("e07700c7-2186-4fa7-9f3d-b143a12e5d2b"), new Guid("9b4cdb10-66b2-437d-87a1-606424b8fff9") }
+                    { new Guid("f5e68241-9243-4d30-9903-77f123cbb68f"), new Guid("0d338ba9-b479-4c6f-a413-7c3f48895b9c") },
+                    { new Guid("dfecd3a0-be11-463b-a9d1-43207bed86dd"), new Guid("2b3df60d-4a40-4da7-b988-c44e98c937ea") },
+                    { new Guid("44a26efb-d599-470d-9a51-f99d87478a32"), new Guid("a9e1e3b6-6c2e-4454-afd0-320d7b63454e") },
+                    { new Guid("44a26efb-d599-470d-9a51-f99d87478a32"), new Guid("bf31ff1f-35bd-4197-b213-984c1f6ff6b0") }
                 });
 
             migrationBuilder.InsertData(
-                table: "ActivityOccurences",
+                table: "ActivityOccurrences",
                 columns: new[] { "Id", "ActivityId", "CreatedAt", "DurationMinutes", "EndTime", "StartTime", "UpdatedAt", "ZoneId" },
                 values: new object[,]
                 {
@@ -415,13 +416,13 @@ namespace ActiviGo.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Bookings",
-                columns: new[] { "Id", "ActivityOccurenceId", "CreatedAt", "Status", "UpdatedAt", "UserId" },
+                columns: new[] { "Id", "ActivityOccurrenceId", "CreatedAt", "Status", "UpdatedAt", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 11, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("9b4cdb10-66b2-437d-87a1-606424b8fff9") },
-                    { 2, 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 4, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("666b951c-1931-4fdd-b5b6-96b27d99daff") },
-                    { 3, 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("9b4cdb10-66b2-437d-87a1-606424b8fff9") },
-                    { 4, 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("666b951c-1931-4fdd-b5b6-96b27d99daff") }
+                    { 1, 11, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("bf31ff1f-35bd-4197-b213-984c1f6ff6b0") },
+                    { 2, 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 4, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("a9e1e3b6-6c2e-4454-afd0-320d7b63454e") },
+                    { 3, 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("bf31ff1f-35bd-4197-b213-984c1f6ff6b0") },
+                    { 4, 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("a9e1e3b6-6c2e-4454-afd0-320d7b63454e") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -440,13 +441,13 @@ namespace ActiviGo.Infrastructure.Migrations
                 column: "ZoneId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActivityOccurences_ActivityId",
-                table: "ActivityOccurences",
+                name: "IX_ActivityOccurrences_ActivityId",
+                table: "ActivityOccurrences",
                 column: "ActivityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActivityOccurences_ZoneId",
-                table: "ActivityOccurences",
+                name: "IX_ActivityOccurrences_ZoneId",
+                table: "ActivityOccurrences",
                 column: "ZoneId");
 
             migrationBuilder.CreateIndex(
@@ -489,14 +490,14 @@ namespace ActiviGo.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_ActivityOccurenceId",
+                name: "IX_Bookings_ActivityOccurrenceId",
                 table: "Bookings",
-                column: "ActivityOccurenceId");
+                column: "ActivityOccurrenceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_UserId_ActivityOccurenceId",
+                name: "IX_Bookings_UserId_ActivityOccurrenceId",
                 table: "Bookings",
-                columns: new[] { "UserId", "ActivityOccurenceId" },
+                columns: new[] { "UserId", "ActivityOccurrenceId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -533,7 +534,7 @@ namespace ActiviGo.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "ActivityOccurences");
+                name: "ActivityOccurrences");
 
             migrationBuilder.DropTable(
                 name: "Activities");

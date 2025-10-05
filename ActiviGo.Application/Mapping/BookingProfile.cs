@@ -10,19 +10,19 @@ namespace ActiviGo.Application.Mappings
         {
             // Booking → BookingDto
             CreateMap<Booking, BookingDto>()
-                .ForMember(dest => dest.ActivityId, opt => opt.MapFrom(src => src.ActivityOccurence.ActivityId))
-                .ForMember(dest => dest.ActivityName, opt => opt.MapFrom(src => src.ActivityOccurence.Activity.Name))
-                .ForMember(dest => dest.ActivityDescription, opt => opt.MapFrom(src => src.ActivityOccurence.Activity.Description))
-                .ForMember(dest => dest.ActivityPrice, opt => opt.MapFrom(src => src.ActivityOccurence.Activity.Price))
-                .ForMember(dest => dest.ZoneName, opt => opt.MapFrom(src => src.ActivityOccurence.Zone.Name))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.ActivityOccurence.Activity.Category.Name));
+                .ForMember(dest => dest.ActivityId, opt => opt.MapFrom(src => src.ActivityOccurrence.ActivityId))
+                .ForMember(dest => dest.ActivityName, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Name))
+                .ForMember(dest => dest.ActivityDescription, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Description))
+                .ForMember(dest => dest.ActivityPrice, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Price))
+                .ForMember(dest => dest.ZoneName, opt => opt.MapFrom(src => src.ActivityOccurrence.Zone.Name))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Category.Name));
 
             // Booking → CreatedBookingDto
             CreateMap<Booking, CreatedBookingDto>()
-                .ForMember(dest => dest.ActivityId, opt => opt.MapFrom(src => src.ActivityOccurence.ActivityId))
-                .ForMember(dest => dest.ActivityOccurenceId, opt => opt.MapFrom(src => src.ActivityOccurenceId))
-                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.ActivityOccurence.StartTime))
-                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.ActivityOccurence.EndTime));
+                .ForMember(dest => dest.ActivityId, opt => opt.MapFrom(src => src.ActivityOccurrence.ActivityId))
+                .ForMember(dest => dest.ActivityOccurrenceId, opt => opt.MapFrom(src => src.ActivityOccurrenceId))
+                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.ActivityOccurrence.StartTime))
+                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.ActivityOccurrence.EndTime));
 
             // CreateBookingDto → Booking
             CreateMap<CreateBookingDto, Booking>()
