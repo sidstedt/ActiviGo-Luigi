@@ -19,6 +19,9 @@ namespace ActiviGo.Domain.Models
         public bool IsAvailable { get; set; }
         [Required, Range(typeof(int), "1", "50")]
         public int MaxParticipants { get; set; }
+        [Required]
+        [Range(1, 120)]
+        public int DurationMinutes { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
@@ -32,6 +35,6 @@ namespace ActiviGo.Domain.Models
         public Guid? StaffId { get; set; }
         public User? Staff { get; set; }
 
-        public ICollection<ActivityOccurence> Occurences { get; set; } = new List<ActivityOccurence>();
+        public ICollection<ActivityOccurrence> Occurrences { get; set; } = new List<ActivityOccurrence>();
     }
 }

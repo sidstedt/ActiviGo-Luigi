@@ -20,7 +20,8 @@ namespace ActiviGo.Application.Services
 
         public async Task<CreatedBookingDto> CreateBookingAsync(Guid userId, CreateBookingDto dto, CancellationToken ct)
         {
-            var activityOccurence = await _bookingRepo.GetActivityOccurenceByIdAsync(dto.ActivityOccurenceId, ct);
+            // Hämta ActivityOccurence från repository för att validera att den finns
+            var activityOccurence = await _bookingRepo.GetActivityOccurrenceByIdAsync(dto.ActivityOccurrenceId, ct);
             if (activityOccurence == null)
                 throw new ArgumentException("ActivityOccurence not found");
 
@@ -28,14 +29,15 @@ namespace ActiviGo.Application.Services
             if (currentCount >= activityOccurence.Activity.MaxParticipants)
                 throw new InvalidOperationException("ActivityOccurence is full.");
 
-            var existing = await _bookingRepo.GetBookingForOccurenceAsync(userId, dto.ActivityOccurenceId, ct);
+            // Kontroll för att förhindra dubbelbokning
+            var existing = await _bookingRepo.GetBookingForOccurrenceAsync(userId, dto.ActivityOccurrenceId, ct);
             if (existing != null)
                 throw new InvalidOperationException("Booking already exists for this occurence.");
 
             var booking = new Booking
             {
                 UserId = userId,
-                ActivityOccurenceId = dto.ActivityOccurenceId,
+                ActivityOccurrenceId = dto.ActivityOccurrenceId,
                 Status = BookingStatus.Reserved,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow

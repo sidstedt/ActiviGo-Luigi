@@ -28,32 +28,30 @@ namespace ActiviGo.Infrastructure.Repositories
             return true;
         }
 
-        public async Task<ActivityOccurence?> GetActivityOccurenceByIdAsync(int activityOccurenceId, CancellationToken ct)
+        public async Task<ActivityOccurrence?> GetActivityOccurrenceByIdAsync(int activityOccurrenceId, CancellationToken ct)
         {
-            return await _dbContext.ActivityOccurences
+            return await _dbContext.ActivityOccurrences
                 .Include(a => a.Activity)
                     .ThenInclude(a => a.Category)
                 .Include(a => a.Zone)
                 .Include(a => a.Bookings)
-                .FirstOrDefaultAsync(a => a.Id == activityOccurenceId, ct);
+                .FirstOrDefaultAsync(a => a.Id == activityOccurrenceId, ct);
         }
 
-        public async Task<Booking?> GetBookingForOccurenceAsync(Guid userId, int occurenceId, CancellationToken ct)
+        public async Task<Booking?> GetBookingForOccurrenceAsync(Guid userId, int occurrenceId, CancellationToken ct)
         {
             return await _dbContext.Bookings
-                .FirstOrDefaultAsync(b => b.UserId == userId && b.ActivityOccurenceId == occurenceId && b.Status != BookingStatus.Canceled, ct);
+                .FirstOrDefaultAsync(b => b.UserId == userId && b.ActivityOccurrenceId == occurrenceId && b.Status != BookingStatus.Canceled, ct);
         }
 
         public async Task<Booking> CreateBookingAsync(Guid userId, Booking booking, CancellationToken ct)
         {
             _dbContext.Add(booking);
             await _dbContext.SaveChangesAsync(ct);
-
-            await _dbContext.Entry(booking).Reference(b => b.ActivityOccurence).LoadAsync(ct);
-            await _dbContext.Entry(booking.ActivityOccurence).Reference(o => o.Activity).LoadAsync(ct);
-            await _dbContext.Entry(booking.ActivityOccurence.Activity).Reference(a => a.Category).LoadAsync(ct);
-            await _dbContext.Entry(booking.ActivityOccurence).Reference(o => o.Zone).LoadAsync(ct);
-
+            await _dbContext.Entry(booking).Reference(b => b.ActivityOccurrence).LoadAsync(ct);
+            await _dbContext.Entry(booking.ActivityOccurrence).Reference(o => o.Activity).LoadAsync(ct);
+            await _dbContext.Entry(booking.ActivityOccurrence.Activity).Reference(a => a.Category).LoadAsync(ct);
+            await _dbContext.Entry(booking.ActivityOccurrence).Reference(o => o.Zone).LoadAsync(ct);
             return booking;
         }
 
@@ -61,10 +59,10 @@ namespace ActiviGo.Infrastructure.Repositories
         {
             return await _dbContext.Bookings
                 .Where(b => b.UserId == userId)
-                .Include(b => b.ActivityOccurence)
+                .Include(b => b.ActivityOccurrence)
                     .ThenInclude(ao => ao.Activity)
                         .ThenInclude(a => a.Category)
-                .Include(b => b.ActivityOccurence)
+                .Include(b => b.ActivityOccurrence)
                     .ThenInclude(ao => ao.Zone)
                 .ToListAsync(ct);
         }
@@ -73,10 +71,10 @@ namespace ActiviGo.Infrastructure.Repositories
         {
             return await _dbContext.Bookings
                 .Where(b => b.UserId == userId && b.Id == bookingId)
-                .Include(b => b.ActivityOccurence)
+                .Include(b => b.ActivityOccurrence)
                     .ThenInclude(ao => ao.Activity)
                         .ThenInclude(a => a.Category)
-                .Include(b => b.ActivityOccurence)
+                .Include(b => b.ActivityOccurrence)
                     .ThenInclude(ao => ao.Zone)
                 .FirstOrDefaultAsync(ct);
         }

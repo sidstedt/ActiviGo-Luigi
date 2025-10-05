@@ -14,6 +14,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
+using ActiviGo.Application.Mapping;
+using ActiviGo.Application.DTOs;
 
 namespace ActiviGo.WebApi
 {
@@ -30,7 +32,8 @@ namespace ActiviGo.WebApi
                 {
                     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-            builder.Services.AddAutoMapper(cfg => { }, typeof(ActivityProfile));
+
+
             builder.Services.AddControllers();
             
 
@@ -113,7 +116,10 @@ namespace ActiviGo.WebApi
             builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
             builder.Services.AddScoped<IActivityService, ActivityService>();
-            builder.Services.AddScoped<IActivityService, ActivityService>();
+            builder.Services.AddScoped<IActivityOccurrenceRepository, ActivityOccurrenceRepository>();
+            builder.Services.AddScoped<IActivityOccurrenceService, ActivityOccurrenceService>();
+
+            builder.Services.AddAutoMapper(typeof(ActivityProfile).Assembly);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -6,7 +6,7 @@ namespace ActiviGo.Application.DTOs
     {
         public int Id { get; set; }
         public Guid UserId { get; set; }
-        public int ActivityOccurenceId { get; set; }
+        public int ActivityOccurrenceId { get; set; }
         public int ActivityId { get; set; }
         public string ActivityName { get; set; } = string.Empty;
         public string ActivityDescription { get; set; } = string.Empty;
@@ -20,13 +20,13 @@ namespace ActiviGo.Application.DTOs
 
     public class CreateBookingDto
     {
-        public int ActivityOccurenceId { get; set; }
+        public int ActivityOccurrenceId { get; set; }
     }
 
     public class CreatedBookingDto
     {
         public int Id { get; set; }
-        public int ActivityOccurenceId { get; set; }
+        public int ActivityOccurrenceId { get; set; }
         public int ActivityId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
