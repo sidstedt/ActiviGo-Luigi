@@ -36,13 +36,13 @@ namespace ActiviGo.Infrastructure.Repositories
             return await _context.Categories.ToListAsync();
         }
 
-        public async Task<IEnumerable<Category>> GetCategoriesWithActivitiesAsync(string activityName)
+        public async Task<IEnumerable<Category>> GetCategoriesWithActivitiesAsync(int id)
         {
             return await _context.Categories
-             .AsNoTracking()
-             .Include(c => c.Activities.Where(a => a.Name == activityName)) 
-             .Where(c => c.Activities.Any(a => a.Name == activityName))
-             .ToListAsync();
+                .Where(c => c.Activities.Any(a => a.Id == id))  
+                .Include(c => c.Activities)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Category> UpdateCategoryAsync(Category category)
@@ -54,6 +54,11 @@ namespace ActiviGo.Infrastructure.Repositories
             _context.Categories.Update(updateCategory);
             await _context.SaveChangesAsync();
             return category;
+        }
+
+        public async Task<Category?> FindByIdAsync(int id)
+        {
+            return await _context.Categories.FindAsync(id);
         }
     }
 }
