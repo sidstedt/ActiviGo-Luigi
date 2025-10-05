@@ -33,9 +33,7 @@ namespace ActiviGo.Infrastructure.Repositories
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return await _context.Categories
-                .Include(c => c.Activities)
-                .ToListAsync();
+            return await _context.Categories.ToListAsync();
         }
 
         public async Task<IEnumerable<Category>> GetCategoriesWithActivitiesAsync(string activityName)
