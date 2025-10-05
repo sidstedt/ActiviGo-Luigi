@@ -1,0 +1,39 @@
+﻿using ActiviGo.Domain.Interfaces;
+using ActiviGo.Domain.Models;
+using ActiviGo.Infrastructure.Data;
+
+namespace ActiviGo.Infrastructure.Repositories
+{
+    public class UnitOfWork : IUnitofWork
+    {
+        private readonly ActiviGoDbContext _context;
+        private IActivityRepository _activity;
+        //private IActivityOccurenceRepository _activityOccurence;
+        private IBookingRepository _booking;
+        private ICategoryRepository _category;
+        //private IUserRepository _user;
+        private IZoneRepository _zone;
+
+        public UnitOfWork(ActiviGoDbContext context)
+        {
+            _context = context;
+        }
+
+        public IActivityRepository Activity => _activity ??= new ActivityRepository(_context);
+
+         //public IActivityOccurenceRepository => _actvityOccurence ??= new ActivityOccurence(_context);
+
+        public IBookingRepository Booking => _booking ??= new BookingRepository(_context);
+
+        public ICategoryRepository Category => _category ??= new CategoryRepository(_context);
+
+        //public IUserRepository => _user ??= new UserRepository(_context);
+
+        public IZoneRepository Zone => _zone ??= new ZoneRepository(_context);
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+    }
+}
