@@ -6,70 +6,18 @@ using AutoMapper;
 
 namespace ActiviGo.Application.Services
 {
-    public class ActivityService : IActivityService
+    public class ActivityService
+        : GenericService<Activity, ActivityResponseDto, ActivityCreateDto, ActivityUpdateDto>,
+          IActivityService
     {
-        private readonly IActivityRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IActivityRepository _activityRepository;
 
-        public ActivityService(IActivityRepository repository, IMapper mapper)
+        public ActivityService(IActivityRepository activityRepository, IMapper mapper)
+            : base(activityRepository, mapper)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _activityRepository = activityRepository;
         }
 
-        public async Task<ActivityResponseDto> CreateActivityAsync(ActivityCreateDto activityDto)
-        {
-            var activityEntity = _mapper.Map<Activity>(activityDto);
-
-            var createdActivity = await _repository.AddActivityAsync(activityEntity);
-
-            return _mapper.Map<ActivityResponseDto>(createdActivity);
-        }
-
-        public async Task<ICollection<ActivityResponseDto>> GetAllActivitiesAsync()
-        {
-            var activities = await _repository.GetAllActivitiesAsync();
-
-            return _mapper.Map<ICollection<ActivityResponseDto>>(activities);
-        }
-
-        public async Task<ActivityResponseDto?> GetActivityByIdAsync(int id)
-        {
-            var activity = await _repository.GetActivityByIdAsync(id);
-            if (activity == null)
-            {
-                return null;
-            }
-
-            return _mapper.Map<ActivityResponseDto>(activity);
-        }
-
-        public async Task<ActivityResponseDto> UpdateActivityAsync(int id, ActivityUpdateDto activityDto)
-        {
-            var existingActivity = await _repository.GetActivityByIdAsync(id);
-            if (existingActivity == null)
-            {
-                throw new KeyNotFoundException($"Activity with Id {id} not found.");
-            }
-
-            _mapper.Map(activityDto, existingActivity);
-
-            var updatedActivity = await _repository.UpdateActivityAsync(existingActivity);
-
-
-            return _mapper.Map<ActivityResponseDto>(updatedActivity);
-        }
-
-        public async Task<bool> DeleteActivityAsync(int id)
-        {
-
-            var isDeleted = await _repository.DeleteActivityAsync(id);
-
-            if (!isDeleted)
-            {
-                throw new KeyNotFoundException($"Activity with Id {id} not found for deletion.");
-            }
-            return true;
-        }
+        // No specific methods for now, but can be added in the future
     }
 }

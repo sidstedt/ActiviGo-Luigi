@@ -3,19 +3,19 @@ using ActiviGo.Application.Interfaces;
 using ActiviGo.Domain.Enum;
 using ActiviGo.Domain.Interfaces;
 using ActiviGo.Domain.Models;
+using AutoMapper;
 
 namespace ActiviGo.Application.Services
 {
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _bookingRepo;
-        public BookingService(IBookingRepository bookings)
+        private readonly IMapper _mapper;
+
+        public BookingService(IBookingRepository bookingRepo, IMapper mapper)
         {
-            _bookingRepo = bookings;
-        }
-        public async Task<bool> CancelBookingAsync(Guid userId, int bookingId, CancellationToken ct)
-        {
-            return await _bookingRepo.CancelBookingAsync(userId, bookingId, ct);
+            _bookingRepo = bookingRepo;
+            _mapper = mapper;
         }
 
         public async Task<CreatedBookingDto> CreateBookingAsync(Guid userId, CreateBookingDto dto, CancellationToken ct)
@@ -25,7 +25,6 @@ namespace ActiviGo.Application.Services
             if (activityOccurence == null)
                 throw new ArgumentException("ActivityOccurence not found");
 
-            // Kontrollera om det finns plats kvar
             var currentCount = activityOccurence.Bookings.Count(b => b.Status != BookingStatus.Canceled);
             if (currentCount >= activityOccurence.Activity.MaxParticipants)
                 throw new InvalidOperationException("ActivityOccurence is full.");
@@ -46,57 +45,25 @@ namespace ActiviGo.Application.Services
 
             var created = await _bookingRepo.CreateBookingAsync(userId, booking, ct);
 
-            return new CreatedBookingDto
-            {
-                Id = created.Id,
-                ActivityOccurrenceId = created.ActivityOccurrenceId,
-                ActivityId = activityOccurence.ActivityId,
-                StartTime = activityOccurence.StartTime,
-                EndTime = activityOccurence.EndTime
-            };
+            // Mapper används för att skapa CreatedBookingDto
+            return _mapper.Map<CreatedBookingDto>(created);
         }
 
         public async Task<List<BookingDto>> GetAllBookingsAsync(Guid userId, CancellationToken ct)
         {
             var allBookings = await _bookingRepo.GetAllBookingsAsync(userId, ct);
-            return allBookings.Select(b => new BookingDto 
-            {
-                Id = b.Id,
-                UserId = b.UserId,
-                ActivityOccurrenceId = b.ActivityOccurrenceId,
-                ActivityId = b.ActivityOccurrence.ActivityId,
-                ActivityName = b.ActivityOccurrence.Activity.Name,
-                ActivityDescription = b.ActivityOccurrence.Activity.Description,
-                ActivityPrice = b.ActivityOccurrence.Activity.Price,
-                StartTime = b.ActivityOccurrence.StartTime,
-                EndTime = b.ActivityOccurrence.EndTime,
-                ZoneName = b.ActivityOccurrence.Zone.Name,
-                CategoryName = b.ActivityOccurrence.Activity.Category.Name,
-                Status = b.Status
-            }).ToList();
+            return _mapper.Map<List<BookingDto>>(allBookings);
         }
 
         public async Task<BookingDto?> GetBookingByIdAsync(Guid userId, int bookingId, CancellationToken ct)
         {
             var b = await _bookingRepo.GetBookingByIdAsync(userId, bookingId, ct);
-            if (b == null)
-                return null;
+            return b == null ? null : _mapper.Map<BookingDto>(b);
+        }
 
-            return new BookingDto
-            {
-                Id = b.Id,
-                UserId = b.UserId,
-                ActivityOccurrenceId = b.ActivityOccurrenceId,
-                ActivityId = b.ActivityOccurrence.ActivityId,
-                ActivityName = b.ActivityOccurrence.Activity.Name,
-                ActivityDescription = b.ActivityOccurrence.Activity.Description,
-                ActivityPrice = b.ActivityOccurrence.Activity.Price,
-                StartTime = b.ActivityOccurrence.StartTime,
-                EndTime = b.ActivityOccurrence.EndTime,
-                ZoneName = b.ActivityOccurrence.Zone.Name,
-                CategoryName = b.ActivityOccurrence.Activity.Category.Name,
-                Status = b.Status
-            };
+        public async Task<bool> CancelBookingAsync(Guid userId, int bookingId, CancellationToken ct)
+        {
+            return await _bookingRepo.CancelBookingAsync(userId, bookingId, ct);
         }
     }
 }

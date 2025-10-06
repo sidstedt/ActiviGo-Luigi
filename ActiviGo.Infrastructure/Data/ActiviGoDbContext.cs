@@ -10,7 +10,7 @@ namespace ActiviGo.Infrastructure.Data
     {
         public ActiviGoDbContext(DbContextOptions<ActiviGoDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; } // Redundant eftersom IdentityDbContext redan har detta
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityOccurrence> ActivityOccurrences { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -87,7 +87,9 @@ namespace ActiviGo.Infrastructure.Data
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            // Roller
+            // ---------------------------
+            // Skapa roller
+            // ---------------------------
             var userRoleId = Guid.NewGuid();
             var staffRoleId = Guid.NewGuid();
             var adminRoleId = Guid.NewGuid();
@@ -98,7 +100,9 @@ namespace ActiviGo.Infrastructure.Data
                 new IdentityRole<Guid> { Id = adminRoleId, Name = "Admin", NormalizedName = "ADMIN" }
             );
 
-            // Users
+            // ---------------------------
+            // Skapa användare
+            // ---------------------------
             var user1Id = Guid.NewGuid();
             var user2Id = Guid.NewGuid();
             var staffId = Guid.NewGuid();
@@ -106,69 +110,75 @@ namespace ActiviGo.Infrastructure.Data
 
             var hasher = new PasswordHasher<User>();
 
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = user1Id,
-                    UserName = "user1@example.com",
-                    NormalizedUserName = "USER1@EXAMPLE.COM",
-                    Email = "user1@example.com",
-                    NormalizedEmail = "USER1@EXAMPLE.COM",
-                    EmailConfirmed = true,
-                    FirstName = "User",
-                    LastName = "One",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    PasswordHash = hasher.HashPassword(null, "Password123!")
-                },
-                new User
-                {
-                    Id = user2Id,
-                    UserName = "user2@example.com",
-                    NormalizedUserName = "USER2@EXAMPLE.COM",
-                    Email = "user2@example.com",
-                    NormalizedEmail = "USER2@EXAMPLE.COM",
-                    EmailConfirmed = true,
-                    FirstName = "User",
-                    LastName = "Two",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    PasswordHash = hasher.HashPassword(null, "Password123!")
-                },
-                new User
-                {
-                    Id = staffId,
-                    UserName = "staff@example.com",
-                    NormalizedUserName = "STAFF@EXAMPLE.COM",
-                    Email = "staff@example.com",
-                    NormalizedEmail = "STAFF@EXAMPLE.COM",
-                    EmailConfirmed = true,
-                    FirstName = "Staff",
-                    LastName = "Member",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    PasswordHash = hasher.HashPassword(null, "Password123!")
-                },
-                new User
-                {
-                    Id = adminId,
-                    UserName = "admin@example.com",
-                    NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                    Email = "admin@example.com",
-                    NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                    EmailConfirmed = true,
-                    FirstName = "Admin",
-                    LastName = "Super",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    PasswordHash = hasher.HashPassword(null, "Password123!")
-                }
-            );
+            var user1 = new User
+            {
+                Id = user1Id,
+                UserName = "user1@example.com",
+                NormalizedUserName = "USER1@EXAMPLE.COM",
+                Email = "user1@example.com",
+                NormalizedEmail = "USER1@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = "User",
+                LastName = "One",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            user1.PasswordHash = hasher.HashPassword(user1, "Password123!");
 
+            var user2 = new User
+            {
+                Id = user2Id,
+                UserName = "user2@example.com",
+                NormalizedUserName = "USER2@EXAMPLE.COM",
+                Email = "user2@example.com",
+                NormalizedEmail = "USER2@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = "User",
+                LastName = "Two",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            user2.PasswordHash = hasher.HashPassword(user2, "Password123!");
+
+            var staff = new User
+            {
+                Id = staffId,
+                UserName = "staff@example.com",
+                NormalizedUserName = "STAFF@EXAMPLE.COM",
+                Email = "staff@example.com",
+                NormalizedEmail = "STAFF@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = "Staff",
+                LastName = "Member",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            staff.PasswordHash = hasher.HashPassword(staff, "Password123!");
+
+            var admin = new User
+            {
+                Id = adminId,
+                UserName = "admin@example.com",
+                NormalizedUserName = "ADMIN@EXAMPLE.COM",
+                Email = "admin@example.com",
+                NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = "Admin",
+                LastName = "Super",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            admin.PasswordHash = hasher.HashPassword(admin, "Password123!");
+
+            modelBuilder.Entity<User>().HasData(user1, user2, staff, admin);
+
+            // ---------------------------
+            // Koppla användare till roller
+            // ---------------------------
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(
                 new IdentityUserRole<Guid> { UserId = user1Id, RoleId = userRoleId },
                 new IdentityUserRole<Guid> { UserId = user2Id, RoleId = userRoleId },

@@ -9,16 +9,19 @@ namespace ActiviGo.Infrastructure.Repositories
     public class BookingRepository : IBookingRepository
     {
         private readonly ActiviGoDbContext _dbContext;
+
         public BookingRepository(ActiviGoDbContext dbContext)
         {
             _dbContext = dbContext;
         }
+
         public async Task<bool> CancelBookingAsync(Guid userId, int bookingId, CancellationToken ct)
         {
             var booking = await _dbContext.Bookings
                 .FirstOrDefaultAsync(b => b.Id == bookingId && b.UserId == userId, ct);
             if (booking == null)
                 return false;
+
             booking.Status = BookingStatus.Canceled;
             booking.UpdatedAt = DateTime.UtcNow;
             await _dbContext.SaveChangesAsync(ct);
@@ -29,7 +32,7 @@ namespace ActiviGo.Infrastructure.Repositories
         {
             return await _dbContext.ActivityOccurrences
                 .Include(a => a.Activity)
-                .ThenInclude(a => a.Category)
+                    .ThenInclude(a => a.Category)
                 .Include(a => a.Zone)
                 .Include(a => a.Bookings)
                 .FirstOrDefaultAsync(a => a.Id == activityOccurrenceId, ct);
@@ -43,7 +46,7 @@ namespace ActiviGo.Infrastructure.Repositories
 
         public async Task<Booking> CreateBookingAsync(Guid userId, Booking booking, CancellationToken ct)
         {
-            _dbContext.Bookings.Add(booking);
+            _dbContext.Add(booking);
             await _dbContext.SaveChangesAsync(ct);
             await _dbContext.Entry(booking).Reference(b => b.ActivityOccurrence).LoadAsync(ct);
             await _dbContext.Entry(booking.ActivityOccurrence).Reference(o => o.Activity).LoadAsync(ct);
