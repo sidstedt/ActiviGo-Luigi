@@ -1,18 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Diagnostics;
-
-using Activity = ActiviGo.Domain.Models.Activity;
-
+﻿using ActiviGo.Domain.Models;
 
 namespace ActiviGo.Domain.Interfaces
 {
-    public interface IActivityRepository
+    public interface IActivityRepository : IGenericRepository<Activity>
     {
-        Task<Activity> AddActivityAsync(Activity activity);
-        Task<ICollection<Activity>> GetAllActivitiesAsync();
-        Task<Activity?> GetActivityByIdAsync(int id);
-        Task<Activity> UpdateActivityAsync(Activity activity);
-        Task<bool> DeleteActivityAsync(int id);
+        // just nu tomt – inga specifika metoder för Activity än så länge
     }
 }

@@ -10,9 +10,9 @@ namespace ActiviGo.Infrastructure.Data
     {
         public ActiviGoDbContext(DbContextOptions<ActiviGoDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; } // Redundant eftersom IdentityDbContext redan har detta
         public DbSet<Activity> Activities { get; set; }
-        public DbSet<ActivityOccurence> ActivityOccurences { get; set; }
+        public DbSet<ActivityOccurrence> ActivityOccurrences { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Zone> Zones { get; set; }
@@ -37,7 +37,7 @@ namespace ActiviGo.Infrastructure.Data
 
             // Unik index för att hindra dubbelbokning (User + Occurrence)
             modelBuilder.Entity<Booking>()
-                .HasIndex(b => new { b.UserId, b.ActivityOccurenceId })
+                .HasIndex(b => new { b.UserId, b.ActivityOccurrenceId })
                 .IsUnique();
 
             // Activity ↔ Category
@@ -62,9 +62,9 @@ namespace ActiviGo.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Activity ↔ Occurrences
-            modelBuilder.Entity<ActivityOccurence>()
+            modelBuilder.Entity<ActivityOccurrence>()
                 .HasOne(o => o.Activity)
-                .WithMany(a => a.Occurences)
+                .WithMany(a => a.Occurrences)
                 .HasForeignKey(o => o.ActivityId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -77,9 +77,9 @@ namespace ActiviGo.Infrastructure.Data
 
             // Booking ↔ Occurrence
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.ActivityOccurence)
+                .HasOne(b => b.ActivityOccurrence)
                 .WithMany(o => o.Bookings)
-                .HasForeignKey(b => b.ActivityOccurenceId)
+                .HasForeignKey(b => b.ActivityOccurrenceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             SeedData(modelBuilder);
@@ -87,7 +87,9 @@ namespace ActiviGo.Infrastructure.Data
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            // Roller
+            // ---------------------------
+            // Skapa roller
+            // ---------------------------
             var userRoleId = Guid.NewGuid();
             var staffRoleId = Guid.NewGuid();
             var adminRoleId = Guid.NewGuid();
@@ -98,7 +100,9 @@ namespace ActiviGo.Infrastructure.Data
                 new IdentityRole<Guid> { Id = adminRoleId, Name = "Admin", NormalizedName = "ADMIN" }
             );
 
-            // Users
+            // ---------------------------
+            // Skapa användare
+            // ---------------------------
             var user1Id = Guid.NewGuid();
             var user2Id = Guid.NewGuid();
             var staffId = Guid.NewGuid();
@@ -106,69 +110,75 @@ namespace ActiviGo.Infrastructure.Data
 
             var hasher = new PasswordHasher<User>();
 
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = user1Id,
-                    UserName = "user1@example.com",
-                    NormalizedUserName = "USER1@EXAMPLE.COM",
-                    Email = "user1@example.com",
-                    NormalizedEmail = "USER1@EXAMPLE.COM",
-                    EmailConfirmed = true,
-                    FirstName = "User",
-                    LastName = "One",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    PasswordHash = hasher.HashPassword(null, "Password123!")
-                },
-                new User
-                {
-                    Id = user2Id,
-                    UserName = "user2@example.com",
-                    NormalizedUserName = "USER2@EXAMPLE.COM",
-                    Email = "user2@example.com",
-                    NormalizedEmail = "USER2@EXAMPLE.COM",
-                    EmailConfirmed = true,
-                    FirstName = "User",
-                    LastName = "Two",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    PasswordHash = hasher.HashPassword(null, "Password123!")
-                },
-                new User
-                {
-                    Id = staffId,
-                    UserName = "staff@example.com",
-                    NormalizedUserName = "STAFF@EXAMPLE.COM",
-                    Email = "staff@example.com",
-                    NormalizedEmail = "STAFF@EXAMPLE.COM",
-                    EmailConfirmed = true,
-                    FirstName = "Staff",
-                    LastName = "Member",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    PasswordHash = hasher.HashPassword(null, "Password123!")
-                },
-                new User
-                {
-                    Id = adminId,
-                    UserName = "admin@example.com",
-                    NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                    Email = "admin@example.com",
-                    NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                    EmailConfirmed = true,
-                    FirstName = "Admin",
-                    LastName = "Super",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    PasswordHash = hasher.HashPassword(null, "Password123!")
-                }
-            );
+            var user1 = new User
+            {
+                Id = user1Id,
+                UserName = "user1@example.com",
+                NormalizedUserName = "USER1@EXAMPLE.COM",
+                Email = "user1@example.com",
+                NormalizedEmail = "USER1@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = "User",
+                LastName = "One",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            user1.PasswordHash = hasher.HashPassword(user1, "Password123!");
 
+            var user2 = new User
+            {
+                Id = user2Id,
+                UserName = "user2@example.com",
+                NormalizedUserName = "USER2@EXAMPLE.COM",
+                Email = "user2@example.com",
+                NormalizedEmail = "USER2@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = "User",
+                LastName = "Two",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            user2.PasswordHash = hasher.HashPassword(user2, "Password123!");
+
+            var staff = new User
+            {
+                Id = staffId,
+                UserName = "staff@example.com",
+                NormalizedUserName = "STAFF@EXAMPLE.COM",
+                Email = "staff@example.com",
+                NormalizedEmail = "STAFF@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = "Staff",
+                LastName = "Member",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            staff.PasswordHash = hasher.HashPassword(staff, "Password123!");
+
+            var admin = new User
+            {
+                Id = adminId,
+                UserName = "admin@example.com",
+                NormalizedUserName = "ADMIN@EXAMPLE.COM",
+                Email = "admin@example.com",
+                NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                EmailConfirmed = true,
+                FirstName = "Admin",
+                LastName = "Super",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            admin.PasswordHash = hasher.HashPassword(admin, "Password123!");
+
+            modelBuilder.Entity<User>().HasData(user1, user2, staff, admin);
+
+            // ---------------------------
+            // Koppla användare till roller
+            // ---------------------------
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(
                 new IdentityUserRole<Guid> { UserId = user1Id, RoleId = userRoleId },
                 new IdentityUserRole<Guid> { UserId = user2Id, RoleId = userRoleId },
@@ -212,32 +222,32 @@ namespace ActiviGo.Infrastructure.Data
             );
 
             // ActivityOccurrences 
-            modelBuilder.Entity<ActivityOccurence>().HasData(
-                new ActivityOccurence { Id = 1, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 10, 10, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 10, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
-                new ActivityOccurence { Id = 2, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 12, 2, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 2, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
-                new ActivityOccurence { Id = 3, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 3, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 3, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+            modelBuilder.Entity<ActivityOccurrence>().HasData(
+                new ActivityOccurrence { Id = 1, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 10, 10, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 10, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 2, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 12, 2, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 2, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 3, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 3, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 3, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // Fulltest
-                new ActivityOccurence { Id = 11, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 5, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 5, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 11, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 5, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 5, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // MaxParticipants = 1 
-                new ActivityOccurence { Id = 12, ActivityId = 11, ZoneId = 1, StartTime = new DateTime(2025, 12, 6, 9, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 6, 10, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 12, ActivityId = 11, ZoneId = 1, StartTime = new DateTime(2025, 12, 6, 9, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 6, 10, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // Förflutet pass
-                new ActivityOccurence { Id = 13, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 1, 15, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 1, 15, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 13, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 1, 15, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 1, 15, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // Boundary + överlappning
-                new ActivityOccurence { Id = 14, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
-                new ActivityOccurence { Id = 15, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 30, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 30, 0, DateTimeKind.Utc), DurationMinutes = 60 }
+                new ActivityOccurrence { Id = 14, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 15, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 30, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 30, 0, DateTimeKind.Utc), DurationMinutes = 60 }
             );
 
             // Bookings (olika status + canceled + reserved + pending + confirmed)
             var seedBookingTime = new DateTime(2025, 10, 1, 0, 0, 0, DateTimeKind.Utc);
             modelBuilder.Entity<Booking>().HasData(
-                new Booking { Id = 1, UserId = user1Id, ActivityOccurenceId = 11, Status = BookingStatus.Reserved, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
-                new Booking { Id = 2, UserId = user2Id, ActivityOccurenceId = 1, Status = BookingStatus.Canceled, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
-                new Booking { Id = 3, UserId = user1Id, ActivityOccurenceId = 2, Status = BookingStatus.Confirmed, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
-                new Booking { Id = 4, UserId = user2Id, ActivityOccurenceId = 3, Status = BookingStatus.Pending, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime }
+                new Booking { Id = 1, UserId = user1Id, ActivityOccurrenceId = 11, Status = BookingStatus.Reserved, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
+                new Booking { Id = 2, UserId = user2Id, ActivityOccurrenceId = 1, Status = BookingStatus.Canceled, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
+                new Booking { Id = 3, UserId = user1Id, ActivityOccurrenceId = 2, Status = BookingStatus.Confirmed, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },
+                new Booking { Id = 4, UserId = user2Id, ActivityOccurrenceId = 3, Status = BookingStatus.Pending, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime }
             );
         }
     }
