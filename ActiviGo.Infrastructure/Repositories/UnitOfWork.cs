@@ -8,7 +8,7 @@ namespace ActiviGo.Infrastructure.Repositories
     {
         private readonly ActiviGoDbContext _context;
         private IActivityRepository _activity;
-        //private IActivityOccurenceRepository _activityOccurence;
+        private IActivityOccurrenceRepository _activityOccurrence;
         private IBookingRepository _booking;
         private ICategoryRepository _category;
         //private IUserRepository _user;
@@ -21,7 +21,7 @@ namespace ActiviGo.Infrastructure.Repositories
 
         public IActivityRepository Activity => _activity ??= new ActivityRepository(_context);
 
-         //public IActivityOccurenceRepository => _actvityOccurence ??= new ActivityOccurence(_context);
+        public IActivityOccurrenceRepository ActivityOccurrence => _activityOccurrence ??= new ActivityOccurrenceRepository(_context);
 
         public IBookingRepository Booking => _booking ??= new BookingRepository(_context);
 
@@ -30,6 +30,8 @@ namespace ActiviGo.Infrastructure.Repositories
         //public IUserRepository => _user ??= new UserRepository(_context);
 
         public IZoneRepository Zone => _zone ??= new ZoneRepository(_context);
+
+
 
         public async Task<int> SaveChangesAsync()
         {
