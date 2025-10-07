@@ -1,5 +1,4 @@
 ﻿using ActiviGo.Application.DTOs;
-using ActiviGo.Application.DTOs.CategoryDtos;
 using ActiviGo.Domain.Models;
 using AutoMapper;
 

@@ -17,6 +17,8 @@ namespace ActiviGo.Domain.Models
         public ICollection<ActivityOccurrence> ActivityOccurrences { get; set; } = new List<ActivityOccurrence>();
 
         public int LocaitonId { get; set; }
+
+        [Required]
         public Location Location { get; set; }
     }
 }
