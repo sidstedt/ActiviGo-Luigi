@@ -58,5 +58,14 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Include(ao => ao.Bookings)
                 .ToListAsync();
         }
+        public async Task<ActivityOccurrence?> GetActivityOccurrenceByIdAsync(int activityOccurrenceId, CancellationToken ct)
+        {
+            return await _context.ActivityOccurrences
+                .Include(a => a.Activity)
+                    .ThenInclude(a => a.Category)
+                .Include(a => a.Zone)
+                .Include(a => a.Bookings)
+                .FirstOrDefaultAsync(a => a.Id == activityOccurrenceId, ct);
+        }
     }
 }
