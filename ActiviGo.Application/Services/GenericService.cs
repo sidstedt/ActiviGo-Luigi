@@ -24,20 +24,20 @@ namespace ActiviGo.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TDto>> GetAllAsync()
+        public virtual async Task<IEnumerable<TDto>> GetAllAsync()
         {
             var entities = await _repository.GetAllAsync();
             return _mapper.Map<IEnumerable<TDto>>(entities);
         }
 
-        public async Task<TDto?> GetByIdAsync(int id)
+        public virtual async Task<TDto?> GetByIdAsync(int id)
         {
             var entity = await _repository.GetByIdAsync(id);
             return entity is null ? default : _mapper.Map<TDto>(entity);
         }
 
 
-        public async Task<TDto?> UpdateAsync(int id, TUpdateDto dto)
+        public virtual async Task<TDto?> UpdateAsync(int id, TUpdateDto dto)
         {
             var existing = await _repository.GetByIdAsync(id);
             if (existing is null) return default;
@@ -47,7 +47,7 @@ namespace ActiviGo.Application.Services
             return _mapper.Map<TDto>(existing);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public virtual async Task<bool> DeleteAsync(int id)
         {
             var existing = await _repository.GetByIdAsync(id);
             if (existing is null) return false;
