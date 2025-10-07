@@ -11,25 +11,25 @@ namespace ActiviGo.Application.Services
         : GenericService<ActivityOccurrence, ActivityOccurrenceResponseDto, ActivityOccurrenceCreateDto, ActivityOccurrenceUpdateDto>,
           IActivityOccurrenceService
     {
+        private readonly IUnitofWork _uow;
         private readonly IActivityOccurrenceRepository _occurrenceRepository;
-        private readonly IActivityRepository _activityRepository;
         private readonly ILogger<ActivityOccurrenceService> _logger;
 
         public ActivityOccurrenceService(
             IActivityOccurrenceRepository occurrenceRepository,
-            IActivityRepository activityRepository,
+            IUnitofWork uow,
             IMapper mapper,
             ILogger<ActivityOccurrenceService> logger)
-            : base(occurrenceRepository, mapper)
+            : base(uow.ActivityOccurrence, mapper)
         {
             _occurrenceRepository = occurrenceRepository;
-            _activityRepository = activityRepository;
+            _uow = uow;
             _logger = logger;
         }
 
         public override async Task<ActivityOccurrenceResponseDto> CreateAsync(ActivityOccurrenceCreateDto dto)
         {
-            var activity = await _activityRepository.GetByIdAsync(dto.ActivityId);
+            var activity = await _uow.Activity.GetByIdAsync(dto.ActivityId);
             if (activity == null)
             {
                 _logger.LogWarning("Försök att skapa ActivityOccurrence för icke-existerande ActivityId: {ActivityId}", dto.ActivityId);
