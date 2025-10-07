@@ -1,5 +1,4 @@
 ﻿using ActiviGo.Application.DTOs;
-using ActiviGo.Application.DTOs.CategoryDtos;
 using ActiviGo.Domain.Models;
 using AutoMapper;
 
@@ -10,7 +9,7 @@ namespace ActiviGo.Application.Mapping
         public CategoryMapping() 
         {
             // CATEGORIES
-            CreateMap<Category, CategoryReadDto>();
+            CreateMap<Category, CategoryDto>();
             CreateMap<Category, CreateCategoryDto>();
 
             //Zone

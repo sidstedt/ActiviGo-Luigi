@@ -1,14 +1,12 @@
-﻿using ActiviGo.Application.DTOs.ZoneDtos;
+﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Domain.Models;
 using System.Runtime.CompilerServices;
 
 namespace ActiviGo.Application.Interfaces
 {
-    public interface IZoneService
+    public interface IZoneService : IGenericService<Zone, ZoneReadDto, ZoneDto,  ZoneUpdateDto>
     {
-        Task<IEnumerable<ZoneReadDto>> GetAllZonesAsync();
-        Task<ZoneReadDto> GetZoneById(int id, CancellationToken ct);
-        Task<Zone> CreateZoneAsync(ZoneCreateDto zoneCreateDto, CancellationToken ct);
-        Task<Zone> UpdateZoneAsync(int id, ZoneUpdateDto zoneUpdateDto, CancellationToken ct);
+        Task<IEnumerable<ZoneReadDto>> GetZonesWithActivititesByIdAsync(int id);
+    
     }
 }
