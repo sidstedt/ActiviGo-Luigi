@@ -1,4 +1,3 @@
-
 using ActiviGo.Application.Interfaces;
 using ActiviGo.Application.Mapping;
 using ActiviGo.Application.Services;
@@ -107,8 +106,9 @@ namespace ActiviGo.WebApi
             builder.Services.AddAuthorization();
 
             // -------------------------------
-            // Repositories & Services
+            // Repositories, UnitOfWork & Services
             // -------------------------------
+            builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
