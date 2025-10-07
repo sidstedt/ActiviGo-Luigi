@@ -14,8 +14,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
-using ActiviGo.Application.Mapping;
-using ActiviGo.Application.DTOs;
 
 namespace ActiviGo.WebApi
 {
