@@ -7,15 +7,16 @@ namespace ActiviGo.Domain.Models
     {
         [Required, MaxLength(100)]
         public string Name { get; set; } = string.Empty;
-        [Required, MaxLength(200)]
-        public string Address { get; set; } = string.Empty;
-        [Required]
-        public double Latitude { get; set; }
-        [Required]
-        public double Longitude { get; set; }
-        [Required]
-        public ZoneType InOut { get; set; }
 
+        [Required]
+        public bool IsOutdoor { get; set; } = false;
+
+        //navigation 
         public ICollection<Activity> Activities { get; set; }
+
+        public ICollection<ActivityOccurrence> ActivityOccurrences { get; set; } = new List<ActivityOccurrence>();
+
+        public int LocaitonId { get; set; }
+        public Location Location { get; set; }
     }
 }
