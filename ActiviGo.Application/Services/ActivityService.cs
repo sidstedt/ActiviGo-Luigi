@@ -10,12 +10,12 @@ namespace ActiviGo.Application.Services
         : GenericService<Activity, ActivityResponseDto, ActivityCreateDto, ActivityUpdateDto>,
           IActivityService
     {
-        private readonly IActivityRepository _activityRepository;
+        private readonly IUnitofWork _uow;
 
-        public ActivityService(IActivityRepository activityRepository, IMapper mapper)
-            : base(activityRepository, mapper)
+        public ActivityService(IUnitofWork uow, IMapper mapper)
+            : base(uow.Activity, mapper)
         {
-            _activityRepository = activityRepository;
+            _uow = uow;
         }
 
         // No specific methods for now, but can be added in the future
