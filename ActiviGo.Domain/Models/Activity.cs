@@ -12,8 +12,6 @@ namespace ActiviGo.Domain.Models
         public decimal Price { get; set; }
 
         [Required]
-        public bool IsActive { get; set; }
-        [Required]
         public bool IsPrivate { get; set; }
         [Required]
         public bool IsAvailable { get; set; }
