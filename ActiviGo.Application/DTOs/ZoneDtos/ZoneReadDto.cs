@@ -10,7 +10,6 @@ namespace ActiviGo.Application.DTOs.ZoneDtos
         public string Adress { get; set; } = string.Empty;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public ZoneType InOut { get; set; }
 
         //navigation
         public int ActivityId { get; set; }

@@ -12,7 +12,6 @@ namespace ActiviGo.Application.DTOs.ZoneDtos
         [Required]
         public double Longitude { get; set; }
         [Required]
-        public ZoneType InOut { get; set; }
 
         //navigation
         public int ActivityId { get; set; }
