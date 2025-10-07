@@ -1,5 +1,4 @@
 ﻿using ActiviGo.Application.DTOs;
-using ActiviGo.Application.DTOs.ZoneDtos;
 using ActiviGo.Application.Interfaces;
 using ActiviGo.Domain.Interfaces;
 using ActiviGo.Domain.Models;
@@ -9,7 +8,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ActiviGo.Application.Services
 {
-    public class ZoneService : GenericService<Zone, ZoneReadDto, ZoneCreateDto, ZoneUpdateDto>, IZoneService
+    public class ZoneService : GenericService<Zone, ZoneReadDto, ZoneDto, ZoneUpdateDto>, IZoneService
     {
         private readonly IUnitofWork _unitofWork;
         private readonly IMapper _mapper;
@@ -22,7 +21,7 @@ namespace ActiviGo.Application.Services
             _unitofWork = unitofWork;
         }
 
-        public async Task<ZoneReadDto> CreateAsync(ZoneCreateDto dto)
+        public async Task<ZoneReadDto> CreateAsync(ZoneDto dto)
         {
             var createdZone = _mapper.Map<Zone>(dto);
 

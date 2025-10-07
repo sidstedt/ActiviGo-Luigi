@@ -10,7 +10,7 @@ namespace ActiviGo.Application.Mapping
         public CategoryMapping() 
         {
             // CATEGORIES
-            CreateMap<Category, CategoryReadDto>();
+            CreateMap<Category, CategoryDto>();
             CreateMap<Category, CreateCategoryDto>();
 
             //Zone
