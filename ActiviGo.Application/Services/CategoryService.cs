@@ -1,32 +1,31 @@
-﻿//using ActiviGo.Application.DTOs;
-//using ActiviGo.Application.DTOs.CategoryDtos;
-//using ActiviGo.Application.Interfaces;
-//using ActiviGo.Application.Services;
-//using ActiviGo.Domain.Interfaces;
-//using ActiviGo.Domain.Models;
-//using AutoMapper;
-//using Microsoft.Extensions.Logging;
+﻿using ActiviGo.Application.DTOs;
+using ActiviGo.Application.Interfaces;
+using ActiviGo.Domain.Interfaces;
+using ActiviGo.Domain.Models;
+using AutoMapper;
+using Microsoft.Extensions.Logging;
 
-//public class CategoryService
-//    : GenericService<Category, CategoryReadDto, CreateCategoryDto, CategoryUpdateDto>, ICategoryService
-//{
-//    private readonly IUnitofWork _unitOfWork;
-//    private readonly IMapper _mapper;
-//    private readonly ILogger _logger;
-    
-//    public CategoryService(IUnitofWork unitOfWork, IMapper mapper, ILogger logger)
-//        : base(unitOfWork.Category, mapper)
-//    {
-//        _logger = logger;
-//        _unitOfWork = unitOfWork;
-//        _mapper = mapper;
-//    }
+namespace ActiviGo.Application.Services
+{
+    public class CategoryService
+        : GenericService<Category, CategoryDto, CreateCategoryDto, CategoryUpdateDto>, ICategoryService
+    {
+        private readonly IUnitofWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly ILogger<CategoryService> _logger;
 
-//    public async Task<IEnumerable<Category>> GetCategoryWithActivitiesById(int categoryId, CancellationToken ct)
-//    {
-//        var findId = _mapper.Map<Category>(categoryId);
-//        if (findId.Id == null) return null;
+        public CategoryService(IUnitofWork unitOfWork, IMapper mapper, ILogger<CategoryService> logger)
+            : base(unitOfWork.Category, mapper)
+        {
+            _logger = logger;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
 
-//        return 
-//    }
-//}
+        public async Task<IEnumerable<CategoryDto>> GetCategoryWithActivitiesById(int categoryId)
+        {
+            var categories = await _unitOfWork.Category.GetCategoryWithActivitiesByIdAsync(categoryId);
+            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+        }
+    }
+}
