@@ -16,6 +16,7 @@ namespace ActiviGo.Infrastructure.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Zone> Zones { get; set; }
+        public DbSet<Location> Locations { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -81,6 +82,24 @@ namespace ActiviGo.Infrastructure.Data
                 .WithMany(o => o.Bookings)
                 .HasForeignKey(b => b.ActivityOccurrenceId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Zone>()
+                .HasMany(z => z.Activities)
+                .WithOne(a => a.Zone)
+                .HasForeignKey(a => a.ZoneId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Location>()
+                .HasMany(l => l.Zones)
+                .WithOne(z => z.Location)
+                .HasForeignKey(z => z.LocaitonId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ActivityOccurrence>()
+                .HasOne(o => o.Zone)
+                .WithMany(z => z.ActivityOccurrences)
+                .HasForeignKey(o => o.ZoneId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             SeedData(modelBuilder);
         }
@@ -195,16 +214,27 @@ namespace ActiviGo.Infrastructure.Data
                 new Category { Id = 5, Name = "Wellness", Description = "Yoga, meditation, etc." }
             );
 
-            // Zones
-            modelBuilder.Entity<Zone>().HasData(
-                new Zone { Id = 1, Name = "Gym Hall", Address = "Main Facility - Zone A", Latitude = 59.33, Longitude = 18.06, InOut = ZoneType.Indoor },
-                new Zone { Id = 2, Name = "Spinning Room", Address = "Main Facility - Zone B", Latitude = 59.33, Longitude = 18.07, InOut = ZoneType.Indoor },
-                new Zone { Id = 3, Name = "Climbing Wall", Address = "Main Facility - Zone C", Latitude = 59.33, Longitude = 18.08, InOut = ZoneType.Indoor },
-                new Zone { Id = 4, Name = "Tennis Court", Address = "Main Facility - Zone D", Latitude = 59.34, Longitude = 18.05, InOut = ZoneType.Outdoor },
-                new Zone { Id = 5, Name = "Football Field", Address = "Main Facility - Zone E", Latitude = 59.34, Longitude = 18.06, InOut = ZoneType.Outdoor },
-                new Zone { Id = 6, Name = "Swimming Pool", Address = "Main Facility - Zone F", Latitude = 59.35, Longitude = 18.04, InOut = ZoneType.Indoor },
-                new Zone { Id = 7, Name = "Spa & Relax", Address = "Main Facility - Zone G", Latitude = 59.35, Longitude = 18.05, InOut = ZoneType.Indoor }
+            // location 
+            modelBuilder.Entity<Location>().HasData(
+                new Location { Id = 1, Name = "Gym Hall", Address = "Centralvägen 10, Stockholm", Latitude = 59.3121, Longitude = 18.0674 },
+                new Location { Id = 2, Name = "Spinning Room", Address = "Sundbybergsvägen 22, Solna", Latitude = 59.3612, Longitude = 18.0012 },
+                new Location { Id = 3, Name = "Climbing Wall", Address = "Rosenlundsgatan 45, Stockholm", Latitude = 59.3129, Longitude = 18.0463 },
+                new Location { Id = 4, Name = "Tennis Court", Address = "Lidingövägen 55, Stockholm", Latitude = 59.3478, Longitude = 18.0901 },
+                new Location { Id = 5, Name = "Football Field", Address = "Björkhagen 7, Nacka", Latitude = 59.2935, Longitude = 18.1324 },
+                new Location { Id = 6, Name = "Swimming Pool", Address = "Stadshagsvägen 12, Stockholm", Latitude = 59.3399, Longitude = 18.0187 },
+                new Location { Id = 7, Name = "Spa & Relax", Address = "Drottninggatan 88, Stockholm", Latitude = 59.3334, Longitude = 18.0639 }
             );
+
+            // Zones
+             modelBuilder.Entity<Zone>().HasData(
+                new Zone { Id = 1, Name = "Yoga & Pilates Studio", IsOutdoor = false, LocaitonId = 1 },
+                new Zone { Id = 2, Name = "Spinning Hall", IsOutdoor = false, LocaitonId = 2 },
+                new Zone { Id = 3, Name = "Climbing Zone", IsOutdoor = false, LocaitonId = 3 },
+                new Zone { Id = 4, Name = "Tennis Zone", IsOutdoor = true, LocaitonId = 4 },
+                new Zone { Id = 5, Name = "Football Arena", IsOutdoor = true, LocaitonId = 5 },
+                new Zone { Id = 6, Name = "Aquatic Center", IsOutdoor = false, LocaitonId = 6 },
+                new Zone { Id = 7, Name = "Spa & Relax Area", IsOutdoor = false, LocaitonId = 7 }
+             );
 
             // Activities (ursprungliga + ny med MaxParticipants=1)
             modelBuilder.Entity<Activity>().HasData(
