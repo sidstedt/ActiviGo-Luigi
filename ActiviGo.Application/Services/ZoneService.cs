@@ -11,17 +11,15 @@ namespace ActiviGo.Application.Services
     public class ZoneService : GenericService<Zone, ZoneReadDto, ZoneDto, ZoneUpdateDto>, IZoneService
     {
         private readonly IUnitofWork _unitofWork;
-        private readonly IMapper _mapper;
         private readonly ILogger<ZoneService> _logger;
 
         public ZoneService(ILogger<ZoneService> logger, IMapper mapper, IUnitofWork unitofWork) : base(unitofWork.Zone, mapper)
         {
             _logger = logger;
-            _mapper = mapper;
             _unitofWork = unitofWork;
         }
 
-        public async Task<ZoneReadDto> CreateAsync(ZoneDto dto)
+        public override async Task<ZoneReadDto> CreateAsync(ZoneDto dto)
         {
             var createdZone = _mapper.Map<Zone>(dto);
 
