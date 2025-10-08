@@ -1,7 +1,7 @@
-﻿using ActiviGo.Application.DTOs; // För Activity DTOs
+﻿using ActiviGo.Application.DTOs; 
 using ActiviGo.Application.Interfaces;
 using ActiviGo.Domain.Interfaces;
-using ActiviGo.Domain.Models; // För User-modellen
+using ActiviGo.Domain.Models; 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
