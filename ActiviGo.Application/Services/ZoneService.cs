@@ -11,16 +11,21 @@ namespace ActiviGo.Application.Services
     {
         private readonly IUnitofWork _unitofWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<ZoneService> _logger;
 
         public ZoneService(ILogger<ZoneService> logger, IMapper mapper, IUnitofWork unitofWork) : base(unitofWork.Zone, mapper)
         {
+            _logger = logger;
             _mapper = mapper;
             _unitofWork = unitofWork;
         }
 
-        public Task AddActivityToZone(int zoneId, int activityId)
+        public async Task AddActivityToZone(int zoneId, int activityId)
         {
-            return _unitofWork.Zone.AddActivityToZoneAsync(zoneId, activityId);
+            await _unitofWork.Zone.AddActivityToZoneAsync(zoneId, activityId);
+            await _unitofWork.SaveChangesAsync();
+
+            _logger.LogInformation($"Activity with ID {activityId} added to Zone with ID {zoneId}");
         }
 
         public async Task<IEnumerable<ZoneReadDto>> GetAllZonesWithRelations()
@@ -44,6 +49,9 @@ namespace ActiviGo.Application.Services
         public async Task RemoveActivityFromZone(int zoneId, int activityId)
         {
             await _unitofWork.Zone.RemoveActivityFromZoneAsync(zoneId, activityId);
+            await _unitofWork.SaveChangesAsync();
+
+            _logger.LogInformation($"Activity with ID {activityId} removed from Zone with ID {zoneId}");
         }
     }
 }

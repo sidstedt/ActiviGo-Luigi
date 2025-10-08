@@ -13,8 +13,6 @@ namespace ActiviGo.Domain.Interfaces
         //fetch all zones with activites and location details
         Task<IEnumerable<Zone>> GetAllZonesWithActivitiesAndLocationAsync();
 
-
-        //not sure about these two methods, need to discuss
         // add activity to a zone
         Task AddActivityToZoneAsync(int zoneId, int activityId);
 
