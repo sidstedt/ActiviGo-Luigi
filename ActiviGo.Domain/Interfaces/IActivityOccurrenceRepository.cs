@@ -9,6 +9,9 @@ namespace ActiviGo.Domain.Interfaces
         Task<int> GetCurrentParticipantCountAsync(int occurrenceId);
         Task<ICollection<ActivityOccurrence>> GetOccurrencesByActivityIdAsync(int activityId);
         Task<ActivityOccurrence?> GetActivityOccurrenceByIdAsync(int activityOccurrenceId, CancellationToken ct);
+
+        // Staff scope
+        Task<IEnumerable<ActivityOccurrence>> GetByStaffAsync(Guid staffId, DateTime? from, DateTime? to, CancellationToken ct);
     }
 
 }

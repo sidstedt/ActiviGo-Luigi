@@ -62,5 +62,12 @@ namespace ActiviGo.Application.Services
             var occurrences = await _occurrenceRepository.GetOccurrencesByActivityIdAsync(activityId);
             return _mapper.Map<ICollection<ActivityOccurrenceResponseDto>>(occurrences);
         }
+
+        // Staff scope
+        public async Task<IEnumerable<ActivityOccurrenceResponseDto>> GetByStaffAsync(Guid staffId, DateTime? from, DateTime? to, CancellationToken ct)
+        {
+            var list = await _occurrenceRepository.GetByStaffAsync(staffId, from, to, ct);
+            return _mapper.Map<IEnumerable<ActivityOccurrenceResponseDto>>(list);
+        }
     }
 }

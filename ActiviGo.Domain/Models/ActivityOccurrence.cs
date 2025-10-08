@@ -15,11 +15,9 @@ namespace ActiviGo.Domain.Models
         public int DurationMinutes { get; set; }
         [Required]
         public int ActivityId { get; set; }
-        [Required]
         public Activity Activity { get; set; }
         [Required]
         public int ZoneId { get; set; }
-        [Required]
         public Zone Zone { get; set; }
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
