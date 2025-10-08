@@ -18,5 +18,7 @@ namespace ActiviGo.Domain.Interfaces
 
         // remove activity from a zone
         Task RemoveActivityFromZoneAsync(int zoneId, int activityId);
+
+
     }
 }

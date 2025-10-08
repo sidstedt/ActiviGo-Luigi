@@ -38,7 +38,7 @@ namespace ActiviGo.Infrastructure.Repositories
         {
             return await _dbSet
                 .Include(z => z.Location)
-                .Where(z => z.LocaitonId == locationId)
+                .Where(z => z.LocationId == locationId)
                 .ToListAsync();
 
         }
