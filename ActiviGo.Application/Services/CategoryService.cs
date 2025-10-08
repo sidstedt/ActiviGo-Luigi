@@ -22,10 +22,36 @@ namespace ActiviGo.Application.Services
             _mapper = mapper;
         }
 
+        public async Task AddActivityToCategory(int categoryId, int activityId)
+        {
+
+            await _unitOfWork.Category.AddActivityToCategoryAsync(categoryId, activityId);
+            await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation($"Added activity with ID {activityId} to category with ID {categoryId}.");
+        }
+
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesWithActivities()
+        {
+            var category = await _unitOfWork.Category.GetAllCategoriesWithActivitiesAsync();
+
+            return _mapper.Map<IEnumerable<CategoryDto>>(category);
+        }
+
         public async Task<IEnumerable<CategoryDto>> GetCategoryWithActivitiesById(int categoryId)
         {
             var categories = await _unitOfWork.Category.GetCategoryWithActivitiesByIdAsync(categoryId);
             return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+        }
+
+        public async Task RemoveActivityFromCategory(int categoryId, int activityId)
+        {
+            await _unitOfWork.Category.RemoveActivityFromCategoryAsync(categoryId, activityId);
+            await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Removed activity with ID {ActivityId} from category with ID {CategoryId}.",
+                activityId, categoryId);
         }
     }
 }
