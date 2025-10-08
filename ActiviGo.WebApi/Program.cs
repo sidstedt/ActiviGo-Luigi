@@ -118,6 +118,10 @@ namespace ActiviGo.WebApi
             builder.Services.AddScoped<IActivityService, ActivityService>();
             builder.Services.AddScoped<IActivityOccurrenceRepository, ActivityOccurrenceRepository>();
             builder.Services.AddScoped<IActivityOccurrenceService, ActivityOccurrenceService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IZoneRepository, ZoneRepository>();
+            builder.Services.AddScoped<IZoneService, ZoneService>();
 
             builder.Services.AddAutoMapper(typeof(ActivityProfile).Assembly);
             var app = builder.Build();
