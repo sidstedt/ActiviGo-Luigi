@@ -3,7 +3,6 @@ using ActiviGo.Application.Mapping;
 using ActiviGo.Application.Services;
 using ActiviGo.Domain.Interfaces;
 using ActiviGo.Domain.Models;
-using ActiviGo.Application.Validators;
 using ActiviGo.Infrastructure.Data;
 using ActiviGo.Infrastructure.Repositories;
 using ActiviGo.WebApi.Auth;
@@ -14,8 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 
 namespace ActiviGo.WebApi
 {
