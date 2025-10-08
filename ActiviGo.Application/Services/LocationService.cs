@@ -20,7 +20,7 @@ namespace ActiviGo.Application.Services
             ILogger<LocationService> logger,
             IMapper mapper,
             IUnitofWork unitofWork,
-            IGeocodingService geocodingService)  // <-- interface
+            IGeocodingService geocodingService)
             : base(unitofWork.Location, mapper)
         {
             _logger = logger;
@@ -31,7 +31,7 @@ namespace ActiviGo.Application.Services
 
         public override async Task<LocationResponseDto> CreateAsync(LocationCreateDto dto)
         {
-            // 🔹 Steg 1: Beräkna lat/long automatiskt om de saknas
+            // Steg 1: Beräkna lat/long automatiskt om de saknas
             if ((!dto.Latitude.HasValue || !dto.Longitude.HasValue) && !string.IsNullOrWhiteSpace(dto.Address))
             {
                 var coords = await _geocodingService.GetCoordinatesFromAddressAsync(dto.Address);
@@ -46,7 +46,7 @@ namespace ActiviGo.Application.Services
                 }
             }
 
-            // 🔹 Steg 2: Skapa Location
+            // Steg 2: Skapa Location
             var location = new Location
             {
                 Name = dto.Name,
@@ -55,7 +55,7 @@ namespace ActiviGo.Application.Services
                 Longitude = dto.Longitude ?? 0
             };
 
-            // 🔹 Steg 3: Koppla zoner
+            // Steg 3: Koppla zoner
             if (dto.ZoneIds.Any())
             {
                 var allZones = await _uow.Zone.GetAllAsync();
@@ -63,12 +63,13 @@ namespace ActiviGo.Application.Services
                 location.Zones = zones;
             }
 
-            // 🔹 Steg 4: Spara i DB
+            // Steg 4: Spara i DB
             await _uow.Location.AddAsync(location);
             await _uow.SaveChangesAsync();
 
             return _mapper.Map<LocationResponseDto>(location);
         }
+        
         public override async Task<LocationResponseDto?> UpdateAsync(int id, LocationUpdateDto dto)
         {
             // Hämta location inklusive zoner
@@ -79,7 +80,7 @@ namespace ActiviGo.Application.Services
                 return null;
             }
 
-            // 🔹 Steg 1: Beräkna lat/long automatiskt om de saknas
+            // Steg 1: Beräkna lat/long automatiskt om de saknas
             if ((!dto.Latitude.HasValue || !dto.Longitude.HasValue) && !string.IsNullOrWhiteSpace(dto.Address))
             {
                 var coords = await _geocodingService.GetCoordinatesFromAddressAsync(dto.Address);
@@ -94,10 +95,10 @@ namespace ActiviGo.Application.Services
                 }
             }
 
-            // 🔹 Steg 2: Mappa övriga fält
+            // Steg 2: Mappa övriga fält
             _mapper.Map(dto, existing);
 
-            // 🔹 Steg 3: Lägg till nya zoner utan att ta bort befintliga
+            // Steg 3: Lägg till nya zoner utan att ta bort befintliga
             if (dto.ZoneIds != null && dto.ZoneIds.Any())
             {
                 var allZones = await _uow.Zone.GetAllAsync();
@@ -111,7 +112,7 @@ namespace ActiviGo.Application.Services
                     existing.Zones.Add(zone);
             }
 
-            // 🔹 Steg 4: Spara ändringar
+            // Steg 4: Spara ändringar
             await _uow.Location.UpdateAsync(existing);
             await _uow.SaveChangesAsync();
 
