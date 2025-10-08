@@ -76,5 +76,18 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Where(b => b.ActivityOccurrenceId == occurrenceId && b.Status != BookingStatus.Canceled)
                 .CountAsync(ct);
         }
+
+        // Staff scope
+        public async Task<List<Booking>> GetBookingsForOccurrenceAsync(int occurrenceId, CancellationToken ct)
+        {
+            return await _ctx.Bookings
+                .Where(b => b.ActivityOccurrenceId == occurrenceId)
+                .Include(b => b.ActivityOccurrence)
+                    .ThenInclude(o => o.Activity)
+                        .ThenInclude(a => a.Category)
+                .Include(b => b.ActivityOccurrence)
+                    .ThenInclude(o => o.Zone)
+                .ToListAsync(ct);
+        }
     }
 }
