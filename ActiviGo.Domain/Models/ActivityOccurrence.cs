@@ -16,11 +16,11 @@ namespace ActiviGo.Domain.Models
         [Required]
         public int ActivityId { get; set; }
         [Required]
-        public Activity Activity { get; set; }
+        public Activity Activity { get; set; } = null!;
         [Required]
         public int ZoneId { get; set; }
         [Required]
-        public Zone Zone { get; set; }
+        public Zone Zone { get; set; } = null!;
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
