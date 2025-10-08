@@ -9,14 +9,26 @@ namespace ActiviGo.Infrastructure.Repositories
     {
         public CategoryRepository(ActiviGoDbContext context) : base(context) { }
 
-        public Task AddActivityToCategoryAsync(int categoryId, int activityId)
+        public async Task AddActivityToCategoryAsync(int categoryId, int activityId)
         {
-            throw new NotImplementedException();
+            var category = await _dbSet
+                .Include(c => c.Activities)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            var activity = await _context.Activities.FindAsync(activityId);
+
+            if (category != null && activity != null)
+            {
+                category.Activities.Add(activity);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<IEnumerable<Category>> GetAllCategoriesWithActivitiesAsync()
+        public async Task<IEnumerable<Category>> GetAllCategoriesWithActivitiesAsync()
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Include(c => c.Activities)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Category>> GetCategoryWithActivitiesByIdAsync(int categoryId)
@@ -28,9 +40,23 @@ namespace ActiviGo.Infrastructure.Repositories
             //.FirstOrDefaultAsync(c => c.Id == categoryId);
         }
 
-        public Task RemoveActivityFromCategoryAsync(int categoryId, int activityId)
+        public async Task RemoveActivityFromCategoryAsync(int categoryId, int activityId)
         {
-            throw new NotImplementedException();
+            var category = _dbSet
+                .Include(c => c.Activities)
+                .FirstOrDefault(c => c.Id == categoryId);
+
+            if (category != null)
+            {
+                var activity = category.Activities
+                    .FirstOrDefault(a => a.Id == activityId);
+
+                if(activity != null)
+                {
+                    category.Activities.Remove(activity);
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
     }
 }

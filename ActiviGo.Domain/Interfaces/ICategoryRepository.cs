@@ -14,8 +14,5 @@ namespace ActiviGo.Domain.Interfaces
 
         //remove activity from a category
         Task RemoveActivityFromCategoryAsync(int categoryId, int activityId);
-
-
-
     }
 }
