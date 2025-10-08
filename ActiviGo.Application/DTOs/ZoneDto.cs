@@ -3,16 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ActiviGo.Application.DTOs
 {
+    //create dto
     public class ZoneDto
     {
         public string Name { get; set; } = string.Empty;
-        public string Adress { get; set; } = string.Empty;
-        public double Latitude { get; set; }
-        [Required]
-        public double Longitude { get; set; }
-        [Required]
+        public bool IsOutdoor { get; set; } = false;
 
         //navigation
+        public int LocationId { get; set; }
         public int ActivityId { get; set; }
         public string ActivityName { get; set; } = string.Empty;
     }
@@ -21,11 +19,10 @@ namespace ActiviGo.Application.DTOs
     {
         public int ZoneId { get; set; }
         public string ZoneName { get; set; } = string.Empty;
-        public string Adress { get; set; } = string.Empty;
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public bool IsOutdoor { get; set; } = false;
 
         //navigation
+        public int LocationId { get; set; }
         public int ActivityId { get; set; }
         public string? ActivityName { get; set; }
     }
@@ -33,11 +30,8 @@ namespace ActiviGo.Application.DTOs
     public class ZoneUpdateDto
     {
         public string Name { get; set; } = string.Empty;
-        public string Adress { get; set; } = string.Empty;
-        public double Latitude { get; set; }
-        [Required]
-        public double Longitude { get; set; }
-        [Required]
+        public bool IsOutdoor { get; set; }
+        public int LocationId { get; set; }
 
         //navigation
         public int ActivityId { get; set; }
