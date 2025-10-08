@@ -11,13 +11,28 @@ namespace ActiviGo.Application.Services
     {
         private readonly IUnitofWork _unitofWork;
         private readonly IMapper _mapper;
-        private readonly ILogger<ZoneService> _logger;
 
         public ZoneService(ILogger<ZoneService> logger, IMapper mapper, IUnitofWork unitofWork) : base(unitofWork.Zone, mapper)
         {
-            _logger = logger;
             _mapper = mapper;
             _unitofWork = unitofWork;
+        }
+
+        public Task AddActivityToZone(int zoneId, int activityId)
+        {
+            return _unitofWork.Zone.AddActivityToZoneAsync(zoneId, activityId);
+        }
+
+        public async Task<IEnumerable<ZoneReadDto>> GetAllZonesWithRelations()
+        {
+            var zone = await _unitofWork.Zone.GetAllZonesWithActivitiesAndLocationAsync();
+            return _mapper.Map<IEnumerable<ZoneReadDto>>(zone);
+        }
+
+        public async Task<IEnumerable<ZoneDto>> GetZonesByLocationId(int locationId)
+        {
+            var zone = await _unitofWork.Zone.GetZonesByLocationIdAsync(locationId);
+            return _mapper.Map<IEnumerable<ZoneDto>>(zone);
         }
 
         public async Task<IEnumerable<ZoneReadDto>> GetZonesWithActivititesByIdAsync(int id)
@@ -26,6 +41,9 @@ namespace ActiviGo.Application.Services
             return _mapper.Map<IEnumerable<ZoneReadDto>>(zones);
         }
 
-      
+        public async Task RemoveActivityFromZone(int zoneId, int activityId)
+        {
+            await _unitofWork.Zone.RemoveActivityFromZoneAsync(zoneId, activityId);
+        }
     }
 }

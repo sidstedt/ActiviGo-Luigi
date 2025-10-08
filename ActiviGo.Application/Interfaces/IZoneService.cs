@@ -8,9 +8,8 @@ namespace ActiviGo.Application.Interfaces
     {
         Task<IEnumerable<ZoneReadDto>> GetZonesWithActivititesByIdAsync(int id);
         Task<IEnumerable<ZoneDto>> GetZonesByLocationId(int locationId);
-        Task<IEnumerable<ZoneDto>> GetAllZonesWithRelations();
+        Task<IEnumerable<ZoneReadDto>> GetAllZonesWithRelations();
         Task AddActivityToZone(int zoneId, int activityId);
         Task RemoveActivityFromZone(int zoneId, int activityId);
-
     }
 }
