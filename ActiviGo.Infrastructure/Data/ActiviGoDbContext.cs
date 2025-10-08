@@ -92,7 +92,7 @@ namespace ActiviGo.Infrastructure.Data
             modelBuilder.Entity<Location>()
                 .HasMany(l => l.Zones)
                 .WithOne(z => z.Location)
-                .HasForeignKey(z => z.LocaitonId)
+                .HasForeignKey(z => z.LocationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ActivityOccurrence>()
@@ -205,7 +205,9 @@ namespace ActiviGo.Infrastructure.Data
                 new IdentityUserRole<Guid> { UserId = adminId, RoleId = adminRoleId }
             );
 
+            // ---------------------------
             // Categories
+            // ---------------------------
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Training", Description = "Physical training and exercise" },
                 new Category { Id = 2, Name = "Outdoor Activities", Description = "Activities outdoors" },
@@ -214,7 +216,9 @@ namespace ActiviGo.Infrastructure.Data
                 new Category { Id = 5, Name = "Wellness", Description = "Yoga, meditation, etc." }
             );
 
-            // location 
+            // ---------------------------
+            // Locations
+            // ---------------------------
             modelBuilder.Entity<Location>().HasData(
                 new Location { Id = 1, Name = "Gym Hall", Address = "Centralvägen 10, Stockholm", Latitude = 59.3121, Longitude = 18.0674 },
                 new Location { Id = 2, Name = "Spinning Room", Address = "Sundbybergsvägen 22, Solna", Latitude = 59.3612, Longitude = 18.0012 },
@@ -225,33 +229,35 @@ namespace ActiviGo.Infrastructure.Data
                 new Location { Id = 7, Name = "Spa & Relax", Address = "Drottninggatan 88, Stockholm", Latitude = 59.3334, Longitude = 18.0639 }
             );
 
+            // ---------------------------
             // Zones
-             modelBuilder.Entity<Zone>().HasData(
-                new Zone { Id = 1, Name = "Yoga & Pilates Studio", IsOutdoor = false, LocaitonId = 1 },
-                new Zone { Id = 2, Name = "Spinning Hall", IsOutdoor = false, LocaitonId = 2 },
-                new Zone { Id = 3, Name = "Climbing Zone", IsOutdoor = false, LocaitonId = 3 },
-                new Zone { Id = 4, Name = "Tennis Zone", IsOutdoor = true, LocaitonId = 4 },
-                new Zone { Id = 5, Name = "Football Arena", IsOutdoor = true, LocaitonId = 5 },
-                new Zone { Id = 6, Name = "Aquatic Center", IsOutdoor = false, LocaitonId = 6 },
-                new Zone { Id = 7, Name = "Spa & Relax Area", IsOutdoor = false, LocaitonId = 7 }
+            // ---------------------------
+            modelBuilder.Entity<Zone>().HasData(
+                new Zone { Id = 1, Name = "Yoga & Pilates Studio", IsOutdoor = false, LocationId = 1 },
+                new Zone { Id = 2, Name = "Spinning Hall", IsOutdoor = false, LocationId = 2 },
+                new Zone { Id = 3, Name = "Climbing Zone", IsOutdoor = false, LocationId = 3 },
+                new Zone { Id = 4, Name = "Tennis Zone", IsOutdoor = true, LocationId = 4 },
+                new Zone { Id = 5, Name = "Football Arena", IsOutdoor = true, LocationId = 5 },
+                new Zone { Id = 6, Name = "Aquatic Center", IsOutdoor = false, LocationId = 6 },
+                new Zone { Id = 7, Name = "Spa & Relax Area", IsOutdoor = false, LocationId = 7 }
              );
 
-            // Activities (ursprungliga + ny med MaxParticipants=1)
+            // ---------------------------
+            // Activities
+            // ---------------------------
             modelBuilder.Entity<Activity>().HasData(
-                new Activity { Id = 1, Name = "Yoga", Description = "Relaxing yoga session", Price = 15, MaxParticipants = 15, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 5, ZoneId = 1, StaffId = staffId },
-                new Activity { Id = 2, Name = "Pilates", Description = "Core Pilates class", Price = 15, MaxParticipants = 15, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 5, ZoneId = 1, StaffId = staffId },
-                new Activity { Id = 3, Name = "Spinning", Description = "High intensity spinning", Price = 20, MaxParticipants = 20, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 1, ZoneId = 2, StaffId = staffId },
-                new Activity { Id = 4, Name = "Football Practice", Description = "Outdoor football training", Price = 10, MaxParticipants = 22, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 3, ZoneId = 5, StaffId = staffId },
-                new Activity { Id = 5, Name = "Tennis Practice", Description = "Tennis training session", Price = 12, MaxParticipants = 8, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 3, ZoneId = 4, StaffId = staffId },
-                new Activity { Id = 6, Name = "Climbing", Description = "Indoor climbing", Price = 18, MaxParticipants = 10, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 2, ZoneId = 3, StaffId = staffId },
-                new Activity { Id = 7, Name = "Swimming Training", Description = "Lap swimming session", Price = 15, MaxParticipants = 12, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 4, ZoneId = 6, StaffId = staffId },
-                new Activity { Id = 8, Name = "Water Aerobics", Description = "Fun aquatic exercise", Price = 15, MaxParticipants = 15, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 4, ZoneId = 6, StaffId = staffId },
-                new Activity { Id = 9, Name = "Meditation", Description = "Mindfulness meditation", Price = 10, MaxParticipants = 15, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 5, ZoneId = 7, StaffId = staffId },
-                new Activity { Id = 10, Name = "Athletics", Description = "Track and field practice", Price = 12, MaxParticipants = 20, IsActive = true, IsPrivate = false, IsAvailable = true, CategoryId = 2, ZoneId = 5, StaffId = staffId },
-                new Activity { Id = 11, Name = "One-on-One Coaching", Description = "Individuell coachning", Price = 50, MaxParticipants = 1, IsActive = true, IsPrivate = true, IsAvailable = true, CategoryId = 1, ZoneId = 1, StaffId = staffId }
-            );
+                new Activity { Id = 1, Name = "Yoga", Description = "Relaxing yoga session", Price = 15, MaxParticipants = 15, IsPrivate = false, IsAvailable = true, CategoryId = 5, ZoneId = 1, StaffId = staffId },
+                new Activity { Id = 2, Name = "Pilates", Description = "Core Pilates class", Price = 15, MaxParticipants = 15, IsPrivate = false, IsAvailable = true, CategoryId = 5, ZoneId = 2, StaffId = staffId },
+                new Activity { Id = 3, Name = "Spinning", Description = "High intensity spinning", Price = 20, MaxParticipants = 20, IsPrivate = false, IsAvailable = true, CategoryId = 1, ZoneId = 3, StaffId = staffId },
+                new Activity { Id = 4, Name = "Football Practice", Description = "Outdoor football training", Price = 10, MaxParticipants = 22, IsPrivate = false, IsAvailable = true, CategoryId = 3, ZoneId = 4, StaffId = staffId },
+                new Activity { Id = 5, Name = "Tennis Practice", Description = "Tennis training session", Price = 12, MaxParticipants = 8, IsPrivate = false, IsAvailable = true, CategoryId = 3, ZoneId = 5, StaffId = staffId },
+                new Activity { Id = 6, Name = "Climbing", Description = "Indoor climbing", Price = 18, MaxParticipants = 10, IsPrivate = false, IsAvailable = true, CategoryId = 2, ZoneId = 6, StaffId = staffId },
+                new Activity { Id = 7, Name = "Swimming Training", Description = "Lap swimming session", Price = 15, MaxParticipants = 12, IsPrivate = false, IsAvailable = true, CategoryId = 4, ZoneId = 7, StaffId = staffId }
+                );
 
-            // ActivityOccurrences 
+            // ---------------------------
+            // Activity Occurrences
+            // ---------------------------
             modelBuilder.Entity<ActivityOccurrence>().HasData(
                 new ActivityOccurrence { Id = 1, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 10, 10, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 10, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
                 new ActivityOccurrence { Id = 2, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 12, 2, 10, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 2, 11, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
@@ -261,7 +267,7 @@ namespace ActiviGo.Infrastructure.Data
                 new ActivityOccurrence { Id = 11, ActivityId = 3, ZoneId = 2, StartTime = new DateTime(2025, 12, 5, 18, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 5, 19, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // MaxParticipants = 1 
-                new ActivityOccurrence { Id = 12, ActivityId = 11, ZoneId = 1, StartTime = new DateTime(2025, 12, 6, 9, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 6, 10, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
+                new ActivityOccurrence { Id = 12, ActivityId = 4, ZoneId = 1, StartTime = new DateTime(2025, 12, 6, 9, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 12, 6, 10, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
 
                 // Förflutet pass
                 new ActivityOccurrence { Id = 13, ActivityId = 1, ZoneId = 1, StartTime = new DateTime(2025, 1, 15, 8, 0, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 1, 15, 9, 0, 0, DateTimeKind.Utc), DurationMinutes = 60 },
@@ -271,7 +277,9 @@ namespace ActiviGo.Infrastructure.Data
                 new ActivityOccurrence { Id = 15, ActivityId = 2, ZoneId = 1, StartTime = new DateTime(2025, 10, 15, 10, 30, 0, DateTimeKind.Utc), EndTime = new DateTime(2025, 10, 15, 11, 30, 0, DateTimeKind.Utc), DurationMinutes = 60 }
             );
 
-            // Bookings (olika status + canceled + reserved + pending + confirmed)
+            // ---------------------------
+            // Bookings
+            // ---------------------------
             var seedBookingTime = new DateTime(2025, 10, 1, 0, 0, 0, DateTimeKind.Utc);
             modelBuilder.Entity<Booking>().HasData(
                 new Booking { Id = 1, UserId = user1Id, ActivityOccurrenceId = 11, Status = BookingStatus.Reserved, CreatedAt = seedBookingTime, UpdatedAt = seedBookingTime },

@@ -11,6 +11,7 @@ namespace ActiviGo.Infrastructure.Repositories
         private IActivityOccurrenceRepository _activityOccurrence;
         private IBookingRepository _booking;
         private ICategoryRepository _category;
+        private ILocationRepository _location;
         //private IUserRepository _user;
         private IZoneRepository _zone;
 
@@ -30,6 +31,7 @@ namespace ActiviGo.Infrastructure.Repositories
         //public IUserRepository => _user ??= new UserRepository(_context);
 
         public IZoneRepository Zone => _zone ??= new ZoneRepository(_context);
+        public ILocationRepository Location => _location ??= new LocationRepository(_context);
 
 
 
