@@ -24,6 +24,14 @@ namespace ActiviGo.Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<Category>>GetAllCategories()
+        {
+            return await _dbSet
+                .Where(c => !c.Activities.Any())
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Category>> GetAllCategoriesWithActivitiesAsync()
         {
             return await _dbSet
@@ -31,13 +39,12 @@ namespace ActiviGo.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Category>> GetCategoryWithActivitiesByIdAsync(int categoryId)
+        public async Task<IEnumerable<Category?>> GetCategoryWithActivitiesByIdAsync(int categoryId)
         {
             return await _dbSet
                 .Include(c => c.Activities)
                 .Where(c => c.Id == categoryId)
                 .ToListAsync();
-            //.FirstOrDefaultAsync(c => c.Id == categoryId);
         }
 
         public async Task RemoveActivityFromCategoryAsync(int categoryId, int activityId)
@@ -58,5 +65,7 @@ namespace ActiviGo.Infrastructure.Repositories
                 }
             }
         }
+
+       
     }
 }
