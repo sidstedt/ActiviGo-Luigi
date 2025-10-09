@@ -1,9 +1,10 @@
 ﻿using ActiviGo.Domain.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace ActiviGo.Application.DTOs
 {
-    //create dto
+    //this class is a create dto
     public class ZoneDto
     {
         public string Name { get; set; } = string.Empty;
@@ -11,8 +12,9 @@ namespace ActiviGo.Application.DTOs
 
         //navigation
         public int LocationId { get; set; }
+        public string LocationName { get; set; } 
         public int ActivityId { get; set; }
-        public string ActivityName { get; set; } = string.Empty;
+        public string ActivityName { get; set; } 
     }
 
     public class ZoneReadDto
@@ -22,9 +24,12 @@ namespace ActiviGo.Application.DTOs
         public bool IsOutdoor { get; set; } = false;
 
         //navigation
-        public int LocationId { get; set; }
-        public int ActivityId { get; set; }
+        //public int LocationId { get; set; }
+        public string LocationName { get; set; }    = string.Empty;
+        //public int ActivityId { get; set; }
         public string? ActivityName { get; set; }
+
+        public string EnvironmentMessage { get; set; } 
     }
 
     public class ZoneUpdateDto
@@ -32,6 +37,7 @@ namespace ActiviGo.Application.DTOs
         public string Name { get; set; } = string.Empty;
         public bool IsOutdoor { get; set; }
         public int LocationId { get; set; }
+        public string LocationName { get; set; } = string.Empty;
 
         //navigation
         public int ActivityId { get; set; }
