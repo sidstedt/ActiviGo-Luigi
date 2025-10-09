@@ -17,21 +17,24 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         // ---------------------------
-        // Create
+        // CREATE
         // ---------------------------
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] LocationCreateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var created = await _locationService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.GetType().GetProperty("Id")?.GetValue(created) }, created);
+
+            if (created == null)
+            {
+                return BadRequest("Could not create entity.");
+            }
+
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         // ---------------------------
-        // Read all
+        // READ ALL
         // ---------------------------
         [HttpGet]
         [AllowAnonymous]
@@ -42,7 +45,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         // ---------------------------
-        // Read by Id
+        // READ BY ID
         // ---------------------------
         [HttpGet("{id:int}")]
         [AllowAnonymous]
@@ -50,30 +53,31 @@ namespace ActiviGo.WebApi.Controllers
         {
             var location = await _locationService.GetByIdAsync(id);
             if (location == null)
-                return NotFound($"Location with ID {id} not found.");
+            {
+                return NotFound();
+            }
 
             return Ok(location);
         }
 
         // ---------------------------
-        // Update
+        // UPDATE
         // ---------------------------
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] LocationUpdateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var updated = await _locationService.UpdateAsync(id, dto);
             if (updated == null)
-                return NotFound($"Location with ID {id} not found.");
+            {
+                return NotFound(new { message = $"Location with ID {id} not found." });
+            }
 
             return Ok(updated);
         }
 
         // ---------------------------
-        // Delete
+        // DELETE
         // ---------------------------
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin")]
@@ -81,7 +85,9 @@ namespace ActiviGo.WebApi.Controllers
         {
             var deleted = await _locationService.DeleteAsync(id);
             if (!deleted)
-                return NotFound($"Location with ID {id} not found.");
+            {
+                return NotFound(new { message = $"Location with ID {id} not found." });
+            }
 
             return NoContent();
         }

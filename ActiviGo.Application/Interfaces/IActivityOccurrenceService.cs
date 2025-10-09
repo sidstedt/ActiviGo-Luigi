@@ -7,6 +7,9 @@ namespace ActiviGo.Application.Interfaces
         : IGenericService<ActivityOccurrence, ActivityOccurrenceResponseDto, ActivityOccurrenceCreateDto, ActivityOccurrenceUpdateDto>
     {
         Task<ICollection<ActivityOccurrenceResponseDto>> GetAvailableOccurrencesByActivityIdAsync(int activityId);
+
+        // staff scope
+        Task<IEnumerable<ActivityOccurrenceResponseDto>> GetByStaffAsync(Guid staffId, DateTime? from, DateTime? to, CancellationToken ct);
     }
 
 }

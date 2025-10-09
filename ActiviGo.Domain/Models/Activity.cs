@@ -17,19 +17,17 @@ namespace ActiviGo.Domain.Models
         public bool IsAvailable { get; set; }
         [Required, Range(typeof(int), "1", "50")]
         public int MaxParticipants { get; set; }
-        [Required]
-        [Range(1, 120)]
+        [Required, Range(1, 120)]
         public int DurationMinutes { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Category Category { get; set; } = null!;
 
         [Required]
         public int ZoneId { get; set; }
-        public Zone Zone { get; set; }
+        public Zone Zone { get; set; } = null!;
 
-        [Required]
         public Guid? StaffId { get; set; }
         public User? Staff { get; set; }
 

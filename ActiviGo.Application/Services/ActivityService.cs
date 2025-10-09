@@ -18,6 +18,11 @@ namespace ActiviGo.Application.Services
             _uow = uow;
         }
 
-        // No specific methods for now, but can be added in the future
+        // staff scope
+        public async Task<IEnumerable<ActivityResponseDto>> GetByStaffAsync(Guid staffId, CancellationToken ct)
+        {
+            var activities = await _uow.Activity.GetByStaffAsync(staffId, ct);
+            return _mapper.Map<IEnumerable<ActivityResponseDto>>(activities);
+        }
     }
 }

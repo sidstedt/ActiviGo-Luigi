@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ActiviGo.Application\ActiviGo.Application.csproj" />
     <ProjectReference Include="..\ActiviGo.Domain\ActiviGo.Domain.csproj" />
   </ItemGroup>
 
