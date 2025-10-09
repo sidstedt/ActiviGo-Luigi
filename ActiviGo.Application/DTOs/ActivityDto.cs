@@ -103,4 +103,11 @@ namespace ActiviGo.Application.DTOs
 
         public string? StaffName { get; set; }
     }
+
+    //for listing activities by category with minimal info
+    public class ActivityForCategoryDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
+    }
 }
