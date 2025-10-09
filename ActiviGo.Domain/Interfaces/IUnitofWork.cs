@@ -7,7 +7,6 @@
         IBookingRepository Booking { get; }
         ICategoryRepository Category { get; }
         ILocationRepository Location { get; }
-        //IUserRepository User { get; }
         IZoneRepository Zone { get; }
         Task<int> SaveChangesAsync();
     }

@@ -1,7 +1,5 @@
 ﻿using ActiviGo.Domain.Interfaces;
-using ActiviGo.Domain.Models;
 using ActiviGo.Infrastructure.Data;
-using System;
 
 namespace ActiviGo.Infrastructure.Repositories
 {
@@ -13,7 +11,6 @@ namespace ActiviGo.Infrastructure.Repositories
         private IBookingRepository _booking;
         private ICategoryRepository _category;
         private ILocationRepository _location;
-        //private IUserRepository _user;
         private IZoneRepository _zone;
 
         public UnitOfWork(ActiviGoDbContext context)
