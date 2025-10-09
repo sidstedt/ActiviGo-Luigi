@@ -32,14 +32,22 @@ namespace ActiviGo.WebApi
 
 
             builder.Services.AddControllers();
-            
 
+            // -------------------------------
             // Database
+            // -------------------------------
             builder.Services.AddDbContext<ActiviGoDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // -------------------------------
             // Geocoding Service
+            // -------------------------------
             builder.Services.AddHttpClient<IGeocodingService, GeocodingService>();
+
+            // -------------------------------
+            // Email Service
+            // -------------------------------
+            builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
             // -------------------------------
             // Swagger / OpenAPI

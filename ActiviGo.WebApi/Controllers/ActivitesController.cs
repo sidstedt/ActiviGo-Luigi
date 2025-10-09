@@ -20,7 +20,8 @@ namespace ActiviGo.WebApi.Controllers
         // Create
         // ---------------------------
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] ActivityCreateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
