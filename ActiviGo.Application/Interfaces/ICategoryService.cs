@@ -5,6 +5,11 @@ namespace ActiviGo.Application.Interfaces
 {
     public interface ICategoryService : IGenericService<Category, CategoryDto, CreateCategoryDto, CategoryUpdateDto>
     {
-        Task<Category?> GetCategoryWithActivitiesById(int categoryId, CancellationToken ct);
+        Task<IEnumerable<CategoryDto>> GetCategoryWithActivitiesById(int categoryId);
+
+        Task<IEnumerable<CategoryDto>> GetAllCategoriesWithActivities();
+        Task AddActivityToCategory(int categoryId, int activityId);
+        Task RemoveActivityFromCategory(int categoryId, int activityId);
     }
+
 }
