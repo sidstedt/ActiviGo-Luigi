@@ -38,6 +38,9 @@ namespace ActiviGo.WebApi
             builder.Services.AddDbContext<ActiviGoDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // Geocoding Service
+            builder.Services.AddHttpClient<IGeocodingService, GeocodingService>();
+
             // -------------------------------
             // Swagger / OpenAPI
             // -------------------------------
@@ -68,6 +71,11 @@ namespace ActiviGo.WebApi
                     }
                 });
             });
+
+            // -------------------------------
+            // Validator
+            // -------------------------------
+            //builder.Services.AddValidatorsFromAssemblyContaining<>();
 
             // -------------------------------
             // Identity

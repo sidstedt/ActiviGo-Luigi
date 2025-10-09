@@ -67,5 +67,21 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Include(a => a.Bookings)
                 .FirstOrDefaultAsync(a => a.Id == activityOccurrenceId, ct);
         }
+
+        // staff scope
+        public async Task<IEnumerable<ActivityOccurrence>> GetByStaffAsync(Guid staffId, DateTime? from, DateTime? to, CancellationToken ct)
+        {
+            var query = _context.ActivityOccurrences
+                .Include(o => o.Activity)
+                    .ThenInclude(a => a.Category)
+                .Include(o => o.Zone)
+                .Include(o => o.Bookings)
+                .Where(o => o.Activity.StaffId == staffId);
+
+            if (from.HasValue) query = query.Where(o => o.StartTime >= from.Value);
+            if (to.HasValue) query = query.Where(o => o.StartTime <= to.Value);
+
+            return await query.OrderBy(o => o.StartTime).ToListAsync(ct);
+        }
     }
 }

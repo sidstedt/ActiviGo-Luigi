@@ -96,5 +96,30 @@ namespace ActiviGo.Application.Services
             _logger.LogInformation("Bokning avbokad: UserId={UserId} BookingId={BookingId}", userId, bookingId);
             return true;
         }
+
+        // Staff scope
+        public async Task<List<BookingDto>?> GetBookingsForOccurrenceAsync(int occurrenceId, Guid staffId, CancellationToken ct)
+        {
+            _logger.LogDebug("Staff bokningslista: StaffId={StaffId} OccurrenceId={OccurrenceId}", staffId, occurrenceId);
+
+            var occurrence = await _uow.ActivityOccurrence.GetActivityOccurrenceByIdAsync(occurrenceId, ct);
+            if (occurrence == null)
+            {
+                _logger.LogWarning("Occurrence saknas: OccurrenceId={OccurrenceId}", occurrenceId);
+                return null;
+            }
+
+            if (occurrence.Activity.StaffId != staffId)
+            {
+                _logger.LogWarning("Åtkomst nekad för bookings: StaffId={StaffId} OccurrenceId={OccurrenceId}", staffId, occurrenceId);
+                return null;
+            }
+
+            var bookings = occurrence.Bookings != null
+                ? occurrence.Bookings.ToList()
+                : await _uow.Booking.GetBookingsForOccurrenceAsync(occurrenceId, ct);
+
+            return _mapper.Map<List<BookingDto>>(bookings);
+        }
     }
 }
