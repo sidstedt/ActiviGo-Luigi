@@ -22,11 +22,11 @@ namespace ActiviGo.Domain.Models
 
         [Required]
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Category Category { get; set; } = null!;
 
         [Required]
         public int ZoneId { get; set; }
-        public Zone Zone { get; set; }
+        public Zone Zone { get; set; } = null!;
 
         public Guid? StaffId { get; set; }
         public User? Staff { get; set; }
