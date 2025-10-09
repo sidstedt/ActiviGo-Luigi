@@ -31,28 +31,24 @@ namespace ActiviGo.Application.Services
                 $"Added activity with ID {activityId} to category with ID {categoryId}");
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetCategories()
+        public async Task<IEnumerable<CreateCategoryDto>> GetCategories()
         {
-            var categories = await _unitOfWork.Category
-                .GetAllAsync(c => !c.Activities.Any());
+            var categories = await _unitOfWork.Category.GetAllCategoriesAsync();
 
-            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            return _mapper.Map<IEnumerable<CreateCategoryDto>>(categories);
         }
 
-
-        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesWithActivities()
+        public async Task<IEnumerable<CategoryWithActivitiesDto>> GetAllCategoriesWithActivities()
         {
             var categories = await _unitOfWork.Category.GetAllCategoriesWithActivitiesAsync();
 
             if (!categories.Any())
-            {
                 _logger.LogWarning("No categories with activities found.");
-            }
 
-            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            return _mapper.Map<IEnumerable<CategoryWithActivitiesDto>>(categories);
         }
 
-        public async Task<CategoryDto?> GetCategoryWithActivitiesById(int categoryId)
+        public async Task<CategoryWithActivitiesDto?> GetCategoryWithActivitiesById(int categoryId)
         {
             var category = await _unitOfWork.Category.GetCategoryWithActivitiesByIdAsync(categoryId);
 
@@ -62,7 +58,7 @@ namespace ActiviGo.Application.Services
                 return null;
             }
 
-            return _mapper.Map<CategoryDto>(category);
+            return _mapper.Map<CategoryWithActivitiesDto>(category);
         }
 
         public async Task RemoveActivityFromCategory(int categoryId, int activityId)
