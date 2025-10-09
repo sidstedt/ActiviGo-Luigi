@@ -1,10 +1,11 @@
 ﻿using ActiviGo.Domain.Interfaces;
 using ActiviGo.Domain.Models;
 using ActiviGo.Infrastructure.Data;
+using System;
 
 namespace ActiviGo.Infrastructure.Repositories
 {
-    public class UnitOfWork : IUnitofWork
+    public class UnitOfWork : IUnitofWork, IDisposable
     {
         private readonly ActiviGoDbContext _context;
         private IActivityRepository _activity;
@@ -38,6 +39,10 @@ namespace ActiviGo.Infrastructure.Repositories
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }
