@@ -4,7 +4,7 @@ namespace ActiviGo.Domain.Interfaces
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
-        Task<IEnumerable<Category?>>GetCategoryWithActivitiesByIdAsync(int categoryId);
+        Task<Category?>GetCategoryWithActivitiesByIdAsync(int categoryId);
 
         //fetch all categories with activities
         Task<IEnumerable<Category>> GetAllCategoriesWithActivitiesAsync();
@@ -12,7 +12,7 @@ namespace ActiviGo.Domain.Interfaces
         //add activity to a category
         Task AddActivityToCategoryAsync(int categoryId, int activityId);
 
-        Task<IEnumerable<Category>> GetAllCategories();
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
 
         //remove activity from a category
         Task RemoveActivityFromCategoryAsync(int categoryId, int activityId);
