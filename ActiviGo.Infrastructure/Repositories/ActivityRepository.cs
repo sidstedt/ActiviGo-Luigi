@@ -26,5 +26,15 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Include(a => a.Zone)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
+
+        // Staff scope
+        public async Task<IEnumerable<Activity>> GetByStaffAsync(Guid staffId, CancellationToken ct)
+        {
+            return await _context.Activities
+                .Where(a => a.StaffId == staffId)
+                .Include(a => a.Category)
+                .Include(a => a.Zone)
+                .ToListAsync(ct);
+        }
     }
 }
