@@ -1,15 +1,11 @@
-﻿using ActiviGo.Application.DTOs; 
+﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Application.Interfaces;
 using ActiviGo.Domain.Interfaces;
-using ActiviGo.Domain.Models; 
+using ActiviGo.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ActiviGo.WebApi.Controllers
 {
@@ -24,64 +20,46 @@ namespace ActiviGo.WebApi.Controllers
         private readonly IActivityService _activityService;
         private readonly IActivityOccurrenceService _activityOccurrenceService;
 
-        private readonly IUnitofWork _uow;
-
         public AdminController(
             UserManager<User> userManager,
             RoleManager<IdentityRole<Guid>> roleManager,
             IActivityService activityService,
-            IActivityOccurrenceService activityOccurrenceService,
-            IUnitofWork uow)
+            IActivityOccurrenceService activityOccurrenceService
+            )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _activityService = activityService;
             _activityOccurrenceService = activityOccurrenceService;
-            _uow = uow;
         }
 
-        [HttpPost("activities")]
-        public async Task<ActionResult<ActivityResponseDto>> CreateActivity([FromBody] ActivityCreateDto createDto)
-        {
-            var activity = await _activityService.CreateAsync(createDto);
-            return CreatedAtAction(nameof(GetActivity), new { id = activity.Id }, activity);
-        }
-        [HttpDelete("activities/{id}")]
-        public async Task<IActionResult> DeleteActivity(int id)
-        {
-            var result = await _activityService.DeleteAsync(id);
-            if (!result == null)
-            {
-                return NotFound($"Activity med ID {id} hittades inte.");
-            }
-            return NoContent();
-        }
-        [HttpGet("activities/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<ActivityResponseDto>> GetActivity(int id)
-        {
-            var activity = await _activityService.GetByIdAsync(id);
-            if (activity == null) return NotFound();
-            return Ok(activity);
-        }
         [HttpGet("users")]
-        public async Task<ActionResult> GetAllUsers()
+        public async Task<ActionResult> GetAllUsers([FromQuery] string? role = null)
         {
             var users = await _userManager.Users.ToListAsync();
-            return Ok(users);
             var userList = new List<object>();
+
             foreach (var user in users)
             {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                // Om en roll har specificerats, filtrera bort användare som inte har den rollen
+                if (!string.IsNullOrEmpty(role) && !roles.Contains(role, StringComparer.OrdinalIgnoreCase))
+                    continue;
+
                 userList.Add(new
                 {
                     user.Id,
                     user.Email,
-                    Roles = await _userManager.GetRolesAsync(user)
+                    Roles = roles
                 });
             }
+
             return Ok(userList);
         }
-        [HttpPost("users/{userId}/roles({roleName}")]
+
+
+        [HttpPost("users/{userId}/roles/{roleName}")]
         public async Task<IActionResult> AddRoleToUser(Guid userId, string roleName)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -92,7 +70,7 @@ namespace ActiviGo.WebApi.Controllers
 
             if (roleName.Equals("Admin", StringComparison.OrdinalIgnoreCase))
             {
-                return Forbid("Administratörsrollen måste tilldeas manuellt eller via én dedikerad Admin-endpoint.");
+                return Forbid("Administratörsrollen måste tilldelas manuellt eller via en dedikerad Admin-endpoint.");
             }
             if (!await _roleManager.RoleExistsAsync(roleName))
             {

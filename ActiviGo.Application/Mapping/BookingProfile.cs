@@ -2,7 +2,7 @@
 using ActiviGo.Domain.Models;
 using AutoMapper;
 
-namespace ActiviGo.Application.Mappings
+namespace ActiviGo.Application.Mapping
 {
     public class BookingProfile : Profile
     {
