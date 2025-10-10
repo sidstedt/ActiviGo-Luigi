@@ -24,39 +24,42 @@ namespace ActiviGo.Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Category>> GetAllCategoriesWithActivitiesAsync()
         {
             return await _dbSet
                 .Include(c => c.Activities)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Category>> GetCategoryWithActivitiesByIdAsync(int categoryId)
+        public async Task<Category?> GetCategoryWithActivitiesByIdAsync(int categoryId)
         {
             return await _dbSet
                 .Include(c => c.Activities)
-                .Where(c => c.Id == categoryId)
-                .ToListAsync();
-            //.FirstOrDefaultAsync(c => c.Id == categoryId);
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
         }
 
         public async Task RemoveActivityFromCategoryAsync(int categoryId, int activityId)
         {
-            var category = _dbSet
+            var category = await _dbSet
                 .Include(c => c.Activities)
-                .FirstOrDefault(c => c.Id == categoryId);
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
 
-            if (category != null)
-            {
-                var activity = category.Activities
-                    .FirstOrDefault(a => a.Id == activityId);
+            if (category == null) return;
 
-                if(activity != null)
-                {
-                    category.Activities.Remove(activity);
-                    await _context.SaveChangesAsync();
-                }
-            }
+            var activity = category.Activities.FirstOrDefault(a => a.Id == activityId);
+            if (activity == null) return;
+
+            _context.Activities.Remove(activity);
+
+            await _context.SaveChangesAsync();
         }
     }
 }
