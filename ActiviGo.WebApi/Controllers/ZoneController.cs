@@ -1,5 +1,7 @@
 ﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Application.Interfaces;
+using ActiviGo.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActiviGo.WebApi.Controllers
@@ -16,6 +18,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //get api/zone/withRelations
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -26,6 +29,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //get api/zone/location/{locationId}
+        [AllowAnonymous]
         [HttpGet]
         [Route("location/{locationId:int}")]
         [ProducesResponseType(200)]
@@ -37,6 +41,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //get api/zone/{id}/activities
+        [AllowAnonymous]
         [HttpGet]
         [Route("{id:int}/activities")]
         [ProducesResponseType(200)]
@@ -47,7 +52,20 @@ namespace ActiviGo.WebApi.Controllers
             return Ok(zones);
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> CreateZone([FromBody] CreateZoneDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var created = await _zone.CreateAsync(dto);
+            return Ok(created);
+
+        }
+
         //add activity to zone
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("{zoneId:int}/activities/{activityId:int}")]
         [ProducesResponseType(200)]
@@ -59,6 +77,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //delete api/zone/{zoneId}/activities/{activityId}
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{zoneId:int}/activities/{activityId:int}")]
         [ProducesResponseType(200)]
@@ -69,5 +88,30 @@ namespace ActiviGo.WebApi.Controllers
             return Ok("Removed Successfully");
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("{id:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeleteZone(int id)
+        {
+            await _zone.DeleteAsync(id);
+            return Ok($"Deleted Successfully fro id {id}");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("{id:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> UpdateZone(int id, [FromBody] ZoneUpdateDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var updated = await _zone.UpdateAsync(id, dto);
+            if (updated == null) return NotFound(new { Message = $"Activity with Id {id} not found." });
+
+            return Ok(updated);
+        }
     }
 }
