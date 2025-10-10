@@ -1,15 +1,11 @@
-﻿using ActiviGo.Application.DTOs; 
+﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Application.Interfaces;
 using ActiviGo.Domain.Interfaces;
-using ActiviGo.Domain.Models; 
+using ActiviGo.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ActiviGo.WebApi.Controllers
 {
@@ -50,7 +46,7 @@ namespace ActiviGo.WebApi.Controllers
         public async Task<IActionResult> DeleteActivity(int id)
         {
             var result = await _activityService.DeleteAsync(id);
-            if (!result == null)
+            if (!result)
             {
                 return NotFound($"Activity med ID {id} hittades inte.");
             }
@@ -68,7 +64,6 @@ namespace ActiviGo.WebApi.Controllers
         public async Task<ActionResult> GetAllUsers()
         {
             var users = await _userManager.Users.ToListAsync();
-            return Ok(users);
             var userList = new List<object>();
             foreach (var user in users)
             {
@@ -81,7 +76,7 @@ namespace ActiviGo.WebApi.Controllers
             }
             return Ok(userList);
         }
-        [HttpPost("users/{userId}/roles({roleName}")]
+        [HttpPost("users/{userId}/roles/{roleName}")]
         public async Task<IActionResult> AddRoleToUser(Guid userId, string roleName)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -92,7 +87,7 @@ namespace ActiviGo.WebApi.Controllers
 
             if (roleName.Equals("Admin", StringComparison.OrdinalIgnoreCase))
             {
-                return Forbid("Administratörsrollen måste tilldeas manuellt eller via én dedikerad Admin-endpoint.");
+                return Forbid("Administratörsrollen måste tilldelas manuellt eller via én dedikerad Admin-endpoint.");
             }
             if (!await _roleManager.RoleExistsAsync(roleName))
             {
@@ -113,5 +108,6 @@ namespace ActiviGo.WebApi.Controllers
 
             return CreatedAtAction("GetZone", new { id = newZone.Id }, newZone);
         }
+        //Get all Admin/Staff/User.
     }
 }
