@@ -1,5 +1,6 @@
 ﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActiviGo.WebApi.Controllers
@@ -15,6 +16,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //get api/category/withActivities
+        [AllowAnonymous]
         [HttpGet]
         [Route("withActivities")]
         [ProducesResponseType(200)]
@@ -26,6 +28,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //get api/category
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -36,6 +39,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //get api/category/{id}/activities
+        [AllowAnonymous]
         [HttpGet]
         [Route("{id:int}/activities")]
         [ProducesResponseType(200)]
@@ -47,6 +51,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //add activity to category
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("{categoryId:int}/activities/{activityId:int}")]
         [ProducesResponseType(200)]
@@ -58,6 +63,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         //remove activity from category
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{categoryId:int}/activities/{activityId:int}")]
         [ProducesResponseType(200)]
@@ -68,5 +74,27 @@ namespace ActiviGo.WebApi.Controllers
             return Ok("Removed Successfully");
         }
 
+        //[Authorize(Roles = "Admin")]
+        //[HttpPut]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(400)]
+        //public async Task<IActionResult> CreateCategory( [FromBody] CreateCategoryDto dto)
+        //{
+        //    if (!ModelState.IsValid) return BadRequest(ModelState);
+        //    var created = await _category.CreateAsync(dto);
+        //    return Ok(created);
+        //}
+
+        //[Authorize(Roles = "Admin")]
+        //[HttpPut]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(400)]
+        //public async Task<IActionResult> UpdateCategory(int id,[FromBody] CategoryUpdateDto dto)
+        //{
+        //    if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        //    var updated = await _category.UpdateAsync(id, dto);
+        //    return Ok(updated);
+        //}
     }
 }

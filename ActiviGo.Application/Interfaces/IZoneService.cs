@@ -11,5 +11,6 @@ namespace ActiviGo.Application.Interfaces
         Task<IEnumerable<ZoneReadDto>> GetAllZonesWithRelations();
         Task AddActivityToZone(int zoneId, int activityId);
         Task RemoveActivityFromZone(int zoneId, int activityId);
+        Task<ZoneReadDto> CreateAsync(CreateZoneDto dto);
     }
 }
