@@ -14,13 +14,12 @@ namespace ActiviGo.Application.Mapping
                 .ForMember(dest => dest.ZoneId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ZoneName, opt => opt.MapFrom(src => src.Name))
                 .ForMember(z => z.LocationName, opt => opt.MapFrom(scr => scr.Location.Name))
-            .ForMember(z => z.ActivityName, opt => opt.MapFrom(src => src.Activities.Select(a => a.Name).FirstOrDefault()))
- .ForMember(dest => dest.LocationName, opt =>
-        opt.MapFrom(src => src.Location.Name))
-    .ForMember(dest => dest.EnvironmentMessage, opt =>
-        opt.MapFrom(src => src.IsOutdoor
-            ? "Denna zon ligger utomhus"
-            : "Denna zon ligger inomhus"));
+                 .ForMember(dest => dest.LocationName, opt =>
+                         opt.MapFrom(src => src.Location.Name))
+                 .ForMember(dest => dest.EnvironmentMessage, opt =>
+                         opt.MapFrom(src => src.IsOutdoor
+                        ? "Denna zon ligger utomhus"
+                        : "Denna zon ligger inomhus"));
 
 
 
@@ -36,7 +35,10 @@ namespace ActiviGo.Application.Mapping
                     .ForMember(z => z.ActivityName, opt => opt.MapFrom(src => src.Activities.Select(a => a.Name).FirstOrDefault()));
 
 
-
+            CreateMap<CreateZoneDto, Zone>()
+                            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                            .ForMember(dest => dest.IsOutdoor, opt => opt.MapFrom(src => src.IsOutdoor))
+                            .ForMember(dest => dest.LocationId, opt => opt.MapFrom(src => src.LocationId));
 
 
             CreateMap<ZoneUpdateDto, Zone>()
