@@ -42,6 +42,7 @@ namespace ActiviGo.WebApi.Controllers
             var activity = await _activityService.CreateAsync(createDto);
             return CreatedAtAction(nameof(GetActivity), new { id = activity.Id }, activity);
         }
+
         [HttpDelete("activities/{id}")]
         public async Task<IActionResult> DeleteActivity(int id)
         {
@@ -52,6 +53,7 @@ namespace ActiviGo.WebApi.Controllers
             }
             return NoContent();
         }
+
         [HttpGet("activities/{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<ActivityResponseDto>> GetActivity(int id)
@@ -60,22 +62,33 @@ namespace ActiviGo.WebApi.Controllers
             if (activity == null) return NotFound();
             return Ok(activity);
         }
+
         [HttpGet("users")]
-        public async Task<ActionResult> GetAllUsers()
+        public async Task<ActionResult> GetAllUsers([FromQuery] string? role = null)
         {
             var users = await _userManager.Users.ToListAsync();
             var userList = new List<object>();
+
             foreach (var user in users)
             {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                // Om en roll har specificerats, filtrera bort användare som inte har den rollen
+                if (!string.IsNullOrEmpty(role) && !roles.Contains(role, StringComparer.OrdinalIgnoreCase))
+                    continue;
+
                 userList.Add(new
                 {
                     user.Id,
                     user.Email,
-                    Roles = await _userManager.GetRolesAsync(user)
+                    Roles = roles
                 });
             }
+
             return Ok(userList);
         }
+
+
         [HttpPost("users/{userId}/roles/{roleName}")]
         public async Task<IActionResult> AddRoleToUser(Guid userId, string roleName)
         {
@@ -100,6 +113,117 @@ namespace ActiviGo.WebApi.Controllers
             }
             return BadRequest(result.Errors);
         }
+
+        [HttpPut("users/{userId}/roles")]
+        public async Task<ActionResult> UpdateUserRoles(string userId, [FromBody] List<string> roles)
+        {
+            // 1Hitta användaren
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound($"Ingen användare med ID {userId} hittades.");
+
+            // Hantera säkerhetsstämpel (om nödvändigt)
+            if (string.IsNullOrEmpty(user.SecurityStamp))
+            {
+                user.SecurityStamp = Guid.NewGuid().ToString();
+                await _userManager.UpdateAsync(user);
+            }
+
+            // Hämta nuvarande roller
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            // Ta bort roller som inte längre ska finnas
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            if (!removeResult.Succeeded)
+                return BadRequest("Misslyckades med att ta bort befintliga roller.");
+
+            // Lägg till de nya rollerna
+            var addResult = await _userManager.AddToRolesAsync(user, roles);
+            if (!addResult.Succeeded)
+                return BadRequest("Misslyckades med att lägga till nya roller.");
+
+            // Returnera uppdaterad information
+            var updatedRoles = await _userManager.GetRolesAsync(user);
+
+            return Ok(new
+            {
+                user.Id,
+                user.Email,
+                Roles = updatedRoles
+            });
+        }
+
+        // PUT: api/users/{userId}
+        [HttpPut("{userId:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateUser(Guid userId, [FromBody] UpdateUserRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+                return NotFound(new { message = "User not found" });
+
+            // Uppdatera SecurityStamp om saknas
+            if (string.IsNullOrEmpty(user.SecurityStamp))
+            {
+                user.SecurityStamp = Guid.NewGuid().ToString();
+                await _userManager.UpdateAsync(user);
+            }
+
+            // Uppdatera fält
+            user.FirstName = request.FirstName ?? user.FirstName;
+            user.LastName = request.LastName ?? user.LastName;
+            user.Email = request.Email ?? user.Email;
+            user.UserName = request.Email ?? user.UserName;
+            user.IsActive = request.IsActive ?? user.IsActive;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+                return BadRequest(new { message = "Failed to update user", errors = updateResult.Errors });
+
+            // Om roller ska uppdateras
+            if (request.Roles != null && request.Roles.Any())
+            {
+                var currentRoles = await _userManager.GetRolesAsync(user);
+                var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                if (!removeResult.Succeeded)
+                    return BadRequest(new { message = "Failed to remove old roles" });
+
+                var addResult = await _userManager.AddToRolesAsync(user, request.Roles);
+                if (!addResult.Succeeded)
+                    return BadRequest(new { message = "Failed to assign new roles" });
+            }
+
+            var updatedRoles = await _userManager.GetRolesAsync(user);
+
+            return Ok(new
+            {
+                user.Id,
+                user.Email,
+                user.FirstName,
+                user.LastName,
+                user.IsActive,
+                Roles = updatedRoles,
+                message = "User updated successfully"
+            });
+        }
+
+        // DELETE: api/users/{userId}
+        [HttpDelete("{userId:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+                return NotFound(new { message = "User not found" });
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+                return BadRequest(new { message = "Failed to delete user", errors = result.Errors });
+
+            return Ok(new { message = "User deleted successfully" });
+        }
+
         [HttpPost("zones")]
         public async Task<IActionResult> CreateNewZone([FromBody] Zone newZone)
         {
@@ -108,6 +232,5 @@ namespace ActiviGo.WebApi.Controllers
 
             return CreatedAtAction("GetZone", new { id = newZone.Id }, newZone);
         }
-        //Get all Admin/Staff/User.
     }
 }
