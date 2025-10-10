@@ -122,6 +122,13 @@ namespace ActiviGo.WebApi.Controllers
             if (user == null)
                 return NotFound($"Ingen användare med ID {userId} hittades.");
 
+            // Hantera säkerhetsstämpel (om nödvändigt)
+            if (string.IsNullOrEmpty(user.SecurityStamp))
+            {
+                user.SecurityStamp = Guid.NewGuid().ToString();
+                await _userManager.UpdateAsync(user);
+            }
+
             // Hämta nuvarande roller
             var currentRoles = await _userManager.GetRolesAsync(user);
 
