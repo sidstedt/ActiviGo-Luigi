@@ -1,6 +1,6 @@
 ﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Application.Interfaces;
-using ActiviGo.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActiviGo.WebApi.Controllers
