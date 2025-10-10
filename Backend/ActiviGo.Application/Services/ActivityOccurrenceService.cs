@@ -1,0 +1,73 @@
+﻿using ActiviGo.Application.DTOs;
+using ActiviGo.Application.Interfaces;
+using ActiviGo.Domain.Interfaces;
+using AutoMapper;
+using Microsoft.Extensions.Logging;
+using ActiviGo.Domain.Models;
+
+namespace ActiviGo.Application.Services
+{
+    public class ActivityOccurrenceService
+        : GenericService<ActivityOccurrence, ActivityOccurrenceResponseDto, ActivityOccurrenceCreateDto, ActivityOccurrenceUpdateDto>,
+          IActivityOccurrenceService
+    {
+        private readonly IUnitofWork _uow;
+        private readonly IActivityOccurrenceRepository _occurrenceRepository;
+        private readonly ILogger<ActivityOccurrenceService> _logger;
+
+        public ActivityOccurrenceService(
+            IActivityOccurrenceRepository occurrenceRepository,
+            IUnitofWork uow,
+            IMapper mapper,
+            ILogger<ActivityOccurrenceService> logger)
+            : base(uow.ActivityOccurrence, mapper)
+        {
+            _occurrenceRepository = occurrenceRepository;
+            _uow = uow;
+            _logger = logger;
+        }
+
+        public override async Task<ActivityOccurrenceResponseDto> CreateAsync(ActivityOccurrenceCreateDto dto)
+        {
+            var activity = await _uow.Activity.GetByIdAsync(dto.ActivityId);
+            if (activity == null)
+            {
+                _logger.LogWarning("Försök att skapa ActivityOccurrence för icke-existerande ActivityId: {ActivityId}", dto.ActivityId);
+                throw new KeyNotFoundException($"Activity med ID {dto.ActivityId} hittades inte.");
+            }
+
+            int durationMinutes = dto.DurationMinutes ?? activity.DurationMinutes;
+            int zoneId = dto.ZoneId ?? activity.ZoneId;
+            var endTime = dto.StartTime.AddMinutes(durationMinutes);
+
+            bool isZoneAvailable = await _occurrenceRepository.CheckZoneAvailabilityAsync(zoneId, dto.StartTime, endTime);
+            if (!isZoneAvailable)
+            {
+                throw new InvalidOperationException($"Zonen (ID: {zoneId}) är redan bokad under den begärda tidsperioden.");
+            }
+
+            var occurrence = _mapper.Map<ActivityOccurrence>(dto);
+            occurrence.DurationMinutes = durationMinutes;
+            occurrence.EndTime = endTime;
+            occurrence.ZoneId = zoneId;
+
+            await _occurrenceRepository.AddAsync(occurrence);
+            var fullOccurrence = await _occurrenceRepository.GetByIdAsync(occurrence.Id);
+
+            return _mapper.Map<ActivityOccurrenceResponseDto>(fullOccurrence);
+        }
+
+        public async Task<ICollection<ActivityOccurrenceResponseDto>> GetAvailableOccurrencesByActivityIdAsync(int activityId)
+        {
+            var occurrences = await _occurrenceRepository.GetOccurrencesByActivityIdAsync(activityId);
+            return _mapper.Map<ICollection<ActivityOccurrenceResponseDto>>(occurrences);
+        }
+
+        // Staff scope
+        public async Task<IEnumerable<ActivityOccurrenceResponseDto>> GetByStaffAsync(Guid staffId, DateTime? from, DateTime? to, CancellationToken ct)
+        {
+            var list = await _occurrenceRepository.GetByStaffAsync(staffId, from, to, ct);
+            return _mapper.Map<IEnumerable<ActivityOccurrenceResponseDto>>(list);
+        }
+    }
+}
