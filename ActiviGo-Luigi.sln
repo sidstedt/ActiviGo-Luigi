@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiviGo.WebApi", "ActiviGo.WebApi\ActiviGo.WebApi.csproj", "{4CFFBE11-6620-4432-A33E-F3035596B471}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiviGo.WebApi", "Backend\ActiviGo.WebApi\ActiviGo.WebApi.csproj", "{4CFFBE11-6620-4432-A33E-F3035596B471}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiviGo.Infrastructure", "ActiviGo.Infrastructure\ActiviGo.Infrastructure.csproj", "{10B5F466-BCBA-4628-B70A-05C20B70D08E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiviGo.Infrastructure", "Backend\ActiviGo.Infrastructure\ActiviGo.Infrastructure.csproj", "{10B5F466-BCBA-4628-B70A-05C20B70D08E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiviGo.Domain", "ActiviGo.Domain\ActiviGo.Domain.csproj", "{A4477CB5-E23F-481C-96FA-28C2B4B061DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiviGo.Domain", "Backend\ActiviGo.Domain\ActiviGo.Domain.csproj", "{A4477CB5-E23F-481C-96FA-28C2B4B061DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiviGo.Application", "ActiviGo.Application\ActiviGo.Application.csproj", "{CE658271-57C1-4437-AB8E-580B283E2061}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiviGo.Application", "Backend\ActiviGo.Application\ActiviGo.Application.csproj", "{CE658271-57C1-4437-AB8E-580B283E2061}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
