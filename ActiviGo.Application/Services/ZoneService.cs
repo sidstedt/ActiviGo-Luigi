@@ -62,8 +62,8 @@ namespace ActiviGo.Application.Services
         public async Task<IEnumerable<ZoneDto>> GetZonesByLocationId(int locationId)
         {
             var zone = await _unitofWork.Zone.GetByIdAsync(locationId);
-            if (zone == null) 
-            { 
+            if (zone == null)
+            {
                 _logger.LogWarning($"Zone with ID {locationId} not found.");
                 throw new Exception($"Zone with ID {locationId} not found.");
             }
@@ -76,5 +76,16 @@ namespace ActiviGo.Application.Services
             var zones = await _unitofWork.Zone.GetAllZonesWithActivitiesAndLocationAsync();
             return _mapper.Map<IEnumerable<ZoneReadDto>>(zones);
         }
+
+        public async Task<ZoneReadDto> CreateAsync(CreateZoneDto dto)
+        {
+            var createdZone = _mapper.Map<Zone>(dto);
+
+            await _unitofWork.Zone.AddAsync(createdZone);
+            await _unitofWork.SaveChangesAsync();
+
+            return _mapper.Map<ZoneReadDto>(createdZone);
+        }
+
     }
 }
