@@ -86,7 +86,6 @@ public class BookingService : IBookingService
                 var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "BookingConfirmationTemplate.html");
                 var body = await File.ReadAllTextAsync(templatePath);
 
-                // Ersätt placeholders med rätt värden
                 body = body.Replace("{{FirstName}}", user.UserName ?? "Kund")
                            .Replace("{{ActivityName}}", activity.Name)
                            .Replace("{{Date}}", activityOccurrence.StartTime.ToString("yyyy-MM-dd"))
