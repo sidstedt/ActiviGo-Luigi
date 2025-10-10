@@ -105,13 +105,6 @@ namespace ActiviGo.WebApi.Controllers
             }
             return BadRequest(result.Errors);
         }
-        [HttpPost("zones")]
-        public async Task<IActionResult> CreateNewZone([FromBody] Zone newZone)
-        {
-            await _uow.Zone.AddAsync(newZone);
-            await _uow.SaveChangesAsync();
-
-            return CreatedAtAction("GetZone", new { id = newZone.Id }, newZone);
-        }
     }
+
 }
