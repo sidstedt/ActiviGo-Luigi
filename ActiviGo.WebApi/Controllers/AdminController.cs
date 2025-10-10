@@ -42,6 +42,7 @@ namespace ActiviGo.WebApi.Controllers
             var activity = await _activityService.CreateAsync(createDto);
             return CreatedAtAction(nameof(GetActivity), new { id = activity.Id }, activity);
         }
+
         [HttpDelete("activities/{id}")]
         public async Task<IActionResult> DeleteActivity(int id)
         {
@@ -52,6 +53,7 @@ namespace ActiviGo.WebApi.Controllers
             }
             return NoContent();
         }
+
         [HttpGet("activities/{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<ActivityResponseDto>> GetActivity(int id)
@@ -60,22 +62,33 @@ namespace ActiviGo.WebApi.Controllers
             if (activity == null) return NotFound();
             return Ok(activity);
         }
+
         [HttpGet("users")]
-        public async Task<ActionResult> GetAllUsers()
+        public async Task<ActionResult> GetAllUsers([FromQuery] string? role = null)
         {
             var users = await _userManager.Users.ToListAsync();
             var userList = new List<object>();
+
             foreach (var user in users)
             {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                // Om en roll har specificerats, filtrera bort användare som inte har den rollen
+                if (!string.IsNullOrEmpty(role) && !roles.Contains(role, StringComparer.OrdinalIgnoreCase))
+                    continue;
+
                 userList.Add(new
                 {
                     user.Id,
                     user.Email,
-                    Roles = await _userManager.GetRolesAsync(user)
+                    Roles = roles
                 });
             }
+
             return Ok(userList);
         }
+
+
         [HttpPost("users/{userId}/roles/{roleName}")]
         public async Task<IActionResult> AddRoleToUser(Guid userId, string roleName)
         {
@@ -100,6 +113,39 @@ namespace ActiviGo.WebApi.Controllers
             }
             return BadRequest(result.Errors);
         }
+
+        [HttpPut("users/{userId}/roles")]
+        public async Task<ActionResult> UpdateUserRoles(string userId, [FromBody] List<string> roles)
+        {
+            // 1Hitta användaren
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound($"Ingen användare med ID {userId} hittades.");
+
+            // Hämta nuvarande roller
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            // Ta bort roller som inte längre ska finnas
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            if (!removeResult.Succeeded)
+                return BadRequest("Misslyckades med att ta bort befintliga roller.");
+
+            // Lägg till de nya rollerna
+            var addResult = await _userManager.AddToRolesAsync(user, roles);
+            if (!addResult.Succeeded)
+                return BadRequest("Misslyckades med att lägga till nya roller.");
+
+            // Returnera uppdaterad information
+            var updatedRoles = await _userManager.GetRolesAsync(user);
+
+            return Ok(new
+            {
+                user.Id,
+                user.Email,
+                Roles = updatedRoles
+            });
+        }
+
         [HttpPost("zones")]
         public async Task<IActionResult> CreateNewZone([FromBody] Zone newZone)
         {
@@ -108,6 +154,5 @@ namespace ActiviGo.WebApi.Controllers
 
             return CreatedAtAction("GetZone", new { id = newZone.Id }, newZone);
         }
-        //Get all Admin/Staff/User.
     }
 }
