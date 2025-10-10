@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /ActiviGo.WebApi/appsettings.json
 /ActiviGo.WebApi/appsettings.Development.json
+/Backend/ActiviGo.WebApi/appsettings.Development.json
