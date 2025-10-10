@@ -52,16 +52,14 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Include(c => c.Activities)
                 .FirstOrDefaultAsync(c => c.Id == categoryId);
 
-            if (category != null)
-            {
-                var activity = category.Activities.FirstOrDefault(a => a.Id == activityId);
+            if (category == null) return;
 
-                if (activity != null)
-                {
-                    category.Activities.Remove(activity);
-                    await _context.SaveChangesAsync();
-                }
-            }
+            var activity = category.Activities.FirstOrDefault(a => a.Id == activityId);
+            if (activity == null) return;
+
+            _context.Activities.Remove(activity);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

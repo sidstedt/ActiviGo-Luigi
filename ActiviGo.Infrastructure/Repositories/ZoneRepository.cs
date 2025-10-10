@@ -47,29 +47,26 @@ namespace ActiviGo.Infrastructure.Repositories
         {
             return await _dbSet
                 .Include(z => z.Activities)
-                .Where(z => z.Id == id) //i guess this i is the right one (theres two id's)
+                .Where(z => z.Id == id) 
                 .ToListAsync();
         }
 
         public async Task RemoveActivityFromZoneAsync(int zoneId, int activityId)
         {
-            var zone = _dbSet
+            var zone = await _dbSet
                 .Include(z => z.Activities)
                 .Where(z => z.Id == zoneId)
                 .FirstOrDefaultAsync();
 
-            if(zone != null)
-            {
-                var activity = zone.Result.Activities
-                    .FirstOrDefault(a => a.Id == activityId);
+            if (zone == null) return;
 
-                if(activity != null)
-                {
-                    zone.Result.Activities.Remove(activity);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            
+            var activity = zone.Activities.FirstOrDefault(a => a.Id == activityId);
+            if (activity == null) return;
+
+            _context.Activities.Remove(activity);
+
+            await _context.SaveChangesAsync();
+
         }
     }
 }
