@@ -20,47 +20,17 @@ namespace ActiviGo.WebApi.Controllers
         private readonly IActivityService _activityService;
         private readonly IActivityOccurrenceService _activityOccurrenceService;
 
-        private readonly IUnitofWork _uow;
-
         public AdminController(
             UserManager<User> userManager,
             RoleManager<IdentityRole<Guid>> roleManager,
             IActivityService activityService,
-            IActivityOccurrenceService activityOccurrenceService,
-            IUnitofWork uow)
+            IActivityOccurrenceService activityOccurrenceService
+            )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _activityService = activityService;
             _activityOccurrenceService = activityOccurrenceService;
-            _uow = uow;
-        }
-
-        [HttpPost("activities")]
-        public async Task<ActionResult<ActivityResponseDto>> CreateActivity([FromBody] ActivityCreateDto createDto)
-        {
-            var activity = await _activityService.CreateAsync(createDto);
-            return CreatedAtAction(nameof(GetActivity), new { id = activity.Id }, activity);
-        }
-
-        [HttpDelete("activities/{id}")]
-        public async Task<IActionResult> DeleteActivity(int id)
-        {
-            var result = await _activityService.DeleteAsync(id);
-            if (!result)
-            {
-                return NotFound($"Activity med ID {id} hittades inte.");
-            }
-            return NoContent();
-        }
-
-        [HttpGet("activities/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<ActivityResponseDto>> GetActivity(int id)
-        {
-            var activity = await _activityService.GetByIdAsync(id);
-            if (activity == null) return NotFound();
-            return Ok(activity);
         }
 
         [HttpGet("users")]
@@ -100,7 +70,7 @@ namespace ActiviGo.WebApi.Controllers
 
             if (roleName.Equals("Admin", StringComparison.OrdinalIgnoreCase))
             {
-                return Forbid("Administratörsrollen måste tilldelas manuellt eller via én dedikerad Admin-endpoint.");
+                return Forbid("Administratörsrollen måste tilldelas manuellt eller via en dedikerad Admin-endpoint.");
             }
             if (!await _roleManager.RoleExistsAsync(roleName))
             {
@@ -222,15 +192,6 @@ namespace ActiviGo.WebApi.Controllers
                 return BadRequest(new { message = "Failed to delete user", errors = result.Errors });
 
             return Ok(new { message = "User deleted successfully" });
-        }
-
-        [HttpPost("zones")]
-        public async Task<IActionResult> CreateNewZone([FromBody] Zone newZone)
-        {
-            await _uow.Zone.AddAsync(newZone);
-            await _uow.SaveChangesAsync();
-
-            return CreatedAtAction("GetZone", new { id = newZone.Id }, newZone);
         }
     }
 }

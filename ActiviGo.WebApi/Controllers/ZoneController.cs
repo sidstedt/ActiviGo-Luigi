@@ -1,5 +1,6 @@
 ﻿using ActiviGo.Application.DTOs;
 using ActiviGo.Application.Interfaces;
+using ActiviGo.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActiviGo.WebApi.Controllers
@@ -68,6 +69,6 @@ namespace ActiviGo.WebApi.Controllers
             await _zone.RemoveActivityFromZone(zoneId, activityId);
             return Ok("Removed Successfully");
         }
-
+        
     }
 }
