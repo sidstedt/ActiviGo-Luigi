@@ -7,9 +7,16 @@
     <UserSecretsId>0062ebc7-721e-4a75-834d-0f52c62ba1e5</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Templates\PasswordResetTemplate.html" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<Content Include="Templates\BookingConfirmationTemplate.html">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Templates\PasswordResetTemplate.html">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 

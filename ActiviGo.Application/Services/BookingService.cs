@@ -86,21 +86,24 @@ public class BookingService : IBookingService
                 var templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", "BookingConfirmationTemplate.html");
                 var body = await File.ReadAllTextAsync(templatePath);
 
-                body = body.Replace("{UserName}", user.UserName ?? "Kund")
-                           .Replace("{ActivityName}", activity.Name)
-                           .Replace("{Date}", activityOccurrence.StartTime.ToString("yyyy-MM-dd"))
-                           .Replace("{StartTime}", activityOccurrence.StartTime.ToString("HH:mm"))
-                           .Replace("{EndTime}", activityOccurrence.EndTime.ToString("HH:mm"))
-                           .Replace("{Location}", activityOccurrence.Zone?.Name ?? "Okänd plats")
-                           .Replace("{Status}", booking.Status.ToString());
+                // Ersätt placeholders med rätt värden
+                body = body.Replace("{{FirstName}}", user.UserName ?? "Kund")
+                           .Replace("{{ActivityName}}", activity.Name)
+                           .Replace("{{Date}}", activityOccurrence.StartTime.ToString("yyyy-MM-dd"))
+                           .Replace("{{StartTime}}", activityOccurrence.StartTime.ToString("HH:mm"))
+                           .Replace("{{EndTime}}", activityOccurrence.EndTime.ToString("HH:mm"))
+                           .Replace("{{Location}}", activityOccurrence.Zone?.Name ?? "Okänd plats")
+                           .Replace("{{Status}}", booking.Status.ToString())
+                           .Replace("{{Year}}", DateTime.Now.Year.ToString());
 
                 await _emailService.SendEmailAsync(user.Email, "Bekräftelse på din bokning – ActiviGo", body);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Misslyckades att skicka bekräftelsemail för bokning {BookingId}", created.Id);
+            _logger.LogError(ex, "Fel vid försök att skicka bokningsbekräftelse till användare med ID {UserId}.", userId);
         }
+
 
         return _mapper.Map<CreatedBookingDto>(created);
     }
