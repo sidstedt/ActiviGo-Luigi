@@ -4,13 +4,10 @@ namespace ActiviGo.Application.DTOs
 {
     public class ActivityOccurrenceCreateDto
     {
-        [Required]
         public DateTime StartTime { get; set; }
 
-        [Range(1, 120)]
         public int? DurationMinutes { get; set; }
 
-        [Required]
         public int ActivityId { get; set; }
 
         public int? ZoneId { get; set; }
@@ -18,23 +15,16 @@ namespace ActiviGo.Application.DTOs
 
     public class ActivityOccurrenceUpdateDto
     {
-        [Required]
         public DateTime StartTime { get; set; }
 
-        [Required]
         public DateTime EndTime { get; set; }
 
-        [Required]
-        [Range(1, 120)]
         public int DurationMinutes { get; set; }
 
-        [Required]
         public int ActivityId { get; set; }
 
-        [Required]
         public int ZoneId { get; set; }
 
-        public bool IsCancelled { get; set; } = false;
         public bool IsActive { get; set; } = true;
     }
 

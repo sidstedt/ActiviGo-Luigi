@@ -1,11 +1,14 @@
 using ActiviGo.Application.Interfaces;
 using ActiviGo.Application.Mapping;
 using ActiviGo.Application.Services;
+using ActiviGo.Application.Validation;
 using ActiviGo.Domain.Interfaces;
 using ActiviGo.Domain.Models;
 using ActiviGo.Infrastructure.Data;
 using ActiviGo.Infrastructure.Repositories;
 using ActiviGo.WebApi.Auth;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,16 +25,14 @@ namespace ActiviGo.WebApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
+            // -------------------------------
+            // Controllers + JSON
+            // -------------------------------
             builder.Services.AddControllers()
                 .AddJsonOptions(o =>
                 {
                     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-
-
-            builder.Services.AddControllers();
 
             // -------------------------------
             // Database
@@ -83,7 +84,8 @@ namespace ActiviGo.WebApi
             // -------------------------------
             // Validator
             // -------------------------------
-            //builder.Services.AddValidatorsFromAssemblyContaining<>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ActivityCreateDtoValidator>();
+            builder.Services.AddFluentValidationAutoValidation();
 
             // -------------------------------
             // Identity
