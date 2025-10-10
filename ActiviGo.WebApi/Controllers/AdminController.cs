@@ -109,5 +109,6 @@ namespace ActiviGo.WebApi.Controllers
             return CreatedAtAction("GetZone", new { id = newZone.Id }, newZone);
         }
         //Get all Admin/Staff/User.
+        //Edit role 
     }
 }
