@@ -162,14 +162,14 @@ namespace ActiviGo.WebApi.Controllers
             if (user == null)
                 return NotFound(new { message = "User not found" });
 
-            // 🧩 Uppdatera SecurityStamp om saknas
+            // Uppdatera SecurityStamp om saknas
             if (string.IsNullOrEmpty(user.SecurityStamp))
             {
                 user.SecurityStamp = Guid.NewGuid().ToString();
                 await _userManager.UpdateAsync(user);
             }
 
-            // 🧾 Uppdatera fält
+            // Uppdatera fält
             user.FirstName = request.FirstName ?? user.FirstName;
             user.LastName = request.LastName ?? user.LastName;
             user.Email = request.Email ?? user.Email;
@@ -181,7 +181,7 @@ namespace ActiviGo.WebApi.Controllers
             if (!updateResult.Succeeded)
                 return BadRequest(new { message = "Failed to update user", errors = updateResult.Errors });
 
-            // ⚙️ Om roller ska uppdateras
+            // Om roller ska uppdateras
             if (request.Roles != null && request.Roles.Any())
             {
                 var currentRoles = await _userManager.GetRolesAsync(user);
