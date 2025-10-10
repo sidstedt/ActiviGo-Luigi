@@ -68,5 +68,14 @@ namespace ActiviGo.Infrastructure.Repositories
             await _context.SaveChangesAsync();
 
         }
+
+        public async Task<Zone?> RemoveZoneAsync(int id)
+        {
+            var zone = await _dbSet.FindAsync(id);
+            if (zone == null) return null;
+            _dbSet.Remove(zone);
+            await _context.SaveChangesAsync();
+            return zone;
+        }
     }
 }
