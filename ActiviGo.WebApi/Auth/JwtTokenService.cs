@@ -33,11 +33,12 @@ namespace ActiviGo.WebApi.Auth
             var expireMinutes = double.TryParse(jwt["ExpireMinutes"], out var exp) ? exp : 60;
 
             var claims = new List<Claim>
-    {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), // Guid till string
-        new Claim(ClaimTypes.Email, user.Email ?? ""),
-        new Claim(ClaimTypes.Name, user.UserName ?? user.Email ?? "")
-    };
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), // subject
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // for ASP.NET NameIdentifier
+                new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+                new Claim(ClaimTypes.Name, user.UserName ?? user.Email ?? string.Empty)
+            };
 
             if (roles?.Any() == true)
             {
