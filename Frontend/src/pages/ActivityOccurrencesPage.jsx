@@ -18,21 +18,28 @@ export default function ActivityOccurrencesPage() {
       setLoading(true);
       setError(null);
       const occurrencesData = await fetchActivityOccurrences();
-      const activeOccurrences = occurrencesData.filter(
-        occ => occ.isActive && !occ.isCancelled
-      );
+      
+      const now = new Date();
+      const activeOccurrences = occurrencesData
+        .filter(occ => occ.isActive && !occ.isCancelled && new Date(occ.startTime) > now)
+        .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
 
       setOccurrences(activeOccurrences);
+      
       const activityIds = [...new Set(activeOccurrences.map(occ => occ.activityId))];
       const activitiesMap = {};
-      await activityIds.map(async (id) => {
+      
+      await Promise.all(
+        activityIds.map(async (id) => {
           try {
             const activity = await fetchActivityById(id);
             activitiesMap[id] = activity;
           } catch (err) {
+
           }
         })
-        
+      );
+
       setActivities(activitiesMap);
     } catch (err) {
       setError(err.message || "Kunde inte hämta aktivitetshändelser");
