@@ -1,0 +1,63 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.overlay:not(.show) {
+  opacity: 0;
+}
+
+.overlay.show {
+  opacity: 1;
+}
+
+.modal {
+  background-color: #ffffff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  min-width: 320px;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.modal:not(.show) {
+  transform: scale(0.8);
+}
+
+.modal.show {
+  transform: scale(1);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 300;
+  color: #2d3748;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.close-button {
+  margin-top: 20px;
+  padding: 12px 14px;
+  background-color: #4a5568;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: #2d3748;
+}
