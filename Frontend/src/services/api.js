@@ -42,6 +42,9 @@ async function apiRequest(endpoint, method = 'GET', data = null, skipAuth = fals
     }));
     throw new Error(error.message || 'Ett fel uppstod');
   }
+  
+  return response.json();
+}
 
 // ============================================
 // Generic API Request with Error Handling
