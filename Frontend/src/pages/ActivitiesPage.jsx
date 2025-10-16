@@ -5,7 +5,9 @@ export default function ActivitiesPage() {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    fetchActivities().then(setActivities).catch(console.error);
+    fetchActivities()
+      .then(setActivities)
+      .catch((err) => console.error("Fel:", err.message));
   }, []);
 
   return (
