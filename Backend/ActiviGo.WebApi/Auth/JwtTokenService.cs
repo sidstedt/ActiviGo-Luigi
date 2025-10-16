@@ -43,6 +43,8 @@ namespace ActiviGo.WebApi.Auth
             if (roles?.Any() == true)
             {
                 claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+                claims.Add(new Claim("roles", string.Join(",", roles)));
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyStr));
