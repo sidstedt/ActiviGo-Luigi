@@ -36,6 +36,7 @@ namespace ActiviGo.Infrastructure.Repositories
             return await _context.ActivityOccurrences
                 .Include(ao => ao.Activity)
                 .Include(ao => ao.Zone)
+                    .ThenInclude(z => z.Location)
                 .Include(ao => ao.Bookings)
                 .ToListAsync();
         }
@@ -45,6 +46,7 @@ namespace ActiviGo.Infrastructure.Repositories
             return await _context.ActivityOccurrences
                 .Include(ao => ao.Activity)
                 .Include(ao => ao.Zone)
+                    .ThenInclude(z => z.Location)
                 .Include(ao => ao.Bookings)
                 .FirstOrDefaultAsync(ao => ao.Id == id);
         }
@@ -55,6 +57,7 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Where(ao => ao.ActivityId == activityId)
                 .Include(ao => ao.Activity)
                 .Include(ao => ao.Zone)
+                    .ThenInclude(z => z.Location)
                 .Include(ao => ao.Bookings)
                 .ToListAsync();
         }
@@ -64,6 +67,7 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Include(a => a.Activity)
                     .ThenInclude(a => a.Category)
                 .Include(a => a.Zone)
+                    .ThenInclude(z => z.Location)
                 .Include(a => a.Bookings)
                 .FirstOrDefaultAsync(a => a.Id == activityOccurrenceId, ct);
         }

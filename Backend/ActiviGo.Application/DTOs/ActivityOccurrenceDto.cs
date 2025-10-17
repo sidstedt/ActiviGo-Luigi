@@ -44,6 +44,10 @@ namespace ActiviGo.Application.DTOs
         public int ZoneId { get; set; }
         public string ZoneName { get; set; } = string.Empty;
 
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public bool IsOutdoor { get; set; }
+
         public bool IsCancelled { get; set; }
         public bool IsActive { get; set; }
     }

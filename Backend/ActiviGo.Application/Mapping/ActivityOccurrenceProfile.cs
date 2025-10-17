@@ -21,6 +21,18 @@ namespace ActiviGo.Application.Mapping
                     opt => opt.MapFrom(src => src.Zone.Name)
                 )
                 .ForMember(
+                    dest => dest.IsOutdoor,
+                    opt => opt.MapFrom(src => src.Zone.IsOutdoor)
+                )
+                .ForMember(
+                    dest => dest.Latitude,
+                    opt => opt.MapFrom(src => (double?)src.Zone.Location.Latitude)
+                )
+                .ForMember(
+                    dest => dest.Longitude,
+                    opt => opt.MapFrom(src => (double?)src.Zone.Location.Longitude)
+                )
+                .ForMember(
                     dest => dest.MaxCapacity,
                     opt => opt.MapFrom(src => src.Activity.MaxParticipants)
                 )
