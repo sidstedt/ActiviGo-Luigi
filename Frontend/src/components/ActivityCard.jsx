@@ -1,7 +1,7 @@
 import '../styles/ActivityCard.css'
 import WeatherBadge from './WeatherBadge'
 
-const ActivityCard = ({ occurrence, price, onBook, forecast }) => {
+const ActivityCard = ({ occurrence, price, onBook, forecast, actionLabel, hideAction = false, bookingInfo }) => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -25,10 +25,27 @@ const ActivityCard = ({ occurrence, price, onBook, forecast }) => {
 
   return (
     <div className="activity-card">
-      {/* Header med titel och pris */}
+      {/* Header med titel, pris och åtgärd */}
       <div className="card-header">
         <h3 className="card-title">{occurrence.activityName}</h3>
-        <span className="card-price">{price} kr</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span className="card-price">{price} kr</span>
+          {!hideAction && (
+            <button 
+              className={`book-button ${!hasAvailableSlots ? 'disabled' : ''}`}
+              onClick={() => onBook(occurrence.id)}
+              disabled={occurrence.isCancelled}
+            >
+              {actionLabel != null
+                ? actionLabel
+                : isFullyBooked
+                  ? 'Fullbokad'
+                  : occurrence.isCancelled
+                    ? 'Inställd'
+                    : 'Boka nu'}
+            </button>
+          )}
+        </div>
       </div>
       
       {/* Innehåll med info */}
@@ -75,23 +92,44 @@ const ActivityCard = ({ occurrence, price, onBook, forecast }) => {
             {occurrence.availableSlots} platser kvar
           </span>
         </div>
-      </div>
 
-      {/* Footer med väder + boka knapp */}
-      <div className="card-footer">
-        {/* Väder (endast om utomhus och forecast finns) */}
-        <div className="card-footer-left">
-          {occurrence.isOutdoor && forecast && (
+        {/* Bokningsinformation (om tillgänglig) */}
+        {bookingInfo && (
+          <div className="card-info-row" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '6px', marginTop: '8px' }}>
+            <div>
+              <span className="card-info-text"><strong>Boknings-ID:</strong> {bookingInfo.id}</span>
+            </div>
+            <div>
+              <span className="card-info-text"><strong>Bokad:</strong> {new Date(bookingInfo.createdAt).toLocaleString('sv-SE')}</span>
+            </div>
+            <div>
+              {(() => {
+                const raw = String(bookingInfo.status || '').toLowerCase();
+                const isCompleted = raw === 'completed' || raw === 'genomförd' || raw === 'done';
+                const isCancelled = raw === 'cancelled' || raw === 'canceled' || raw === 'avbokad';
+                const cls = isCancelled
+                  ? 'status-badge status-cancelled'
+                  : isCompleted
+                    ? 'status-badge status-completed'
+                    : 'status-badge status-confirmed';
+                const label = bookingInfo.status || 'Bekräftad';
+                return <span className={cls}>{label}</span>;
+              })()}
+            </div>
+            {typeof bookingInfo.seats === 'number' && (
+              <div>
+                <span className="card-info-text"><strong>Platser:</strong> {bookingInfo.seats}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Väder (visas i innehållet om utomhus) */}
+        {occurrence.isOutdoor && forecast && (
+          <div className="card-info-row">
             <WeatherBadge forecast={forecast} />
-          )}
-        </div>
-        <button 
-          className={`book-button ${!hasAvailableSlots ? 'disabled' : ''}`}
-          onClick={() => onBook(occurrence.id)}
-          disabled={!hasAvailableSlots || occurrence.isCancelled}
-        >
-          {isFullyBooked ? 'Fullbokad' : occurrence.isCancelled ? 'Inställd' : 'Boka nu'}
-        </button>
+          </div>
+        )}
       </div>
     </div>
   )

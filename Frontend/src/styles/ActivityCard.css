@@ -72,6 +72,30 @@
   flex-shrink: 0;
 }
 
+/* Booking status badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.status-confirmed {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+.status-completed {
+  background-color: #e5e7eb;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+.status-cancelled {
+  background-color: #fee2e2;
+  color: #7f1d1d;
+  border: 1px solid #fecaca;
+}
+
 .text-green {
   color: #10b981;
   font-weight: 500;
@@ -82,14 +106,7 @@
   font-weight: 500;
 }
 
-.card-footer {
-  display: flex;
-  justify-content: space-between; /* weather on left, button on right */
-  align-items: center;
-  margin-top: auto;
-  padding-top: 0.5rem;
-  gap: 1rem;
-}
+/* Footer removed; action button moved to header */
 
 .card-footer-left {
   display: flex;
@@ -196,7 +213,6 @@
   .book-button {
     padding: 0.75rem 1.75rem;
     font-size: 0.9375rem;
-    width: 100%;
   }
 }
 

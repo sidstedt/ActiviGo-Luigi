@@ -4,6 +4,7 @@ import StartPage from "./pages/StartPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ActivitiesPage from "./pages/ActivitiesPage.jsx";
 import ActivityOccurrencesPage from "./pages/ActivityOccurrencesPage.jsx";
+import BookingsPage from "./pages/BookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 
 const DashboardHome = () => <HomePage />;
@@ -41,7 +42,7 @@ function AppRoutes() {
       <Route path="/" element={<StartPage userRole={userRole} roles={roles} />}>
         <Route index element={<DashboardHome />} />
         <Route path="activities" element={<ActivitiesPage />} />
-        <Route path="bookings" element={<ActivityOccurrencesPage />} />
+        <Route path="bookings" element={<BookingsPage />} />
         <Route path="login" element={<LoginPage />} />
 
         <Route

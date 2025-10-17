@@ -24,7 +24,8 @@ export default function LoginPage() {
       } else if (roles.includes("staff")) {
         window.location.href = "/staff";
       } else {
-        window.location.href = "/";
+        // Redirect regular users to search activities page
+        window.location.href = "/activities";
       }
     } catch (err) {
       setError(err.message);

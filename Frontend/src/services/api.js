@@ -62,6 +62,9 @@ export async function fetchActivityById(id) {
 export async function fetchActivityOccurrences() {
   return apiRequest('ActivityOccurrence');
 }
+export async function fetchActivityOccurrenceById(id) {
+  return apiRequest(`ActivityOccurrence/${id}`);
+}
 
 // ============================================
 // WEATHER
@@ -74,6 +77,13 @@ export async function fetchWeatherForecastBatch(queries) {
 // ============================================
 // BOOKINGS
 // ============================================
+export async function fetchMyBookings() {
+  // Backend exposes GET /api/Bookings returning current user's bookings
+  return apiRequest('Bookings');
+}
+export async function cancelBooking(bookingId) {
+  return apiRequest(`Bookings/${bookingId}`, 'DELETE');
+}
 
 // ============================================
 // CATEGORIES
