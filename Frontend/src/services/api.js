@@ -64,6 +64,14 @@ export async function fetchActivityOccurrences() {
 }
 
 // ============================================
+// WEATHER
+// ============================================
+export async function fetchWeatherForecastBatch(queries) {
+  // queries: [{ occurrenceId, latitude, longitude, at }]
+  return apiRequest('Weather/forecast', 'POST', queries, true);
+}
+
+// ============================================
 // BOOKINGS
 // ============================================
 

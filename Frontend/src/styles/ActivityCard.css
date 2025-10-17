@@ -84,9 +84,17 @@
 
 .card-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between; /* weather on left, button on right */
+  align-items: center;
   margin-top: auto;
   padding-top: 0.5rem;
+  gap: 1rem;
+}
+
+.card-footer-left {
+  display: flex;
+  align-items: center;
+  min-height: 40px; /* ensures a neat row height even with 2-line weather */
 }
 
 .book-button {

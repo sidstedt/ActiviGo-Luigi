@@ -1,7 +1,7 @@
-import React from 'react'
-import './ActivityCard.css'
+import '../styles/ActivityCard.css'
+import WeatherBadge from './WeatherBadge'
 
-const ActivityCard = ({ occurrence, price, onBook }) => {
+const ActivityCard = ({ occurrence, price, onBook, forecast }) => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -77,8 +77,14 @@ const ActivityCard = ({ occurrence, price, onBook }) => {
         </div>
       </div>
 
-      {/* Footer med boka knapp */}
+      {/* Footer med väder + boka knapp */}
       <div className="card-footer">
+        {/* Väder (endast om utomhus och forecast finns) */}
+        <div className="card-footer-left">
+          {occurrence.isOutdoor && forecast && (
+            <WeatherBadge forecast={forecast} />
+          )}
+        </div>
         <button 
           className={`book-button ${!hasAvailableSlots ? 'disabled' : ''}`}
           onClick={() => onBook(occurrence.id)}

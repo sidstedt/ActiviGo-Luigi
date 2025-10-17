@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { fetchActivityOccurrences, fetchActivityById } from "../services/api";
+import { fetchActivityOccurrences, fetchActivityById, fetchWeatherForecastBatch } from "../services/api";
 import ActivityCard from "../components/ActivityCard";
-import "./ActivityOccurrencesPage.css";
+import "../styles/ActivityOccurrencesPage.css";
 
 export default function ActivityOccurrencesPage() {
   const [occurrences, setOccurrences] = useState([]);
   const [activities, setActivities] = useState({});
+  const [forecasts, setForecasts] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -41,6 +42,30 @@ export default function ActivityOccurrencesPage() {
       );
 
       setActivities(activitiesMap);
+
+      const weatherQueries = activeOccurrences
+        .filter(o => o.isOutdoor && o.latitude != null && o.longitude != null)
+        .map(o => ({
+          occurrenceId: o.id,
+          latitude: o.latitude,
+          longitude: o.longitude,
+          at: new Date(o.startTime).toISOString()
+        }));
+
+      if (weatherQueries.length > 0) {
+        try {
+          const batch = await fetchWeatherForecastBatch(weatherQueries);
+          const map = {};
+          batch.forEach(item => {
+            if (item.occurrenceId != null && item.forecast) {
+              map[item.occurrenceId] = item.forecast;
+            }
+          });
+          setForecasts(map);
+        } catch (e) {
+
+        }
+      }
     } catch (err) {
       setError(err.message || "Kunde inte hämta aktivitetshändelser");
     } finally {
@@ -93,6 +118,7 @@ export default function ActivityOccurrencesPage() {
                 key={occurrence.id}
                 occurrence={occurrence}
                 price={price}
+                forecast={forecasts[occurrence.id]}
                 onBook={() => {}}
               />
             );
