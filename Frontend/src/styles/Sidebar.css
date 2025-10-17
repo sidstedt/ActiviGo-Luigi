@@ -1,0 +1,111 @@
+/* Sidebar.css - styles the left navigation bar (matches provided screenshots) */
+:root {
+  --sb-bg: #ffffff;
+  --sb-text: #1f2937;
+  --sb-muted: #6b7280;
+  --sb-accent: #10b981; /* green */
+  --sb-hover: #f3f4f6;
+  --sb-active-bg: #ecfdf5; /* light green background */
+  --sb-border: #e5e7eb;
+}
+
+/* Ensure the whole app uses a left sidebar layout */
+.app-layout {
+  --sb-width: 260px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff;
+  color: var(--sb-text);
+}
+
+.app-layout.sidebar-collapsed { --sb-width: 72px; }
+
+.sidebar {
+  background: var(--sb-bg);
+  border-right: 1px solid var(--sb-border);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 10px;
+  width: var(--sb-width);
+  transition: width 220ms ease;
+}
+
+.sidebar.collapsed { width: 72px; }
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 6px;
+  margin-bottom: 10px;
+}
+
+.sidebar-header .brand {
+  font-weight: 800;
+  color: var(--sb-accent);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.collapse-btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: none;
+  padding: 0;
+}
+.collapse-btn:hover { background: transparent; color: var(--sb-text); }
+.collapse-btn:focus { outline: none; }
+.collapse-btn:focus-visible { outline: none; }
+.collapse-btn img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  color: var(--sb-muted);
+  text-decoration: none;
+}
+
+.nav-item span + span {
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.nav-item:hover { background: var(--sb-hover); color: var(--sb-text); }
+
+.nav-item.active {
+  background: var(--sb-active-bg);
+  color: var(--sb-accent);
+  font-weight: 600;
+}
+
+/* Collapsed mode shows bullets only; tooltips can be added later */
+.nav-item.is-collapsed { justify-content: center; padding: 0; }
+.nav-item.is-collapsed span + span { opacity: 0; transform: translateX(-4px); }
+
+/* Body container to the right of sidebar */
+.app-body {
+  background: linear-gradient(120deg, #16a34a 0%, #22c55e 100%);
+  overflow: auto;
+}

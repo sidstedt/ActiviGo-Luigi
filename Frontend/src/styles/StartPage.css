@@ -1,0 +1,99 @@
+/* StartPage.css - header + content wrapper to match screenshots */
+:root {
+  --header-bg: #ffffff;
+  --header-text: #111827;
+  --content-bg: transparent; /* gradient is on app-body */
+}
+
+/* Override the Vite demo centering */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  display: block;
+  background: #fff;
+  color: var(--header-text);
+}
+
+/* Top header bar like screenshots (brand + title area) */
+.top-header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--header-bg);
+  border-bottom: 1px solid #e5e7eb;
+}
+.top-header .brand {
+  font-weight: 800;
+  color: #10b981;
+}
+
+/* Content wrapper inside body (for pages like LoginPage hero) */
+.body-content {
+  padding: 28px;
+}
+
+/* Optional card styles for future content */
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* Hero area (green gradient) */
+.app-body {
+  /* gradient background behind main content to match mock */
+  background: linear-gradient(135deg, rgba(16,185,129,0.85), rgba(34,197,94,0.85));
+  min-height: 100vh;
+  width: 100%;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+}
+
+.hero-inner {
+  max-width: 920px;
+  text-align: center;
+  color: #ecfdf5;
+}
+
+.hero-title {
+  font-size: 64px;
+  font-weight: 800;
+  margin: 0 16px 16px;
+  overflow-wrap: anywhere;
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  max-width: 760px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-primary { background: #f97316; color: #fff; }
+.btn-secondary { background: rgba(255,255,255,0.2); color: #ecfdf5; backdrop-filter: saturate(140%); }
