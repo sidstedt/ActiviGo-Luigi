@@ -1,0 +1,40 @@
+.weather-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.weather-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.weather-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+.weather-metrics {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.weather-temp {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.weather-wind {
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.weather-summary {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-left: 34px; /* align with text after icon */
+}

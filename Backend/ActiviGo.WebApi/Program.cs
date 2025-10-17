@@ -46,6 +46,12 @@ namespace ActiviGo.WebApi
             builder.Services.AddHttpClient<IGeocodingService, GeocodingService>();
 
             // -------------------------------
+            // Weather Service (SMHI)
+            // -------------------------------
+            builder.Services.AddMemoryCache();
+            builder.Services.AddHttpClient<IWeatherService, WeatherService>();
+
+            // -------------------------------
             // Email Service
             // -------------------------------
             builder.Services.AddScoped<IEmailService, SmtpEmailService>();
@@ -117,7 +123,7 @@ namespace ActiviGo.WebApi
                         ValidIssuer = jwtConfig["Issuer"],
                         ValidAudience = jwtConfig["Audience"],
                         IssuerSigningKey = key,
-                        ClockSkew = TimeSpan.FromMinutes(1) // För att hantera liten tidsskillnad
+                        ClockSkew = TimeSpan.FromMinutes(1) // FÃ¶r att hantera liten tidsskillnad
                     };
                 });
 
