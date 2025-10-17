@@ -158,3 +158,39 @@ export async function resetPassword(email, token, newPassword) {
 // ============================================
 // ADMIN
 // ============================================
+/**
+ * src/services/api.js
+ * * Hanterar alla nätverksanrop, t.ex. att hämta aktiviteter.
+ * I ett riktigt projekt, byt ut mock-data mot riktiga fetch-anrop.
+ */
+
+// Simulerar din befintliga API-URL
+
+// Mock-data för att demonstrera visuell presentation
+export const mockActivities = [
+    { id: 1, name: "CrossFit-Passet", description: "Högintensivt pass med fokus på styrka och kondition.", date: "Idag, 18:00", location: "Huvudsalen", capacity: 20, bookedCount: 15 },
+    { id: 2, name: "Yoga Flow - Morgon", description: "Mjukt flöde för att starta dagen med fokus på andning och rörlighet.", date: "Imorgon, 07:00", location: "Studion", capacity: 15, bookedCount: 5 },
+    { id: 3, name: "Spinning: Intervall", description: "Tufft intervallpass på cykel.", date: "Torsdag, 19:30", location: "Spinninghallen", capacity: 30, bookedCount: 30 },
+    { id: 4, name: "Basket: Öppen träning", description: "Informell match och träning, öppen för alla nivåer.", date: "Måndag, 20:00", location: "Idrottshallen", capacity: 40, bookedCount: 10 },
+];
+
+/**
+ * Hämtar kommande aktiviteter.
+ */
+export async function fetchActivities() {
+    try {
+        // I en riktig applikation:
+        // const response = await fetch(`${API_BASE_URL}/Activities`);
+        // if (!response.ok) throw new Error("Fel vid hämtning av aktiviteter");
+        // return response.json();
+
+        await new Promise(resolve => setTimeout(resolve, 500)); // Simulerar nätverksfördröjning
+        return mockActivities;
+
+    } catch (error) {
+        console.error("Kunde inte nå backend, använder mock-data:", error);
+        // Återgår till mock-data vid fel för att behålla UI-funktionalitet
+        return mockActivities; 
+    }
+}
+

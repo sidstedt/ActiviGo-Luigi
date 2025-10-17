@@ -1,8 +1,10 @@
-const { useState, useEffect, useMemo } = React;
+// Notera: Du behöver INTE omsluta detta i <script type="text/babel">
+// eftersom du länkade filen med det attributet i index.html.
+import "../styles/Dashboard.css";
+import { useState, useEffect, useMemo } from 'react';
 
-// --- START: Simulerad API-tjänst (Oförändrad, men rensad för att undvika bugg) ---
+// --- START: Simulerad API-tjänst ---
 
-// Mock-data för att demonstrera visuell presentation
 const mockActivities = [
     { id: 1, name: "CrossFit-Passet", description: "Högintensivt pass med fokus på styrka och kondition.", date: "Idag, 18:00", location: "Huvudsalen", capacity: 20, bookedCount: 15 },
     { id: 2, name: "Yoga Flow - Morgon", description: "Mjukt flöde för att starta dagen med fokus på andning och rörlighet.", date: "Imorgon, 07:00", location: "Studion", capacity: 15, bookedCount: 5 },
@@ -10,9 +12,6 @@ const mockActivities = [
     { id: 4, name: "Basket: Öppen träning", description: "Informell match och träning, öppen för alla nivåer.", date: "Måndag, 20:00", location: "Idrottshallen", capacity: 40, bookedCount: 10 },
 ];
 
-/**
- * Hämtar kommande aktiviteter. (Simulering av nätverksanrop)
- */
 async function fetchActivities() {
     try {
         await new Promise(resolve => setTimeout(resolve, 500)); 
@@ -23,11 +22,6 @@ async function fetchActivities() {
     }
 }
 
-/**
- * Simulerar en bokningsbegäran. Manipulerar den globala mockActivities-listan.
- * @param {number} activityId - ID för aktiviteten som ska bokas.
- * @returns {object} Resultatet av bokningen.
- */
 async function bookActivity(activityId) {
     await new Promise(resolve => setTimeout(resolve, 1000)); 
 
@@ -41,9 +35,8 @@ async function bookActivity(activityId) {
         return { success: false, message: "Aktiviteten är redan fullbokad!" };
     }
 
-    // Uppdatera mock-datan (simulera serverns ändring)
     if (mockActivity) {
-         mockActivity.bookedCount += 1;
+        mockActivity.bookedCount += 1;
     }
 
     return { 
@@ -54,10 +47,6 @@ async function bookActivity(activityId) {
 }
 // --- SLUT: Simulerad API-tjänst ---
 
-
-// ----------------------------------------------------
-// KOMPONENTER UTAN TAILWIND KLASSER
-// ----------------------------------------------------
 
 const StatCard = ({ title, value, icon, linkText, onClick }) => (
     <div className="stat-card"> 
@@ -108,10 +97,9 @@ const ActivityCard = ({ activity, onBookingSuccess }) => {
                 >
                     {isBookingPending ? (
                         <>
-                            {/* Laddningsikon utan Tailwind-klass för rotation */}
                             <svg className="loading-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="20" height="20">
-                                <circle className="loading-circle" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="loading-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                             Bokar...
                         </>
@@ -132,7 +120,6 @@ function DashboardPage() {
     const [userName, setUserName] = useState("Användare"); 
     const [bookingMessage, setBookingMessage] = useState(null);
 
-    // Funktion för att ladda aktiviteter
     const loadActivities = () => {
         setLoading(true);
         setError(null);
@@ -155,9 +142,7 @@ function DashboardPage() {
         loadActivities();
     }, []);
 
-    // Funktion som anropas när en bokning initieras från ActivityCard
     const handleActivityBooking = async (activityId) => {
-        // 1. Markera aktiviteten som bokas (optimistisk uppdatering för laddningsstatus)
         setActivities(prevActivities => 
             prevActivities.map(a => 
                 a.id === activityId ? { ...a, isBookingPending: true } : a
@@ -166,11 +151,9 @@ function DashboardPage() {
         setBookingMessage(null);
 
         try {
-            // 2. Skicka bokningsanropet till den simulerade API-tjänsten.
             const result = await bookActivity(activityId); 
 
             if (result.success) {
-                // 3. Uppdatera bookedCount med funktionell uppdatering
                 setActivities(prevActivities => 
                     prevActivities.map(a => 
                         a.id === activityId 
@@ -179,9 +162,7 @@ function DashboardPage() {
                     )
                 );
                 setBookingMessage({ type: 'success', text: `Du bokade framgångsrikt: ${result.name}!` });
-
             } else {
-                // 3b. Återställ bokningsstatus vid fel
                 setActivities(prevActivities => 
                     prevActivities.map(a => 
                         a.id === activityId ? { ...a, isBookingPending: false } : a
@@ -189,10 +170,8 @@ function DashboardPage() {
                 );
                 setBookingMessage({ type: 'error', text: result.message || "Ett okänt fel uppstod vid bokning." });
             }
-
         } catch (err) {
             console.error("Bokningsfel:", err);
-            // 3c. Återställ bokningsstatus vid nätverksfel
             setActivities(prevActivities => 
                 prevActivities.map(a => 
                     a.id === activityId ? { ...a, isBookingPending: false } : a
@@ -201,17 +180,14 @@ function DashboardPage() {
             setBookingMessage({ type: 'error', text: "Nätverksfel: Kunde inte slutföra bokningen." });
         }
 
-        // Ta bort bokningsmeddelandet efter 4 sekunder
         setTimeout(() => setBookingMessage(null), 4000);
     };
 
 
-    // Hantering av laddnings- och felstatus
     let activitiesContent;
     if (loading) {
         activitiesContent = (
             <div className="loading-container">
-                {/* Laddningsikon utan Tailwind-klass för rotation */}
                 <svg className="loading-icon-large" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="32" height="32">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -271,7 +247,7 @@ function DashboardPage() {
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                     >
                         {/* Burgar-ikon */}
-                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
             </header>
@@ -302,7 +278,7 @@ function DashboardPage() {
                     <div className="content-wrapper">
                         
                         {/* Välkomstbanner */}
-                        <div className="welcome-banner" style={{backgroundImage: 'url(https://placehold.co/1200x300/155e75/ecfccb?text=Sportcenter+Bakgrund)'}}>
+                        <div className="welcome-banner">
                             
                             <div className="banner-content">
                                 <h1 className="banner-title">
@@ -354,5 +330,5 @@ function DashboardPage() {
 }
 
 // Rendera applikationen till DOM-trädet
-const rootElement = document.getElementById('root');
-ReactDOM.createRoot(rootElement).render(<DashboardPage />);
+
+export default DashboardPage;
