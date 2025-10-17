@@ -18,7 +18,14 @@ export default function LoginPage() {
     try {
       const data = await login(email, password);
       localStorage.setItem("accessToken", data.accessToken);
-      window.location.href = "/dashboard";
+      const roles = Array.isArray(data?.user?.roles) ? data.user.roles : [];
+      if (roles.includes("admin")) {
+        window.location.href = "/admin";
+      } else if (roles.includes("staff")) {
+        window.location.href = "/staff";
+      } else {
+        window.location.href = "/";
+      }
     } catch (err) {
       setError(err.message);
     }
