@@ -1,0 +1,429 @@
+/* ============== Dashboard.css ==============
+   Mål: Matcha de två bilderna (mörkt tema, vänster sidomeny,
+   välkomstbanner, tre "stat-cards" och ett rutnät med aktiviteter).
+   Fungerar responsivt och med klassnamnen i din komponent.
+   ------------------------------------------ */
+
+/* Tema-variabler */
+:root {
+  --bg: #0b1220;              /* sidans bakgrund */
+  --header: #0e1628;          /* toppbar */
+  --sidebar: #0f172a;         /* sidomeny */
+  --panel: #111827;           /* kort/paneler */
+  --panel-2: #0f1b2d;         /* bannerbas */
+  --border: #1f2937;          /* linjer */
+  --text: #e5e7eb;            /* primär text */
+  --muted: #9aa6b2;           /* sekundär text */
+  --primary: #21c55d;         /* grönt (brand) */
+  --primary-600: #16a34a;
+  --primary-700: #0f8a3a;
+  --accent-teal: #155e75;     /* teal i banner */
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  --radius: 14px;
+}
+
+/* Bas / reset (lokal till dashboarden) */
+#app-container, #app-container * { box-sizing: border-box; }
+#app-container {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  line-height: 1.4;
+}
+
+/* --------- Header (topbar) --------- */
+#main-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  height: 64px;
+  background: var(--header);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+}
+
+#main-header .logo {
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: var(--text);
+  font-size: 1.25rem;
+}
+#main-header .logo .logo-highlight {
+  color: var(--primary);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.welcome-text {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  background: rgba(33, 197, 93, 0.1);
+  border: 1px solid rgba(33, 197, 93, 0.18);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #0c1426;
+  color: #cbd5e1;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .15s ease, transform .05s ease;
+}
+.menu-button:hover { background: #121c34; }
+.menu-button:active { transform: translateY(1px); }
+
+/* --------- Layout (sidebar + content) --------- */
+#main-layout {
+  position: relative;
+  display: flex;
+}
+
+/* Sidebar */
+#sidebar {
+  position: fixed;
+  top: 64px; /* under header */
+  left: 0;
+  width: 260px;
+  height: calc(100vh - 64px);
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  padding: 18px 14px;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform .2s ease;
+  z-index: 50;
+}
+#sidebar.open { transform: translateX(0); }
+
+.nav-group { display: grid; gap: 10px; }
+.nav-title {
+  color: #9aa6b2;
+  font-size: 0.78rem;
+  letter-spacing: .08em;
+  margin: 4px 10px 10px;
+}
+.nav-link {
+  display: block;
+  color: #cfd6df;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.nav-link:hover {
+  background: #0e1730;
+  border-color: #1c2944;
+}
+.nav-link.active {
+  background: rgba(33, 197, 93, .12);
+  color: #eaf9ef;
+  border-color: rgba(33, 197, 93, .35);
+  font-weight: 600;
+}
+
+/* Desktop: sidomeny alltid synlig, content offset */
+@media (min-width: 1024px) {
+  #sidebar { transform: none !important; }
+  #main-content { margin-left: 260px; }
+}
+
+/* --------- Main content --------- */
+#main-content {
+  flex: 1 1 auto;
+  width: 100%;
+}
+.content-wrapper {
+  padding: 22px 18px 36px;
+  max-width: 1260px;
+  margin: 0 auto;
+}
+
+/* --------- Toast (bokningsmeddelande) --------- */
+.toast-message {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 70;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  border: 1px solid transparent;
+  box-shadow: var(--shadow);
+  animation: slidein .18s ease-out;
+}
+.toast-message.success {
+  background: rgba(33, 197, 93, 0.15);
+  color: #d1fae5;
+  border-color: rgba(33, 197, 93, 0.35);
+}
+.toast-message.error {
+  background: rgba(239, 68, 68, 0.16);
+  color: #fee2e2;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+@keyframes slidein {
+  from { transform: translateY(-8px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* --------- Välkomstbanner --------- */
+.welcome-banner {
+  position: relative;
+  background: var(--panel-2);
+  border: 1px solid #173052;
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 190px;
+  display: flex;
+  align-items: center;
+  padding: 26px;
+  box-shadow: var(--shadow);
+  background-image: linear-gradient(135deg, rgba(21, 94, 117, 0.74), rgba(15, 23, 42, 0.6)), var(--bg);
+  background-size: cover;
+  background-position: center;
+}
+.welcome-banner::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(1200px 300px at 20% 0%, rgba(21, 197, 120, .12), transparent 60%);
+  pointer-events: none;
+}
+.banner-content { position: relative; max-width: 720px; }
+.banner-title {
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  margin: 0 0 10px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  color: #ecfeff;
+}
+.highlight-text { color: #78e2a1; }
+.banner-subtitle {
+  color: #dbeafe;
+  opacity: .9;
+  max-width: 56ch;
+  margin: 0 0 16px;
+}
+.banner-button {
+  background: var(--primary);
+  color: #05230f;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.15);
+  cursor: pointer;
+  transition: transform .04s ease, background .15s ease, box-shadow .15s ease;
+  box-shadow: 0 6px 14px rgba(33, 197, 93, .25);
+}
+.banner-button:hover { background: var(--primary-600); }
+.banner-button:active { transform: translateY(1px); }
+
+/* --------- Statistik / Genvägar --------- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0 8px;
+}
+@media (min-width: 640px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .stat-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  box-shadow: var(--shadow);
+}
+.stat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.stat-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  background: #0c1426;
+  border: 1px solid #1b2743;
+  padding: 10px;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border-radius: 12px;
+}
+.stat-title {
+  color: var(--muted);
+  margin: 0;
+  font-size: 0.86rem;
+}
+.stat-value {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #e9eef6;
+}
+.stat-button {
+  justify-self: start;
+  background: rgba(33, 197, 93, 0.14);
+  color: #d1fae5;
+  border: 1px solid rgba(33, 197, 93, 0.38);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background .15s ease, transform .04s ease, border-color .15s ease;
+}
+.stat-button:hover {
+  background: rgba(33, 197, 93, 0.22);
+  border-color: rgba(33, 197, 93, 0.55);
+}
+.stat-button:active { transform: translateY(1px); }
+
+/* --------- Sektionstitel --------- */
+.section-title {
+  margin: 22px 0 10px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: .25px;
+  color: #f1f5f9;
+}
+
+/* --------- Aktivitetsrutnät --------- */
+.activity-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Aktivitetskort */
+.activity-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 220px;
+  box-shadow: var(--shadow);
+}
+.activity-name {
+  margin: 0 0 6px;
+  font-weight: 800;
+  color: #e6f1ff;
+  font-size: 1.05rem;
+}
+.activity-details {
+  margin: 0 0 8px;
+  color: #c7d2fe;
+  opacity: .9;
+  font-size: 0.92rem;
+}
+.activity-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.activity-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+}
+.activity-slots {
+  display: grid;
+  gap: 4px;
+}
+.slots-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.slots-count {
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+.status-available { color: #86efac; }
+.status-full { color: var(--danger); }
+
+/* Bokningsknapp */
+.activity-button {
+  min-width: 122px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(33, 197, 93, 0.4);
+  background: var(--primary);
+  color: #05230f;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background .15s ease, transform .04s ease, box-shadow .15s ease, border-color .15s ease, color .15s ease;
+  box-shadow: 0 8px 16px rgba(33, 197, 93, .25);
+}
+.activity-button:hover { background: var(--primary-600); }
+.activity-button:active { transform: translateY(1px); }
+
+.activity-button[disabled] {
+  background: #1b2238;
+  color: #b6c2d0;
+  border-color: #28314c;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Laddningsikoner */
+.loading-icon, .loading-icon-large {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0); }
+  to   { transform: rotate(360deg); }
+}
+
+.loading-container {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 40px 0;
+  color: #cfe8ff;
+}
+.loading-text { color: #cfe8ff; }
+
+/* Meddelanderutor (fel/varning) */
+.error-message, .warning-message {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  color: var(--text);
+}
+.error-message { border-color: rgba(239, 68, 68, .5); }
+.error-title { color: #fecaca; font-weight: 700; margin: 0 0 6px; }
+.warning-message { border-color: rgba(245, 158, 11, .5); }
+
+/* --------- Mindre skärmar --------- */
+@media (max-width: 1023.98px) {
+  #main-content { margin-left: 0; }
+  .welcome-text { display: none; } /* behåll rent på små skärmar */
+  .banner-content { max-width: 100%; }
+}
