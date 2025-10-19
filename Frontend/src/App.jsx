@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage.jsx";
 import ActivitiesPage from "./pages/ActivitiesPage.jsx";
 import ActivityOccurrencesPage from "./pages/ActivityOccurrencesPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+// imported statistics page
+import Statistics from "./pages/Statistics.jsx";
 
 const DashboardHome = () => <HomePage />;
 const AdminDashboard = () => <div>Adminpanel</div>;
@@ -40,9 +42,12 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<StartPage userRole={userRole} roles={roles} />}>
         <Route index element={<DashboardHome />} />
-        <Route path="activities" element={<ActivitiesPage />} />
-        <Route path="bookings" element={<ActivityOccurrencesPage />} />
-        <Route path="login" element={<LoginPage />} />
+
+  <Route path="activities" element={<ActivitiesPage />} />
+  <Route path="bookings" element={<ActivityOccurrencesPage />} />
+  <Route path="login" element={<LoginPage />} />
+  {/* Route for statistics-page */}
+  <Route path="statistics" element={<Statistics />} />
 
         <Route
           path="admin"
