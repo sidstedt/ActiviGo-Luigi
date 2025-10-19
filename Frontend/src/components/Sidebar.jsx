@@ -16,6 +16,8 @@ export default function Sidebar({ userRole = "guest", roles = [], collapsed = fa
   const userMenu = [
     { title: "Hem", url: "/", icon: "🏠" },
     { title: "Bokningar", url: "/bookings", icon: "📅" },
+    // Statistic link
+    { title: "Statistics", url: "/statistics", icon: "📊" },
     { title: "Mitt konto", url: "/account", icon: "👤" },
   ];
 
