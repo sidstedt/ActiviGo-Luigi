@@ -20,9 +20,80 @@
   margin-bottom: 0.5rem;
 }
 
-.page-header .subtitle {
+.page-header p {
   font-size: 1.2rem;
   color: #7f8c8d;
+}
+
+/* Filters Section */
+.filters-section {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.filter-input, .filter-select {
+  padding: 0.75rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.filter-input:focus, .filter-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.clear-filters-btn {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.clear-filters-btn:hover {
+  background: #7f8c8d;
+}
+
+/* Results Section */
+.results-section {
+  margin-top: 2rem;
+}
+
+.results-header {
+  margin-bottom: 2rem;
+}
+
+.results-header h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
 }
 
 .loading {
@@ -140,6 +211,11 @@
     padding: 1.5rem;
   }
 
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
   .occurrences-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
@@ -155,6 +231,10 @@
     padding: 1rem;
   }
 
+  .filters-section {
+    padding: 1.5rem;
+  }
+
   .occurrences-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -164,7 +244,7 @@
     font-size: 1.75rem;
   }
 
-  .page-header .subtitle {
+  .page-header p {
     font-size: 1rem;
   }
 }

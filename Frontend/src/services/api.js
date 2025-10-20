@@ -40,7 +40,8 @@ async function apiRequest(endpoint, method = 'GET', data = null, skipAuth = fals
     const error = await response.json().catch(() => ({ 
       message: `HTTP ${response.status}: ${response.statusText}` 
     }));
-    throw new Error(error.message || 'Ett fel uppstod');
+    const msg = error.message || error.Message || `HTTP ${response.status}: ${response.statusText}`;
+    throw new Error(msg);
   }
   
   return response.json();
@@ -52,15 +53,22 @@ async function apiRequest(endpoint, method = 'GET', data = null, skipAuth = fals
 export async function fetchActivities() {
   return apiRequest(`Activities`);
 }
-export async function fetchActivityById(id) {
-  return apiRequest(`Activities/${id}`);
-}
 
 // ============================================
 // ACTIVITY OCCURRENCES
 // ============================================
 export async function fetchActivityOccurrences() {
   return apiRequest('ActivityOccurrence');
+}
+
+export async function createActivityOccurrence(data) {
+  // data: { startTime, durationMinutes?, activityId, zoneId? }
+  return apiRequest('ActivityOccurrence', 'POST', data);
+}
+
+export async function updateActivityOccurrence(id, data) {
+  // data: { startTime, endTime, durationMinutes, activityId, zoneId, isActive }
+  return apiRequest(`ActivityOccurrence/${id}`, 'PUT', data);
 }
 
 // ============================================
@@ -74,14 +82,39 @@ export async function fetchWeatherForecastBatch(queries) {
 // ============================================
 // BOOKINGS
 // ============================================
+export async function fetchUserBookings() {
+  return apiRequest('Bookings');
+}
+
+export async function fetchBookingById(id) {
+  return apiRequest(`Bookings/${id}`);
+}
+
+export async function createBooking(bookingData) {
+  return apiRequest('Bookings', 'POST', bookingData);
+}
+
+export async function cancelBooking(id) {
+  return apiRequest(`Bookings/${id}`, 'DELETE');
+}
 
 // ============================================
 // CATEGORIES
 // ============================================
+// Categories (unused currently)
+// export async function fetchCategories() { return apiRequest('Category'); }
+// export async function fetchCategoriesWithActivities() { return apiRequest('Category/withActivities'); }
 
 // ============================================
 // ZONES
 // ============================================
+export async function fetchZones() {
+  return apiRequest('Zone');
+}
+
+// Zones (unused currently)
+// export async function fetchZonesWithRelations() { return apiRequest('Zone/withRelations'); }
+// export async function fetchZonesByLocation(locationId) { return apiRequest(`Zone/location/${locationId}`); }
 
 // ============================================
 // STAFF
@@ -102,10 +135,16 @@ export async function login(email, password) {
   // Decode token for user info
   const decoded = jwtDecode(data.accessToken);
   const roles = (decoded.roles?.split(',') || []).map(r => String(r).trim().toLowerCase());
+  const firstName = decoded.given_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]; 
+  const lastName = decoded.family_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]; 
+  const displayName = [firstName, lastName].filter(Boolean).join(' ') || decoded.unique_name || decoded.name || decoded.email;
+  const jwtEmail = decoded.email || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || null;
   const user = {
     id: decoded.sub,
-    username: decoded.unique_name,
-    email: decoded.email,
+    username: displayName,
+    firstName: firstName || null,
+    lastName: lastName || null,
+    email: jwtEmail,
     roles: Array.isArray(roles) ? roles : [roles]
   };
   
@@ -137,6 +176,60 @@ export async function refreshAccessToken() {
   }
 }
 
+// Current user (from token or cache)
+export function getCurrentUser() {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      // roles may be a comma string, or an array under 'role'
+      let roles = [];
+      if (decoded.roles) {
+        roles = String(decoded.roles).split(',').map(r => String(r).trim().toLowerCase()).filter(Boolean);
+      } else if (decoded.role) {
+        roles = Array.isArray(decoded.role) ? decoded.role.map(r => String(r).toLowerCase()) : [String(decoded.role).toLowerCase()];
+      }
+      const firstName = decoded.given_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]; 
+      const lastName = decoded.family_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]; 
+      const email = decoded.email || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || null;
+      const displayName = [firstName, lastName].filter(Boolean).join(' ') 
+        || decoded.unique_name || decoded.name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] 
+        || email || null;
+      const user = {
+        id: decoded.sub,
+        username: displayName,
+        firstName: firstName || null,
+        lastName: lastName || null,
+        email,
+        roles
+      };
+      localStorage.setItem('user', JSON.stringify(user));
+      return user;
+    } catch {
+      // fall through to cached
+    }
+  }
+  try {
+    const cached = localStorage.getItem('user');
+    if (cached) {
+      const user = JSON.parse(cached);
+      return user || null;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+// ============================================
+// LOCATIONS
+// ============================================
+export async function fetchLocations() {
+  return apiRequest('Location');
+}
+
+// (unused) export async function fetchLocationById(id) { return apiRequest(`Location/${id}`); }
+
 // ============================================
 // USERS
 // ============================================
@@ -166,20 +259,3 @@ export async function resetPassword(email, token, newPassword) {
 // ============================================
 // ADMIN
 // ============================================
-/**
- * src/services/api.js
- * * Hanterar alla nätverksanrop, t.ex. att hämta aktiviteter.
- * I ett riktigt projekt, byt ut mock-data mot riktiga fetch-anrop.
- */
-
-// Simulerar din befintliga API-URL
-
-// Mock-data för att demonstrera visuell presentation
-export const mockActivities = [
-    { id: 1, name: "CrossFit-Passet", description: "Högintensivt pass med fokus på styrka och kondition.", date: "Idag, 18:00", location: "Huvudsalen", capacity: 20, bookedCount: 15 },
-    { id: 2, name: "Yoga Flow - Morgon", description: "Mjukt flöde för att starta dagen med fokus på andning och rörlighet.", date: "Imorgon, 07:00", location: "Studion", capacity: 15, bookedCount: 5 },
-    { id: 3, name: "Spinning: Intervall", description: "Tufft intervallpass på cykel.", date: "Torsdag, 19:30", location: "Spinninghallen", capacity: 30, bookedCount: 30 },
-    { id: 4, name: "Basket: Öppen träning", description: "Informell match och träning, öppen för alla nivåer.", date: "Måndag, 20:00", location: "Idrottshallen", capacity: 40, bookedCount: 10 },
-];
-
-
