@@ -18,7 +18,7 @@ namespace ActiviGo.WebApi.Controllers
 
         //get api/zone/withRelations
         [AllowAnonymous]
-        [HttpGet]
+        [HttpGet("withRelations")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<IEnumerable<ZoneResponseDto>>> GetAllZonesWithActivitesAndLocation()
@@ -48,6 +48,17 @@ namespace ActiviGo.WebApi.Controllers
         public async Task<ActionResult<IEnumerable<ZoneResponseDto>>> GetZonesWithActivitiesById(int id)
         {
             var zones = await _zone.GetZonesWithActivititesByIdAsync(id);
+            return Ok(zones);
+        }
+
+        //get api/zone
+        [AllowAnonymous]
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<IEnumerable<ZoneDto>>> GetAllZones()
+        {
+            var zones = await _zone.GetAllAsync();
             return Ok(zones);
         }
 

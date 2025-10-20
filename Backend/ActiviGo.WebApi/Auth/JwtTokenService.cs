@@ -32,12 +32,19 @@ namespace ActiviGo.WebApi.Auth
             var audience = jwt["Audience"] ?? throw new InvalidOperationException("JWT Audience is not configured.");
             var expireMinutes = double.TryParse(jwt["ExpireMinutes"], out var exp) ? exp : 60;
 
+            var firstName = user.FirstName ?? string.Empty;
+            var lastName = user.LastName ?? string.Empty;
+            var fullName = string.Join(" ", new[] { firstName, lastName }.Where(s => !string.IsNullOrWhiteSpace(s)));
+
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), // subject
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // for ASP.NET NameIdentifier
                 new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
-                new Claim(ClaimTypes.Name, user.UserName ?? user.Email ?? string.Empty)
+                // Prefer full name if available
+                new Claim(ClaimTypes.Name, string.IsNullOrWhiteSpace(fullName) ? (user.UserName ?? user.Email ?? string.Empty) : fullName),
+                new Claim(ClaimTypes.GivenName, firstName),
+                new Claim(ClaimTypes.Surname, lastName)
             };
 
             if (roles?.Any() == true)
