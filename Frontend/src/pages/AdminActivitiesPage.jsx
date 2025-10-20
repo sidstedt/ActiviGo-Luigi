@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   fetchActivities,
   fetchZones,
   fetchLocations,
-  deleteActivity,
   createActivity,
   updateActivity,
+  deleteActivity,
 } from "../services/api";
 import { getLocationAddressByZoneId } from "../utils/location";
+import ActivityModal from "../components/ActivityModal";
 import "../styles/ActivitiesPage.css";
 
 export default function AdminActivitiesPage() {
@@ -20,10 +21,8 @@ export default function AdminActivitiesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  // Modal states
   const [showModal, setShowModal] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [editingActivity, setEditingActivity] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -40,10 +39,9 @@ export default function AdminActivitiesPage() {
     return () => clearTimeout(t);
   }, [searchTerm]);
 
-  const loadData = async () => {
+  async function loadData() {
     try {
       setLoading(true);
-      setError(null);
       const [activitiesData, zonesData, locationsData] = await Promise.all([
         fetchActivities(),
         fetchZones(),
@@ -53,12 +51,12 @@ export default function AdminActivitiesPage() {
       setZones(zonesData);
       setLocations(locationsData);
     } catch (err) {
-      setError(err.message || "Kunde inte hämta data");
-      console.error("Fel vid hämtning av data:", err);
+      setError("Kunde inte hämta aktiviteter");
+      console.error(err);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const applyFilters = () => {
     let filtered = [...activities];
@@ -76,28 +74,18 @@ export default function AdminActivitiesPage() {
     setFilteredActivities(filtered);
   };
 
-  const clearFilters = () => {
-    setSearchTerm("");
-  };
+  const clearFilters = () => setSearchTerm("");
 
   const getLocationAddress = (zoneId) =>
     getLocationAddressByZoneId(zones, locations, zoneId);
 
   const handleAdd = () => {
-    setSelectedActivity({
-      name: "",
-      description: "",
-      maxParticipants: "",
-      durationMinutes: "",
-      zoneId: "",
-    });
-    setEditMode(false);
+    setEditingActivity(null);
     setShowModal(true);
   };
 
   const handleEdit = (activity) => {
-    setSelectedActivity(activity);
-    setEditMode(true);
+    setEditingActivity(activity);
     setShowModal(true);
   };
 
@@ -120,8 +108,8 @@ export default function AdminActivitiesPage() {
 
   const handleSave = async (formData) => {
     try {
-      if (editMode) {
-        const updated = await updateActivity(formData);
+      if (editingActivity) {
+        const updated = await updateActivity(editingActivity.id, formData);
         setActivities((prev) =>
           prev.map((a) => (a.id === updated.id ? updated : a))
         );
@@ -130,34 +118,26 @@ export default function AdminActivitiesPage() {
         setActivities((prev) => [...prev, created]);
       }
       setShowModal(false);
-      setSelectedActivity(null);
+      setEditingActivity(null);
     } catch (err) {
       alert("Fel vid sparande: " + err.message);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="activities-page">
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Laddar aktiviteter...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <p>Laddar aktiviteter...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="activities-page">
       <header className="page-header">
         <h1>Hantera Aktiviteter</h1>
         <p>Här kan du lägga till, ändra eller ta bort aktiviteter</p>
-        <button className="add-activity-btn" onClick={handleAdd}>
+        <button className="btn-primary" onClick={handleAdd}>
           ➕ Lägg till ny aktivitet
         </button>
       </header>
 
-      {/* Filter Section */}
+      {/* Filter */}
       <div className="filters-section">
         <div className="filters-grid">
           <div className="filter-group">
@@ -179,33 +159,25 @@ export default function AdminActivitiesPage() {
         </div>
       </div>
 
-      {/* Results */}
+      {/* Aktivitetskorten */}
       <div className="activities-grid">
         {filteredActivities.map((activity) => (
           <div key={activity.id} className="activity-card">
             <div className="activity-header">
-              <h3 className="activity-name">{activity.name}</h3>
+              <h3>{activity.name}</h3>
             </div>
             <div className="activity-content">
-              <p className="activity-description">{activity.description}</p>
+              <p>{activity.description}</p>
               <div className="activity-details">
-                <div className="detail-item">
-                  <span className="detail-label">Adress:</span>
-                  <span className="detail-value">
-                    {getLocationAddress(activity.zoneId) || "Okänd adress"}
-                  </span>
+                <div>
+                  <strong>Adress:</strong>{" "}
+                  {getLocationAddress(activity.zoneId) || "Okänd"}
                 </div>
-                <div className="detail-item">
-                  <span className="detail-label">Max deltagare:</span>
-                  <span className="detail-value">
-                    {activity.maxParticipants}
-                  </span>
+                <div>
+                  <strong>Max deltagare:</strong> {activity.maxParticipants}
                 </div>
-                <div className="detail-item">
-                  <span className="detail-label">Längd:</span>
-                  <span className="detail-value">
-                    {activity.durationMinutes} min
-                  </span>
+                <div>
+                  <strong>Längd:</strong> {activity.durationMinutes} min
                 </div>
               </div>
             </div>
@@ -224,80 +196,29 @@ export default function AdminActivitiesPage() {
         ))}
       </div>
 
-      {/* Modaler */}
+      {/* Modal */}
       {showModal && (
         <ActivityModal
-          activity={selectedActivity}
+          editing={editingActivity}
+          initialData={editingActivity}
           onClose={() => setShowModal(false)}
           onSave={handleSave}
-          editMode={editMode}
         />
       )}
 
-      {showDeleteModal && (
+      {showDeleteModal && deleteTarget && (
         <ConfirmDeleteModal
+          name={deleteTarget.name}
           onConfirm={confirmDelete}
           onCancel={() => setShowDeleteModal(false)}
-          name={deleteTarget?.name}
         />
       )}
     </div>
   );
 }
 
-/* --- MODAL KOMPONENTER --- */
-function ActivityModal({ activity, onClose, onSave, editMode }) {
-  const [formData, setFormData] = useState(activity);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  return (
-    <div className="modal-backdrop">
-      <div className="modal">
-        <h2>{editMode ? "Redigera aktivitet" : "Ny aktivitet"}</h2>
-
-        <label>Namn:</label>
-        <input name="name" value={formData.name} onChange={handleChange} />
-
-        <label>Beskrivning:</label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-        />
-
-        <label>Max deltagare:</label>
-        <input
-          name="maxParticipants"
-          type="number"
-          value={formData.maxParticipants}
-          onChange={handleChange}
-        />
-
-        <label>Längd (minuter):</label>
-        <input
-          name="durationMinutes"
-          type="number"
-          value={formData.durationMinutes}
-          onChange={handleChange}
-        />
-
-        <div className="modal-actions">
-          <button onClick={() => onSave(formData)} className="save-btn">
-            💾 Spara
-          </button>
-          <button onClick={onClose} className="cancel-btn">
-            Avbryt
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ConfirmDeleteModal({ onConfirm, onCancel, name }) {
+/* --- Bekräfta borttagning --- */
+function ConfirmDeleteModal({ name, onConfirm, onCancel }) {
   return (
     <div className="modal-backdrop">
       <div className="modal small">
