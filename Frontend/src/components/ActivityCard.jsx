@@ -1,24 +1,15 @@
 import '../styles/ActivityCard.css'
 import WeatherBadge from './WeatherBadge'
+import { useState } from 'react'
+import { formatDateShort, formatTimeHm } from '../utils/format'
+import Modal from './Modal'
 
-const ActivityCard = ({ occurrence, price, onBook, forecast }) => {
+const ActivityCard = ({ occurrence, price, onBook, forecast, locationName, address, description }) => {
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    // dd/MM
-    return date.toLocaleDateString('sv-SE', {
-      day: '2-digit',
-      month: '2-digit',
-    });
-  };
+  const [showInfo, setShowInfo] = useState(false)
 
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('sv-SE', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
-  };
+  const formatDate = formatDateShort;
+  const formatTime = formatTimeHm;
 
   const hasAvailableSlots = occurrence.availableSlots > 0;
   const isFullyBooked = occurrence.availableSlots === 0;
@@ -33,14 +24,16 @@ const ActivityCard = ({ occurrence, price, onBook, forecast }) => {
       
       {/* Innehåll med info */}
       <div className="card-content">
-        {/* Zon */}
-        <div className="card-info-row">
-          <svg className="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-          <span className="card-info-text">{occurrence.zoneName}</span>
-        </div>
+        {/* Adress */}
+        {address && (
+          <div className="card-info-row">
+            <svg className="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            <span className="card-info-text">{locationName ? `${locationName} – ` : ''}{address}</span>
+          </div>
+        )}
 
 
         {/* Datum, tid och duration */}
@@ -85,14 +78,38 @@ const ActivityCard = ({ occurrence, price, onBook, forecast }) => {
             <WeatherBadge forecast={forecast} />
           )}
         </div>
-        <button 
-          className={`book-button ${!hasAvailableSlots ? 'disabled' : ''}`}
-          onClick={() => onBook(occurrence.id)}
-          disabled={!hasAvailableSlots || occurrence.isCancelled}
-        >
-          {isFullyBooked ? 'Fullbokad' : occurrence.isCancelled ? 'Inställd' : 'Boka nu'}
-        </button>
+        <div className="card-actions">
+          <button 
+            className="secondary-button"
+            onClick={() => setShowInfo(true)}
+          >
+            Mer info
+          </button>
+          <button 
+            className={`book-button ${!hasAvailableSlots ? 'disabled' : ''}`}
+            onClick={() => onBook(occurrence.id)}
+            disabled={!hasAvailableSlots || occurrence.isCancelled}
+          >
+            {isFullyBooked ? 'Fullbokad' : occurrence.isCancelled ? 'Inställd' : 'Boka nu'}
+          </button>
+        </div>
       </div>
+
+      {showInfo && (
+        <Modal title={occurrence.activityName} onClose={() => setShowInfo(false)}>
+          <div className="info-modal-content">
+            <div className="info-row"><strong>Zon:</strong> {occurrence.zoneName}</div>
+            {description && (
+              <div className="info-row"><strong>Beskrivning:</strong> {description}</div>
+            )}
+            {address && <div className="info-row"><strong>Adress:</strong> {address}</div>}
+            {!address && locationName && <div className="info-row"><strong>Plats:</strong> {locationName}</div>}
+            <div className="info-row"><strong>Datum:</strong> {formatDate(occurrence.startTime)}</div>
+            <div className="info-row"><strong>Tid:</strong> {formatTime(occurrence.startTime)} - {formatTime(occurrence.endTime)}</div>
+            <div className="info-row"><strong>Längd:</strong> {occurrence.durationMinutes} min</div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
