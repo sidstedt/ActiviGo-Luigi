@@ -29,9 +29,25 @@ namespace ActiviGo.WebApi.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var userId = GetUserId();
-            var booking = await _bookingService.CreateBookingAsync(userId, dto, ct);
-
-            return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
+            try
+            {
+                var booking = await _bookingService.CreateBookingAsync(userId, dto, ct);
+                return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Business rule violations: full, duplicate, etc.
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                // Fallback to avoid leaking server details; logs should capture the stack.
+                return StatusCode(500, new { message = "Ett oväntat fel uppstod vid bokning." });
+            }
         }
 
         // ---------------------------

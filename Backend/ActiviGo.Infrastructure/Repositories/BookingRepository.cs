@@ -44,6 +44,12 @@ namespace ActiviGo.Infrastructure.Repositories
             return booking;
         }
 
+        public async Task<Booking?> GetAnyBookingForOccurrenceAsync(Guid userId, int occurrenceId, CancellationToken ct)
+        {
+            return await _ctx.Bookings
+                .FirstOrDefaultAsync(b => b.UserId == userId && b.ActivityOccurrenceId == occurrenceId, ct);
+        }
+
         public async Task<List<Booking>> GetAllBookingsAsync(Guid userId, CancellationToken ct)
         {
             return await _ctx.Bookings

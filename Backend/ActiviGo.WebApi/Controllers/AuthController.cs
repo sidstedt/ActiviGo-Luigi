@@ -87,12 +87,12 @@ namespace ActiviGo.WebApi.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            // Assign default role "Customer"
-            if (!await _roleManager.RoleExistsAsync("Customer"))
+            // Assign default role "User"
+            if (!await _roleManager.RoleExistsAsync("User"))
             {
-                await _roleManager.CreateAsync(new IdentityRole<Guid>("Customer"));
+                await _roleManager.CreateAsync(new IdentityRole<Guid>("User"));
             }
-            await _userManager.AddToRoleAsync(user, "Customer");
+            await _userManager.AddToRoleAsync(user, "User");
 
             var roles = await _userManager.GetRolesAsync(user);
             var accessToken = _tokens.CreateToken(user, roles);
