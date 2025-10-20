@@ -4,7 +4,9 @@ import StartPage from "./pages/StartPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ActivitiesPage from "./pages/ActivitiesPage.jsx";
 import ActivityOccurrencesPage from "./pages/ActivityOccurrencesPage.jsx";
+import MyBookingsPage from "./pages/MyBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
 
 const DashboardHome = () => <HomePage />;
 const AdminDashboard = () => <div>Adminpanel</div>;
@@ -42,6 +44,7 @@ function AppRoutes() {
         <Route index element={<DashboardHome />} />
         <Route path="activities" element={<ActivitiesPage />} />
         <Route path="bookings" element={<ActivityOccurrencesPage />} />
+        <Route path="my-bookings" element={<MyBookingsPage />} />
         <Route path="login" element={<LoginPage />} />
 
         <Route
@@ -49,6 +52,14 @@ function AppRoutes() {
           element={
             <RoleRoute allowed={["admin"]} roles={roles}>
               <AdminDashboard />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/schedule"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminSchedulePage />
             </RoleRoute>
           }
         />

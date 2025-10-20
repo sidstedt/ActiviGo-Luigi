@@ -8,14 +8,16 @@ import sidebarIcon from "../assets/weather/sidebaricon/image.png";
 export default function Sidebar({ userRole = "guest", roles = [], collapsed = false, onToggle }) {
   const isLoggedIn = Array.isArray(roles) && roles.length > 0;
 
-  const guestMenu = [
+  // Always visible
+  const baseMenu = [
     { title: "Hem", url: "/", icon: "🏠" },
-    { title: "Logga in", url: "/login", icon: "🔐" },
+    { title: "Aktiviteter", url: "/activities", icon: "🏃" },
   ];
 
-  const userMenu = [
-    { title: "Hem", url: "/", icon: "🏠" },
-    { title: "Bokningar", url: "/bookings", icon: "📅" },
+  // Only for authenticated users
+  const authedMenu = [
+    { title: "Sök & Boka", url: "/bookings", icon: "📅" },
+    { title: "Mina bokningar", url: "/my-bookings", icon: "📋" },
     { title: "Mitt konto", url: "/account", icon: "👤" },
   ];
 
@@ -25,12 +27,13 @@ export default function Sidebar({ userRole = "guest", roles = [], collapsed = fa
 
   const adminExtra = [
     { title: "Admin", url: "/admin", icon: "⚙️" },
+    { title: "Aktivitetsschema", url: "/admin/schedule", icon: "🗓️" },
   ];
 
   const hasRole = (r) => roles.includes(r) || userRole === r;
-  let menuItems = guestMenu;
+  let menuItems = [...baseMenu];
   if (hasRole("user") || hasRole("staff") || hasRole("admin")) {
-    menuItems = userMenu;
+    menuItems = [...menuItems, ...authedMenu];
   }
   if (hasRole("staff")) {
     menuItems = [...menuItems, ...staffExtra];
@@ -68,6 +71,16 @@ export default function Sidebar({ userRole = "guest", roles = [], collapsed = fa
             {!collapsed && <span>{item.title}</span>}
           </NavLink>
         ))}
+        {!isLoggedIn && (
+          <NavLink
+            to="/login"
+            className={`nav-item ${collapsed ? "is-collapsed" : ""}`}
+            title={collapsed ? "Logga in" : undefined}
+          >
+            <span className="icon" aria-hidden="true">🔐</span>
+            {!collapsed && <span>Logga in</span>}
+          </NavLink>
+        )}
         {isLoggedIn && (
           <button
             type="button"
