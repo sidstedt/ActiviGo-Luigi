@@ -16,9 +16,16 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const data = await login(email, password);
+  const data = await login(email, password);
       localStorage.setItem("accessToken", data.accessToken);
       const roles = Array.isArray(data?.user?.roles) ? data.user.roles : [];
+      // If there's a next= param, prefer redirecting there after login
+      const params = new URLSearchParams(window.location.search);
+      const next = params.get('next');
+      if (next) {
+        window.location.href = next;
+        return;
+      }
       if (roles.includes("admin")) {
         window.location.href = "/admin";
       } else if (roles.includes("staff")) {
