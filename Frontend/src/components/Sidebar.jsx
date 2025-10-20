@@ -5,7 +5,12 @@ import { logout } from "../services/api";
 import sidebarIcon from "../assets/weather/sidebaricon/image.png";
 
 // Collapsible, role-based sidebar (no CSS here)
-export default function Sidebar({ userRole = "guest", roles = [], collapsed = false, onToggle }) {
+export default function Sidebar({
+  userRole = "guest",
+  roles = [],
+  collapsed = false,
+  onToggle,
+}) {
   const isLoggedIn = Array.isArray(roles) && roles.length > 0;
 
   // Always visible
@@ -21,25 +26,24 @@ export default function Sidebar({ userRole = "guest", roles = [], collapsed = fa
     { title: "Mitt konto", url: "/account", icon: "👤" },
   ];
 
-  const staffExtra = [
-    { title: "Personalpanel", url: "/staff", icon: "🛠️" },
-  ];
-
-  const adminExtra = [
-    { title: "Admin", url: "/admin", icon: "⚙️" },
-    { title: "Aktivitetsschema", url: "/admin/schedule", icon: "🗓️" },
-  ];
+  const staffExtra = [{ title: "Personalpanel", url: "/staff", icon: "🛠️" }];
 
   const hasRole = (r) => roles.includes(r) || userRole === r;
   let menuItems = [...baseMenu];
-  if (hasRole("user") || hasRole("staff") || hasRole("admin")) {
-    menuItems = [...menuItems, ...authedMenu];
-  }
-  if (hasRole("staff")) {
-    menuItems = [...menuItems, ...staffExtra];
-  }
   if (hasRole("admin")) {
-    menuItems = [...menuItems, ...adminExtra];
+    menuItems = [
+      { title: "Hem", url: "/", icon: "🏠" },
+      { title: "Aktiviteter", url: "/admin/activities", icon: "🏃" },
+      { title: "Aktivitetsschema", url: "/admin/schedule", icon: "🗓️" },
+      { title: "Användare", url: "/admin/users", icon: "👥" },
+      { title: "Statistik", url: "/admin/statistics", icon: "📊" },
+    ];
+  } else if (hasRole("staff")) {
+    menuItems = [...baseMenu, ...authedMenu, ...staffExtra];
+  } else if (hasRole("user")) {
+    menuItems = [...baseMenu, ...authedMenu];
+  } else {
+    menuItems = [...baseMenu];
   }
 
   return (
@@ -63,11 +67,15 @@ export default function Sidebar({ userRole = "guest", roles = [], collapsed = fa
             key={item.title}
             to={item.url}
             className={({ isActive }) =>
-              `nav-item ${isActive ? "active" : ""} ${collapsed ? "is-collapsed" : ""}`
+              `nav-item ${isActive ? "active" : ""} ${
+                collapsed ? "is-collapsed" : ""
+              }`
             }
             title={collapsed ? item.title : undefined}
           >
-            <span className="icon" aria-hidden="true">{item.icon || "•"}</span>
+            <span className="icon" aria-hidden="true">
+              {item.icon || "•"}
+            </span>
             {!collapsed && <span>{item.title}</span>}
           </NavLink>
         ))}
@@ -77,7 +85,9 @@ export default function Sidebar({ userRole = "guest", roles = [], collapsed = fa
             className={`nav-item ${collapsed ? "is-collapsed" : ""}`}
             title={collapsed ? "Logga in" : undefined}
           >
-            <span className="icon" aria-hidden="true">🔐</span>
+            <span className="icon" aria-hidden="true">
+              🔐
+            </span>
             {!collapsed && <span>Logga in</span>}
           </NavLink>
         )}
@@ -88,7 +98,9 @@ export default function Sidebar({ userRole = "guest", roles = [], collapsed = fa
             className={`nav-item ${collapsed ? "is-collapsed" : ""}`}
             title={collapsed ? "Logga ut" : undefined}
           >
-            <span className="icon" aria-hidden="true">⎋</span>
+            <span className="icon" aria-hidden="true">
+              ⎋
+            </span>
             {!collapsed && <span>Logga ut</span>}
           </button>
         )}

@@ -1,5 +1,11 @@
 import React from "react";
-import { Routes, Route, Navigate, BrowserRouter, useInRouterContext } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  BrowserRouter,
+  useInRouterContext,
+} from "react-router-dom";
 import StartPage from "./pages/StartPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ActivitiesPage from "./pages/ActivitiesPage.jsx";
@@ -7,6 +13,7 @@ import ActivityOccurrencesPage from "./pages/ActivityOccurrencesPage.jsx";
 import MyBookingsPage from "./pages/MyBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
+import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
 
 const DashboardHome = () => <HomePage />;
 const AdminDashboard = () => <div>Adminpanel</div>;
@@ -29,7 +36,9 @@ function AppRoutes() {
     }
   })();
 
-  const roles = Array.isArray(storedUser?.roles) ? storedUser.roles.map(r => String(r).toLowerCase()) : [];
+  const roles = Array.isArray(storedUser?.roles)
+    ? storedUser.roles.map((r) => String(r).toLowerCase())
+    : [];
   const userRole = roles.includes("admin")
     ? "admin"
     : roles.includes("staff")
@@ -60,6 +69,14 @@ function AppRoutes() {
           element={
             <RoleRoute allowed={["admin"]} roles={roles}>
               <AdminSchedulePage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/activities"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminActivitiesPage />
             </RoleRoute>
           }
         />
