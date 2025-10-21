@@ -83,7 +83,7 @@ export async function fetchWeatherForecastBatch(queries) {
 // BOOKINGS
 // ============================================
 export async function fetchUserBookings() {
-  return apiRequest('Bookings');
+  return apiRequest('Bookings/UserGetBookings');
 }
 
 export async function fetchBookingById(id) {
@@ -97,6 +97,13 @@ export async function createBooking(bookingData) {
 export async function cancelBooking(id) {
   return apiRequest(`Bookings/${id}`, 'DELETE');
 }
+
+export async function fetchAdminBookings() {
+  return apiRequest('Bookings/AdminGetBookings');
+}
+// export async function fetchBookings() {
+//   return apiRequest('Bookings/admin');
+// }
 
 // ============================================
 // CATEGORIES
