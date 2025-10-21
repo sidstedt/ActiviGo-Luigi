@@ -11,10 +11,12 @@ namespace ActiviGo.Application.DTOs
         public string ActivityName { get; set; } = string.Empty;
         public string ActivityDescription { get; set; } = string.Empty;
         public decimal ActivityPrice { get; set; }
+    public decimal Price { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string ZoneName { get; set; } = string.Empty;
         public string CategoryName { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
         public BookingStatus Status { get; set; }
     }
 
@@ -31,9 +33,10 @@ namespace ActiviGo.Application.DTOs
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
     }
-
+    
     public class UpdateBookingDto
     {
         public BookingStatus Status { get; set; }
     }
+
 }

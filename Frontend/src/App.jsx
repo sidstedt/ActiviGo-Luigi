@@ -1,12 +1,21 @@
 import React from "react";
-import { Routes, Route, Navigate, BrowserRouter, useInRouterContext } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  BrowserRouter,
+  useInRouterContext,
+} from "react-router-dom";
 import StartPage from "./pages/StartPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ActivitiesPage from "./pages/ActivitiesPage.jsx";
 import ActivityOccurrencesPage from "./pages/ActivityOccurrencesPage.jsx";
+import MyBookingsPage from "./pages/MyBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 // imported statistics page
 import Statistics from "./pages/Statistics.jsx";
+import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
+import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
 
 const DashboardHome = () => <HomePage />;
 const AdminDashboard = () => <div>Adminpanel</div>;
@@ -29,7 +38,9 @@ function AppRoutes() {
     }
   })();
 
-  const roles = Array.isArray(storedUser?.roles) ? storedUser.roles.map(r => String(r).toLowerCase()) : [];
+  const roles = Array.isArray(storedUser?.roles)
+    ? storedUser.roles.map((r) => String(r).toLowerCase())
+    : [];
   const userRole = roles.includes("admin")
     ? "admin"
     : roles.includes("staff")
@@ -48,12 +59,32 @@ function AppRoutes() {
   <Route path="login" element={<LoginPage />} />
   {/* Route for statistics-page */}
   <Route path="statistics" element={<Statistics />} />
+        <Route path="activities" element={<ActivitiesPage />} />
+        <Route path="bookings" element={<ActivityOccurrencesPage />} />
+        <Route path="my-bookings" element={<MyBookingsPage />} />
+        <Route path="login" element={<LoginPage />} />
 
         <Route
           path="admin"
           element={
             <RoleRoute allowed={["admin"]} roles={roles}>
               <AdminDashboard />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/schedule"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminSchedulePage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/activities"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminActivitiesPage />
             </RoleRoute>
           }
         />

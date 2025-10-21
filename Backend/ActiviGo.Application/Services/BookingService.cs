@@ -50,9 +50,19 @@ public class BookingService : IBookingService
             throw new InvalidOperationException("ActivityOccurrence is full.");
         }
 
-        var existing = await _uow.Booking.GetBookingForOccurrenceAsync(userId, dto.ActivityOccurrenceId, ct);
-        if (existing != null)
+        // Check any existing booking (including canceled)
+        var anyExisting = await _uow.Booking.GetAnyBookingForOccurrenceAsync(userId, dto.ActivityOccurrenceId, ct);
+        if (anyExisting != null)
         {
+            if (anyExisting.Status == BookingStatus.Canceled)
+            {
+                // Reactivate canceled booking
+                anyExisting.Status = BookingStatus.Reserved;
+                anyExisting.UpdatedAt = DateTime.UtcNow;
+                await _uow.SaveChangesAsync();
+                _logger.LogInformation("Återaktiverade avbokad bokning: BookingId={BookingId} UserId={UserId} OccurrenceId={OccurrenceId}", anyExisting.Id, userId, dto.ActivityOccurrenceId);
+                return _mapper.Map<CreatedBookingDto>(anyExisting);
+            }
             _logger.LogWarning("Dubbelbokningsförsök: UserId={UserId} OccurrenceId={OccurrenceId}", userId, dto.ActivityOccurrenceId);
             throw new InvalidOperationException("Booking already exists for this occurrence.");
         }

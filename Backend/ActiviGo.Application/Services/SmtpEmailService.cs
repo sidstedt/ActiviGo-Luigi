@@ -15,14 +15,21 @@ namespace ActiviGo.Application.Services
         public SmtpEmailService(IConfiguration configuration)
         {
             var emailSettings = configuration.GetSection("EmailSettings");
-            _smtpHost = emailSettings["SmtpHost"];
-            _smtpPort = int.Parse(emailSettings["SmtpPort"]);
-            _smtpUser = emailSettings["SmtpUser"];
-            _smtpPass = emailSettings["SmtpPass"];
+            _smtpHost = emailSettings["SmtpHost"] ?? string.Empty;
+            var port = emailSettings["SmtpPort"];
+            _smtpPort = int.TryParse(port, out var parsed) ? parsed : 0;
+            _smtpUser = emailSettings["SmtpUser"] ?? string.Empty;
+            _smtpPass = emailSettings["SmtpPass"] ?? string.Empty;
         }
 
         public async Task SendEmailAsync(string to, string subject, string body)
         {
+            // Basic validation; silently skip if not configured to avoid breaking core flow
+            if (string.IsNullOrWhiteSpace(to) || string.IsNullOrWhiteSpace(_smtpHost) || _smtpPort <= 0 || string.IsNullOrWhiteSpace(_smtpUser))
+            {
+                return;
+            }
+
             using var client = new SmtpClient(_smtpHost, _smtpPort)
             {
                 Credentials = new NetworkCredential(_smtpUser, _smtpPass),

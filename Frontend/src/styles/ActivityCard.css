@@ -124,6 +124,22 @@
   color: #9ca3af;
 }
 
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.secondary-button {
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #374151;
+  background-color: #e5e7eb;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 @media (max-width: 1024px) {
   .activity-card {
     padding: 1.5rem;
