@@ -95,5 +95,17 @@ namespace ActiviGo.Infrastructure.Repositories
                     .ThenInclude(o => o.Zone)
                 .ToListAsync(ct);
         }
+
+        public async Task<List<Booking>> GetAllBookingsAdminAsync(CancellationToken ct)
+        {
+            return await _ctx.Bookings
+                .AsNoTracking()
+                .Include(b => b.ActivityOccurrence)
+                    .ThenInclude(ao => ao.Activity)
+                        .ThenInclude(a => a.Category)
+                .Include(b => b.ActivityOccurrence)
+                    .ThenInclude(ao => ao.Zone)
+                .ToListAsync(ct);
+        }
     }
 }
