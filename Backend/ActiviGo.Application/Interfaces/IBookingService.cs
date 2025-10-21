@@ -11,5 +11,6 @@ namespace ActiviGo.Application.Interfaces
 
         // Staff scope
         Task<List<BookingDto>?> GetBookingsForOccurrenceAsync(int occurrenceId, Guid staffId, CancellationToken ct);
+        Task<List<BookingDto>> GetAllBookingsAdminAsync(CancellationToken ct);
     }
 }
