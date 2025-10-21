@@ -106,6 +106,9 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Include(b => b.ActivityOccurrence)
                     .ThenInclude(ao => ao.Zone)
                 .ToListAsync(ct);
+
         }
+
+
     }
 }
