@@ -54,11 +54,11 @@ function AppRoutes() {
       <Route path="/" element={<StartPage userRole={userRole} roles={roles} />}>
         <Route index element={<DashboardHome />} />
 
-  <Route path="activities" element={<ActivitiesPage />} />
-  <Route path="bookings" element={<ActivityOccurrencesPage />} />
-  <Route path="login" element={<LoginPage />} />
-  {/* Route for statistics-page */}
-  <Route path="statistics" element={<Statistics />} />
+        <Route path="activities" element={<ActivitiesPage />} />
+        <Route path="bookings" element={<ActivityOccurrencesPage />} />
+        <Route path="login" element={<LoginPage />} />
+        {/* Route for statistics-page */}
+        <Route path="statistics" element={<Statistics />} />
         <Route path="activities" element={<ActivitiesPage />} />
         <Route path="bookings" element={<ActivityOccurrencesPage />} />
         <Route path="my-bookings" element={<MyBookingsPage />} />
@@ -96,7 +96,15 @@ function AppRoutes() {
             </RoleRoute>
           }
         />
-
+        <Route
+          path="admin/statistics"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <Statistics />
+            </RoleRoute>
+          }
+        />
+        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
