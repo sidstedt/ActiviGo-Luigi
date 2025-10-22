@@ -114,9 +114,7 @@ export async function cancelBooking(id) {
 export async function fetchAdminBookings() {
   return apiRequest('Bookings/AdminGetBookings');
 }
-// export async function fetchBookings() {
-//   return apiRequest('Bookings/admin');
-// }
+
 
 // ============================================
 // CATEGORIES
