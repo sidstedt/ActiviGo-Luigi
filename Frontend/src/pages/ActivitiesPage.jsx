@@ -82,19 +82,38 @@ export default function ActivitiesPage() {
     if (selectedCategory) {
       const selIdx = Number(selectedCategory);
       const selCat = categories[selIdx];
-      const selName = selCat ? String(selCat.name || '').toLowerCase() : '';
+      const selName = selCat ? String(selCat.name || "").toLowerCase() : "";
       filtered = filtered.filter((a) => {
         // Possible places to find category info on activity
-        const actCatRaw = a.categoryId ?? a.CategoryId ?? a.category?.id ?? a.category?.categoryId ?? a.categoryIndex ?? a.catIndex ?? null;
-        const actCatName = String(a.categoryName || a.category?.name || '').toLowerCase();
+        const actCatRaw =
+          a.categoryId ??
+          a.CategoryId ??
+          a.category?.id ??
+          a.category?.categoryId ??
+          a.categoryIndex ??
+          a.catIndex ??
+          null;
+        const actCatName = String(
+          a.categoryName || a.category?.name || ""
+        ).toLowerCase();
 
         if (actCatRaw != null) {
           // numeric match against selected index
-          if (!isNaN(Number(actCatRaw)) && Number(actCatRaw) === selIdx) return true;
+          if (!isNaN(Number(actCatRaw)) && Number(actCatRaw) === selIdx)
+            return true;
           // match against selected category id if present
-          if (selCat && !isNaN(Number(actCatRaw)) && Number(actCatRaw) === Number(selCat.id ?? selCat.categoryId)) return true;
+          if (
+            selCat &&
+            !isNaN(Number(actCatRaw)) &&
+            Number(actCatRaw) === Number(selCat.id ?? selCat.categoryId)
+          )
+            return true;
           // string match (some APIs store id as string)
-          if (selCat && String(actCatRaw) === String(selCat.id ?? selCat.categoryId)) return true;
+          if (
+            selCat &&
+            String(actCatRaw) === String(selCat.id ?? selCat.categoryId)
+          )
+            return true;
         }
 
         // name-based fallback
@@ -106,11 +125,11 @@ export default function ActivitiesPage() {
 
     // Place filter (determine via activity.zoneId -> zone/location flags)
     if (selectedPlace) {
-      if (selectedPlace === 'outdoor') {
-        filtered = filtered.filter((a) => getActivityPlace(a) === 'outdoor');
-      } else if (selectedPlace === 'indoor') {
+      if (selectedPlace === "outdoor") {
+        filtered = filtered.filter((a) => getActivityPlace(a) === "outdoor");
+      } else if (selectedPlace === "indoor") {
         // treat anything not explicitly classified as 'outdoor' as indoor — backend often only marks outdoor zones
-        filtered = filtered.filter((a) => getActivityPlace(a) !== 'outdoor');
+        filtered = filtered.filter((a) => getActivityPlace(a) !== "outdoor");
       }
     }
 
@@ -139,11 +158,11 @@ export default function ActivitiesPage() {
       // zone-level flags
       if (zone) {
         // if isOutdoor explicitly true -> outdoor
-        if (zone.isOutdoor === true) return 'outdoor';
+        if (zone.isOutdoor === true) return "outdoor";
         // if isOutdoor explicitly false -> indoor
-        if (zone.isOutdoor === false) return 'indoor';
-        if (zone.isIndoor === true) return 'indoor';
-        if (zone.isIndoor === false) return 'outdoor';
+        if (zone.isOutdoor === false) return "indoor";
+        if (zone.isIndoor === true) return "indoor";
+        if (zone.isIndoor === false) return "outdoor";
       }
       // location-level flags
       const loc =
@@ -156,10 +175,10 @@ export default function ActivitiesPage() {
             l.zones.some((zz) => (zz.id ?? zz.zoneId) === zid)
         );
       if (loc) {
-        if (loc.isOutdoor === true) return 'outdoor';
-        if (loc.isOutdoor === false) return 'indoor';
-        if (loc.isIndoor === true) return 'indoor';
-        if (loc.isIndoor === false) return 'outdoor';
+        if (loc.isOutdoor === true) return "outdoor";
+        if (loc.isOutdoor === false) return "indoor";
+        if (loc.isIndoor === true) return "indoor";
+        if (loc.isIndoor === false) return "outdoor";
       }
       return null;
     } catch {

@@ -111,13 +111,25 @@ export default function AdminActivitiesPage() {
     if (selectedCategory) {
       const selIdx = Number(selectedCategory);
       const selCat = categories[selIdx];
-      const selName = selCat ? String(selCat.name || '').toLowerCase() : '';
+      const selName = selCat ? String(selCat.name || "").toLowerCase() : "";
       filtered = filtered.filter((a) => {
-        const actCatRaw = a.categoryId ?? a.CategoryId ?? a.category?.id ?? a.category?.categoryId ?? null;
-        const actCatName = String(a.categoryName || a.category?.name || '').toLowerCase();
+        const actCatRaw =
+          a.categoryId ??
+          a.CategoryId ??
+          a.category?.id ??
+          a.category?.categoryId ??
+          null;
+        const actCatName = String(
+          a.categoryName || a.category?.name || ""
+        ).toLowerCase();
         if (actCatRaw != null) {
-          if (!isNaN(Number(actCatRaw)) && Number(actCatRaw) === selIdx) return true;
-          if (selCat && Number(actCatRaw) === Number(selCat.id ?? selCat.categoryId)) return true;
+          if (!isNaN(Number(actCatRaw)) && Number(actCatRaw) === selIdx)
+            return true;
+          if (
+            selCat &&
+            Number(actCatRaw) === Number(selCat.id ?? selCat.categoryId)
+          )
+            return true;
         }
         if (selName && actCatName && selName === actCatName) return true;
         return false;
@@ -127,23 +139,30 @@ export default function AdminActivitiesPage() {
     // Place filter
     const getActivityPlace = (activity) => {
       try {
-        const zid = activity.zoneId ?? activity.ZoneId ?? activity.zone?.id ?? null;
+        const zid =
+          activity.zoneId ?? activity.ZoneId ?? activity.zone?.id ?? null;
         if (!zid) return null;
         const zone = zones.find((z) => (z.id ?? z.zoneId) === zid) || null;
         if (zone) {
-          if (zone.isOutdoor === true) return 'outdoor';
-          if (zone.isOutdoor === false) return 'indoor';
-          if (zone.isIndoor === true) return 'indoor';
-          if (zone.isIndoor === false) return 'outdoor';
+          if (zone.isOutdoor === true) return "outdoor";
+          if (zone.isOutdoor === false) return "indoor";
+          if (zone.isIndoor === true) return "indoor";
+          if (zone.isIndoor === false) return "outdoor";
         }
         const loc =
-          locations.find((l) => l.id === (zone?.locationId ?? zone?.LocationId)) ||
-          locations.find((l) => Array.isArray(l.zones) && l.zones.some((zz) => (zz.id ?? zz.zoneId) === zid));
+          locations.find(
+            (l) => l.id === (zone?.locationId ?? zone?.LocationId)
+          ) ||
+          locations.find(
+            (l) =>
+              Array.isArray(l.zones) &&
+              l.zones.some((zz) => (zz.id ?? zz.zoneId) === zid)
+          );
         if (loc) {
-          if (loc.isOutdoor === true) return 'outdoor';
-          if (loc.isOutdoor === false) return 'indoor';
-          if (loc.isIndoor === true) return 'indoor';
-          if (loc.isIndoor === false) return 'outdoor';
+          if (loc.isOutdoor === true) return "outdoor";
+          if (loc.isOutdoor === false) return "indoor";
+          if (loc.isIndoor === true) return "indoor";
+          if (loc.isIndoor === false) return "outdoor";
         }
         return null;
       } catch {
@@ -152,10 +171,10 @@ export default function AdminActivitiesPage() {
     };
 
     if (selectedPlace) {
-      if (selectedPlace === 'outdoor') {
-        filtered = filtered.filter((a) => getActivityPlace(a) === 'outdoor');
-      } else if (selectedPlace === 'indoor') {
-        filtered = filtered.filter((a) => getActivityPlace(a) !== 'outdoor');
+      if (selectedPlace === "outdoor") {
+        filtered = filtered.filter((a) => getActivityPlace(a) === "outdoor");
+      } else if (selectedPlace === "indoor") {
+        filtered = filtered.filter((a) => getActivityPlace(a) !== "outdoor");
       }
     }
     setFilteredActivities(filtered);
