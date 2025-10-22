@@ -14,6 +14,7 @@ import MyBookingsPage from "./pages/MyBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
 import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
+import MyAccountPage from "./pages/MyAccountPage.jsx";
 
 const DashboardHome = () => <HomePage />;
 const AdminDashboard = () => <div>Adminpanel</div>;
@@ -55,6 +56,7 @@ function AppRoutes() {
         <Route path="bookings" element={<ActivityOccurrencesPage />} />
         <Route path="my-bookings" element={<MyBookingsPage />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="my-account" element={<MyAccountPage />} />
 
         <Route
           path="admin"

@@ -23,7 +23,7 @@ export default function Sidebar({
   const authedMenu = [
     { title: "Sök & Boka", url: "/bookings", icon: "📅" },
     { title: "Mina bokningar", url: "/my-bookings", icon: "📋" },
-    { title: "Mitt konto", url: "/account", icon: "👤" },
+    { title: "Mitt konto", url: "/my-account", icon: "👤" },
   ];
 
   const staffExtra = [{ title: "Personalpanel", url: "/staff", icon: "🛠️" }];
