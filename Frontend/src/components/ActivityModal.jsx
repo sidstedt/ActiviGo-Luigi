@@ -53,11 +53,6 @@ export default function ActivityModal({
     }
   }, []);
 
-  useEffect(() => {
-    console.log("categoryId:", categoryId);
-    console.log("categories:", categories);
-  }, [categoryId, categories]);
-
   // räkna fram lediga tider och auto-välj första om ingen giltig tid är satt
   useEffect(() => {
     const times = getAvailableTimes({
