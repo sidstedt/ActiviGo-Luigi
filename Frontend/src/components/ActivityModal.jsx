@@ -43,13 +43,20 @@ export default function ActivityModal({
   const [availableTimes, setAvailableTimes] = useState([]);
 
   useEffect(() => {
-    if (!initialData && zones.length > 0 && !zoneId) {
-      setZoneId(zones[0].zoneId);
+    if (!initialData) {
+      if (zones?.length > 0 && !zoneId) {
+        setZoneId(zones[0].zoneId);
+      }
+      if (categories?.length > 0 && !categoryId) {
+        setCategoryId(categories[0].categoryId);
+      }
     }
-    if (!initialData && categories?.length > 0 && !categoryId) {
-      setCategoryId(categories[0].categoryId);
-    }
-  }, [initialData, zones]);
+  }, []);
+
+  useEffect(() => {
+    console.log("categoryId:", categoryId);
+    console.log("categories:", categories);
+  }, [categoryId, categories]);
 
   // räkna fram lediga tider och auto-välj första om ingen giltig tid är satt
   useEffect(() => {
@@ -76,7 +83,8 @@ export default function ActivityModal({
       durationMinutes: Number(durationMinutes) || 0,
       isPrivate: Boolean(isPrivate),
       isAvailable: Boolean(isAvailable),
-      categoryId: Number(categoryId) || 0,
+      categoryId: Number(categoryId),
+      categoryName: categories[Number(categoryId)]?.name || "",
       zoneId: Number(zoneId) || 0,
       staffId: staffId || null,
       startTime: dateStr && timeStr ? `${dateStr}T${timeStr}:00` : undefined,
@@ -152,11 +160,7 @@ export default function ActivityModal({
       <div className="modal">
         {/* Modal Header */}
         <div className="modal-header">
-          <h2>
-            {editing
-              ? "Redigera aktivitetstillfälle"
-              : "Nytt aktivitetstillfälle"}
-          </h2>
+          <h2>{editing ? "Redigera aktivitet" : "Ny aktivitet"}</h2>
           <button className="close-btn" onClick={onClose} aria-label="Stäng">
             ×
           </button>
@@ -178,15 +182,16 @@ export default function ActivityModal({
           <label>
             Kategori
             <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(Number(e.target.value))}
+              value={String(categoryId)}
+              onChange={(e) => setCategoryId(e.target.value)}
               required
             >
-              {categories?.map((c) => (
-                <option key={c.categoryId} value={c.categoryId}>
-                  {c.categoryName || c.name}
+              <option value="">Välj kategori</option>
+              {categories?.map((c, index) => (
+                <option key={index} value={String(index)}>
+                  {c.name}
                 </option>
-              )) || <option value={0}>Ingen kategori</option>}
+              ))}
             </select>
           </label>
 
