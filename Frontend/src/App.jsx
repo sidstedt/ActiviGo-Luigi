@@ -62,10 +62,10 @@ function AppRoutes() {
           path="admin"
           element={
             <RoleRoute allowed={["admin"]} roles={roles}>
-              <AdminDashboard />
+              <Navigate to="/" replace />
             </RoleRoute>
-          }
-        />
+  }
+/>
         <Route
           path="admin/schedule"
           element={
@@ -99,7 +99,7 @@ function AppRoutes() {
 
 export default function App() {
   const isInRouter = useInRouterContext();
-  // Fallback: auto-wrap in BrowserRouter if rendered outside a Router
+
   if (!isInRouter) {
     return (
       <BrowserRouter>
