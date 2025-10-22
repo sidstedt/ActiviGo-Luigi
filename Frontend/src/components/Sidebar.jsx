@@ -29,7 +29,8 @@ export default function Sidebar({
     { title: "Mina bokningar", url: "/my-bookings", icon: "📋" },
     // Statistic link
     { title: "Statistics", url: "/statistics", icon: "📊" },
-    { title: "Mitt konto", url: "/account", icon: "👤" },
+    // { title: "Mitt konto", url: "/account", icon: "👤" },
+    { title: "Mitt konto", url: "/my-account", icon: "👤" },
   ];
 
   const staffExtra = [{ title: "Personalpanel", url: "/staff", icon: "🛠️" }];

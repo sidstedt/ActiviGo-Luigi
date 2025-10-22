@@ -41,6 +41,26 @@ namespace ActiviGo.WebApi.Controllers
             return Ok(users);
         }
 
+        [HttpGet("staff")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> GetAllStaff()
+        {
+            var staffUsers = await _userManager.GetUsersInRoleAsync("Staff");
+
+            var result = staffUsers.Select(u => new
+            {
+                u.Id,
+                u.Email,
+                u.FirstName,
+                u.LastName,
+                u.IsActive,
+                u.CreatedAt,
+                u.UpdatedAt
+            }).ToList();
+
+            return Ok(result);
+        }
+
         [HttpGet("{userId:guid}")]
         [Authorize(Roles = ("Admin,Staff"))]
         public async Task<IActionResult> GetUserById(Guid userId)

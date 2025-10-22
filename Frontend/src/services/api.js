@@ -54,6 +54,19 @@ export async function fetchActivities() {
   return apiRequest(`Activities`);
 }
 
+export async function createActivity(activityData) {
+  return apiRequest('Activities', 'POST', activityData);
+}
+
+export async function updateActivity(id, activityData) {
+  return apiRequest(`Activities/${id}`, 'PUT', activityData);
+}
+
+export async function deleteActivity(id) {
+  return apiRequest(`Activities/${id}`, 'DELETE');
+}
+
+
 // ============================================
 // ACTIVITY OCCURRENCES
 // ============================================
@@ -109,7 +122,8 @@ export async function fetchAdminBookings() {
 // CATEGORIES
 // ============================================
 // Categories (unused currently)
-// export async function fetchCategories() { return apiRequest('Category'); }
+export async function fetchCategories()
+{ return apiRequest('Category'); }
 // export async function fetchCategoriesWithActivities() { return apiRequest('Category/withActivities'); }
 
 // ============================================
@@ -126,6 +140,9 @@ export async function fetchZones() {
 // ============================================
 // STAFF
 // ============================================
+export async function fetchStaff() {
+  return apiRequest('Users/staff');
+}
 
 // ============================================
 // AUTH
@@ -268,65 +285,65 @@ export async function resetPassword(email, token, newPassword) {
 // ============================================
 
 // ========== USERS ==========
-export async function fetchAllUsers() {
-  return apiRequest('Admin/users');
-}
+// export async function fetchAllUsers() {
+//   return apiRequest('Admin/users');
+// }
 
-export async function fetchUserById(id) {
-  return apiRequest(`Admin/users/${id}`);
-}
+// export async function fetchUserById(id) {
+//   return apiRequest(`Admin/users/${id}`);
+// }
 
-export async function createUser(userData) {
-  return apiRequest('Admin/users', 'POST', userData);
-}
+// export async function createUser(userData) {
+//   return apiRequest('Admin/users', 'POST', userData);
+// }
 
-export async function updateUser(id, userData) {
-  return apiRequest(`Admin/users/${id}`, 'PUT', userData);
-}
+// export async function updateUser(id, userData) {
+//   return apiRequest(`Admin/users/${id}`, 'PUT', userData);
+// }
 
-export async function deleteUser(id) {
-  return apiRequest(`Admin/users/${id}`, 'DELETE');
-}
+// export async function deleteUser(id) {
+//   return apiRequest(`Admin/users/${id}`, 'DELETE');
+// }
 
-// ========== ACTIVITIES ==========
-export async function fetchAllActivities() {
-  return apiRequest('Admin/activities');
-}
+// // ========== ACTIVITIES ==========
+// export async function fetchAllActivities() {
+//   return apiRequest('Admin/activities');
+// }
 
-export async function fetchActivityById(id) {
-  return apiRequest(`Admin/activities/${id}`);
-}
+// export async function fetchActivityById(id) {
+//   return apiRequest(`Admin/activities/${id}`);
+// }
 
-export async function createActivity(activityData) {
-  return apiRequest('Admin/activities', 'POST', activityData);
-}
+// export async function createActivity(activityData) {
+//   return apiRequest('Activities', 'POST', activityData);
+// }
 
-export async function updateActivity(id, activityData) {
-  return apiRequest(`Admin/activities/${id}`, 'PUT', activityData);
-}
+// export async function updateActivity(id, activityData) {
+//   return apiRequest(`Admin/activities/${id}`, 'PUT', activityData);
+// }
 
-export async function deleteActivity(id) {
-  return apiRequest(`Admin/activities/${id}`, 'DELETE');
-}
+// export async function deleteActivity(id) {
+//   return apiRequest(`Admin/activities/${id}`, 'DELETE');
+// }
 
 // ========== BOOKINGS ==========
-export async function fetchAllBookings() {
-  return apiRequest('Admin/bookings');
-}
+// export async function fetchAllBookings() {
+//   return apiRequest('Admin/bookings');
+// }
 
-export async function fetchBookingDetails(id) {
-  return apiRequest(`Admin/bookings/${id}`);
-}
+// export async function fetchBookingDetails(id) {
+//   return apiRequest(`Admin/bookings/${id}`);
+// }
 
-export async function updateBooking(id, bookingData) {
-  return apiRequest(`Admin/bookings/${id}`, 'PUT', bookingData);
-}
+// export async function updateBooking(id, bookingData) {
+//   return apiRequest(`Admin/bookings/${id}`, 'PUT', bookingData);
+// }
 
-export async function deleteBooking(id) {
-  return apiRequest(`Admin/bookings/${id}`, 'DELETE');
-}
+// export async function deleteBooking(id) {
+//   return apiRequest(`Admin/bookings/${id}`, 'DELETE');
+// }
 
-// ========== STATISTICS ==========
-export async function fetchStatistics() {
-  return apiRequest('Admin/statistics');
-}
+// // ========== STATISTICS ==========
+// export async function fetchStatistics() {
+//   return apiRequest('Admin/statistics');
+// }
