@@ -48,10 +48,7 @@ export default function ActivitiesPage() {
 
   // applyFilters removed — page always shows all activities via useEffect above
 
-  const clearFilters = () => {
-    // no-op now — kept for possible future use
-    setFilteredActivities(Array.isArray(activities) ? activities : []);
-  };
+  // No clearFilters function — this page shows all activities
 
   // Address resolution via shared helper
   const getLocationAddress = (zoneId) =>

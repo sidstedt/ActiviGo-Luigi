@@ -36,9 +36,34 @@
 
 .filters-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   align-items: end;
+}
+
+.filters-row {
+  display: grid;
+  gap: 1rem;
+  align-items: end;
+}
+
+.filters-row--top {
+  /* Now three columns: Category | Activity | Place (clear button moved) */
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+}
+
+.filters-row--dates {
+  grid-template-columns: 1fr 1fr 160px; /* dateFrom | dateTo | button cell */
+}
+
+.filter-group--right {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+}
+
+.filter-group--right .clear-filters-btn {
+  margin-top: 0.25rem;
 }
 
 .filter-group {
@@ -60,6 +85,8 @@
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
+
+/* Previously used to make date inputs compact; removed so date fields fill their grid cell like other inputs. */
 
 .filter-input:focus, .filter-select:focus {
   outline: none;
@@ -214,6 +241,14 @@
   .filters-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .filters-row--top {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-row--dates {
+    grid-template-columns: 1fr 1fr;
   }
 
   .occurrences-grid {
