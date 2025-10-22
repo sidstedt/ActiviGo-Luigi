@@ -70,6 +70,7 @@ export default function ActivityDistributionPie({ activityOccurrences }) {
       upcoming: v.upcoming,
     }));
 
+    
     const innerStatus = [
       {
         id: "completed",
@@ -218,51 +219,74 @@ export default function ActivityDistributionPie({ activityOccurrences }) {
             </div>
           </>
         ) : (
-          <PieChart
-            series={[
-              {
-                innerRadius: 80,
-                outerRadius: 170,
-                data: data.innerStatus,
-                arcLabel: (item) =>
-                  `${item.id || item.label} (${Number(
-                    item.percentage || 0
-                  ).toFixed(0)}%)`,
-                valueFormatter: ({ value }) =>
-                  `${value} av ${data.totalAll} (${
-                    data.totalAll > 0
-                      ? ((value / data.totalAll) * 100).toFixed(0)
-                      : 0
-                  }%)`,
-                highlightScope: { fade: "global", highlight: "item" },
-                highlighted: { additionalRadius: 2 },
-                cornerRadius: 3,
-              },
-              {
-                innerRadius: 170,
-                outerRadius: 190,
-                data: data.outerStatusActivity,
-                arcLabel: (item) =>
-                  `${(item.id || "").split("-")[0]} (${Number(
-                    item.percentage || 0
-                  ).toFixed(0)}%)`,
-                arcLabelRadius: 150,
-                highlightScope: { fade: "global", highlight: "item" },
-                highlighted: { additionalRadius: 2 },
-                cornerRadius: 3,
-              },
-            ]}
-            sx={{ [`& .${pieArcLabelClasses.root}`]: { fontSize: "12px" } }}
-            legend={{
-              position: { vertical: "middle", horizontal: "right" },
-              direction: "column",
-              itemMarkWidth: 18,
-              itemMarkHeight: 18,
-              labelStyle: { fontSize: 14, fontWeight: 500, marginLeft: 6 },
-            }}
-          >
-            <PieCenterLabel>Status</PieCenterLabel>
-          </PieChart>
+          <>
+            <PieChart
+              series={[
+                {
+                  innerRadius: 80,
+                  outerRadius: 170,
+                  data: data.innerStatus,
+                  valueFormatter: ({ value, dataIndex }) => {
+                    const pct =
+                      data.totalAll > 0
+                        ? ((value / data.totalAll) * 100).toFixed(0)
+                        : 0;
+                    return `${value} av ${data.totalAll} (${pct}%)`;
+                  },
+                  highlightScope: { fade: "global", highlight: "item" },
+                  highlighted: { additionalRadius: 2 },
+                  cornerRadius: 3,
+                },
+              ]}
+              sx={{ [`& .${pieArcLabelClasses.root}`]: { fontSize: "12px" } }}
+              hideLegend
+              width={420}
+              height={340}
+            >
+              <PieCenterLabel>Status</PieCenterLabel>
+            </PieChart>
+
+            <div style={{ minWidth: 260 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Status
+              </Typography>
+              <div>
+                {data.innerStatus.map((d) => (
+                  <div
+                    key={d.id}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      margin: "4px 0",
+                    }}
+                    title={`Totalt: ${d.value} (${Number(d.percentage || 0).toFixed(0)}%)`}
+                  >
+                    <div
+                      style={{
+                        width: 14,
+                        height: 14,
+                        background: d.color,
+                        borderRadius: 3,
+                        marginRight: 8,
+                      }}
+                    />
+                    <div
+                      style={{
+                        flex: 1,
+                        minWidth: 140,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {String(d.label)}
+                    </div>
+                    <strong style={{ marginLeft: 8 }}>{d.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
         )}
       </Box>
     </div>
