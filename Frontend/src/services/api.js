@@ -250,6 +250,18 @@ export async function fetchLocations() {
   return apiRequest('Location');
 }
 
+export async function createLocation(locationData) {
+  return apiRequest('Location', 'POST', locationData)
+}
+
+export async function updateLocation(id, locationData) {
+  return apiRequest(`Location/${id}`, 'PUT', locationData);
+}
+
+export async function deleteLocation(id) {
+  return apiRequest(`Location/${id}`, 'DELETE');
+}
+
 // (unused) export async function fetchLocationById(id) { return apiRequest(`Location/${id}`); }
 
 // ============================================
