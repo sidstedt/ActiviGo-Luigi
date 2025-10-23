@@ -178,33 +178,50 @@ export default function AdminActivitiesPage() {
               <h3>{activity.name}</h3>
             </div>
             <div className="activity-content">
-              <p>{activity.description}</p>
+              <p className="activity-description">{activity.description}</p>
               <div className="activity-details">
-                <div>
-                  <strong>Adress:</strong>{" "}
-                  {getLocationAddress(activity.zoneId) || "Okänd"}
+                <div className="detail-item">
+                  <div className="detail-label">Adress</div>
+                  <div className="detail-value">
+                    {getLocationAddress(activity.zoneId) || "Okänd"}
+                  </div>
                 </div>
-                <div>
-                  <strong>Pris:</strong> {activity.price} kr
+                <div className="detail-item">
+                  <div className="detail-label">Pris</div>
+                  <div className="detail-value">{activity.price} kr</div>
                 </div>
-                <div>
-                  <strong>Max deltagare:</strong> {activity.maxParticipants}
+                <div className="detail-item">
+                  <div className="detail-label">Max deltagare</div>
+                  <div className="detail-value">{activity.maxParticipants}</div>
                 </div>
-                <div>
-                  <strong>Längd:</strong> {activity.durationMinutes} min
+                <div className="detail-item">
+                  <div className="detail-label">Längd</div>
+                  <div className="detail-value">
+                    {activity.durationMinutes} min
+                  </div>
                 </div>
               </div>
             </div>
             <div className="activity-footer">
-              <button className="edit-btn" onClick={() => handleEdit(activity)}>
-                ✏️ Ändra
-              </button>
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(activity)}
-              >
-                🗑️ Ta bort
-              </button>
+              <div className="activity-status">
+                {activity.isPrivate && (
+                  <span className="status-badge private">Privat</span>
+                )}
+              </div>
+              <div className="card-actions">
+                <button
+                  className="view-details-btn edit-btn"
+                  onClick={() => handleEdit(activity)}
+                >
+                  Ändra
+                </button>
+                <button
+                  className="view-details-btn delete-btn"
+                  onClick={() => handleDelete(activity)}
+                >
+                  Ta bort
+                </button>
+              </div>
             </div>
           </div>
         ))}
