@@ -87,5 +87,11 @@ namespace ActiviGo.Application.Services
             return _mapper.Map<ZoneReadDto>(createdZone);
         }
 
+        public override async Task<IEnumerable<ZoneReadDto>> GetAllAsync()
+        {
+            var zones = await _unitofWork.Zone.GetAllZonesWithActivitiesAndLocationAsync();
+            return _mapper.Map<IEnumerable<ZoneReadDto>>(zones);
+        }
+
     }
 }

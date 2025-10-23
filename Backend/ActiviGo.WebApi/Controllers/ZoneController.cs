@@ -106,7 +106,7 @@ namespace ActiviGo.WebApi.Controllers
         public async Task<IActionResult> DeleteZone(int id)
         {
             await _zone.DeleteAsync(id);
-            return Ok($"Deleted Successfully fro id {id}");
+            return Ok(new { message = $"Deleted Successfully from id: {id}" });
         }
 
         [Authorize(Roles = "Admin")]

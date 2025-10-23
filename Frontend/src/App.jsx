@@ -17,6 +17,7 @@ import Statistics from "./pages/Statistics.jsx";
 import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
 import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
 import MyAccountPage from "./pages/MyAccountPage.jsx";
+import AdminZonesPage from './pages/AdminZonesPage.jsx'
 
 const DashboardHome = () => <HomePage />;
 const AdminDashboard = () => <div>Adminpanel</div>;
@@ -87,6 +88,14 @@ function AppRoutes() {
           element={
             <RoleRoute allowed={["admin"]} roles={roles}>
               <AdminActivitiesPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/zones"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminZonesPage />
             </RoleRoute>
           }
         />
