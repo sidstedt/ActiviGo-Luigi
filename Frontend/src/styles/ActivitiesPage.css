@@ -168,6 +168,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1rem;
+  grid-auto-rows: 1fr;
+  align-items: stretch;
 }
 
 .activity-card {
@@ -177,11 +179,23 @@
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #e1e8ed;
+  display: flex;
+  flex-direction: column;
 }
 
+/* se till att innehållet kan scrolla om det blir för stort istället för att trycka in layouten */
+.activity-content {
+  padding: 0.8rem;
+  flex: 1 1 auto;
+  min-height: 0; /* viktigt när föräldern använder flex och grid-auto-rows:1fr */
+  overflow: hidden; /* eller auto om du vill tillåta inre scroll */
+}
+
+/* Hover: lägg upp över andra kort istället för att trycka in dem */
 .activity-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  z-index: 5;
 }
 
 .activity-header {
@@ -198,6 +212,11 @@
   margin: 0;
   flex: 1;
   margin-right: 0.5rem;
+  display: block;
+  max-width: 16ch;          /* approx 16 tecken */
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .activity-price {
@@ -209,6 +228,7 @@
 
 .activity-content {
   padding: 0.8rem;
+  flex: 1 1 auto;
 }
 
 .activity-description {
@@ -254,6 +274,7 @@
   padding: 0.5rem 0.9rem;
   background: #f8f9fa;
   border-top: 1px solid #e1e8ed;
+  margin-top: auto;
 }
 
 .activity-status {
