@@ -16,16 +16,12 @@ import "../styles/ActivitiesPage.css";
 
 export default function AdminActivitiesPage() {
   const [activities, setActivities] = useState([]);
-  const [filteredActivities, setFilteredActivities] = useState([]);
   const [zones, setZones] = useState([]);
   const [locations, setLocations] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [categories, setCategories] = useState([]);
   const [occurrences, setOccurrences] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
-  // Filter state (category + place)
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedPlace, setSelectedPlace] = useState(""); // "" | "indoor" | "outdoor"
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,11 +43,6 @@ export default function AdminActivitiesPage() {
     const t = setTimeout(() => setDebouncedSearchTerm(searchTerm), 300);
     return () => clearTimeout(t);
   }, [searchTerm]);
-
-  // Filter
-  useEffect(() => {
-    applyFilters();
-  }, [activities, debouncedSearchTerm, selectedCategory, selectedPlace]);
 
   useEffect(() => {
     let mounted = true;
@@ -96,89 +87,7 @@ export default function AdminActivitiesPage() {
     }
   }
 
-  const applyFilters = () => {
-    let filtered = [...activities];
-    if (debouncedSearchTerm) {
-      filtered = filtered.filter(
-        (a) =>
-          a.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-          a.description
-            .toLowerCase()
-            .includes(debouncedSearchTerm.toLowerCase())
-      );
-    }
-    // Category filter
-    if (selectedCategory) {
-      const selIdx = Number(selectedCategory);
-      const selCat = categories[selIdx];
-      const selName = selCat ? String(selCat.name || "").toLowerCase() : "";
-      filtered = filtered.filter((a) => {
-        const actCatRaw =
-          a.categoryId ??
-          a.CategoryId ??
-          a.category?.id ??
-          a.category?.categoryId ??
-          null;
-        const actCatName = String(
-          a.categoryName || a.category?.name || ""
-        ).toLowerCase();
-        if (actCatRaw != null) {
-          if (!isNaN(Number(actCatRaw)) && Number(actCatRaw) === selIdx)
-            return true;
-          if (
-            selCat &&
-            Number(actCatRaw) === Number(selCat.id ?? selCat.categoryId)
-          )
-            return true;
-        }
-        if (selName && actCatName && selName === actCatName) return true;
-        return false;
-      });
-    }
-
-    // Place filter
-    const getActivityPlace = (activity) => {
-      try {
-        const zid =
-          activity.zoneId ?? activity.ZoneId ?? activity.zone?.id ?? null;
-        if (!zid) return null;
-        const zone = zones.find((z) => (z.id ?? z.zoneId) === zid) || null;
-        if (zone) {
-          if (zone.isOutdoor === true) return "outdoor";
-          if (zone.isOutdoor === false) return "indoor";
-          if (zone.isIndoor === true) return "indoor";
-          if (zone.isIndoor === false) return "outdoor";
-        }
-        const loc =
-          locations.find(
-            (l) => l.id === (zone?.locationId ?? zone?.LocationId)
-          ) ||
-          locations.find(
-            (l) =>
-              Array.isArray(l.zones) &&
-              l.zones.some((zz) => (zz.id ?? zz.zoneId) === zid)
-          );
-        if (loc) {
-          if (loc.isOutdoor === true) return "outdoor";
-          if (loc.isOutdoor === false) return "indoor";
-          if (loc.isIndoor === true) return "indoor";
-          if (loc.isIndoor === false) return "outdoor";
-        }
-        return null;
-      } catch {
-        return null;
-      }
-    };
-
-    if (selectedPlace) {
-      if (selectedPlace === "outdoor") {
-        filtered = filtered.filter((a) => getActivityPlace(a) === "outdoor");
-      } else if (selectedPlace === "indoor") {
-        filtered = filtered.filter((a) => getActivityPlace(a) !== "outdoor");
-      }
-    }
-    setFilteredActivities(filtered);
-  };
+  // (Filtrering borttagen — renderar alla aktiviteter direkt)
 
   const clearFilters = () => setSearchTerm("");
 
@@ -259,63 +168,11 @@ export default function AdminActivitiesPage() {
         </button>
       </header>
 
-      {/* Filter */}
-      <div className="filters-section">
-        <div className="filters-grid">
-          <div className="filter-group">
-            <label htmlFor="search">Sök aktivitet</label>
-            <input
-              id="search"
-              type="text"
-              placeholder="Sök efter namn eller beskrivning..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="filter-input"
-            />
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="category">Kategori</label>
-            <select
-              id="category"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="filter-select"
-            >
-              <option value="">Alla kategorier</option>
-              {categories.map((c, idx) => (
-                <option key={c.id ?? c.categoryId ?? idx} value={String(idx)}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="place">Plats</label>
-            <select
-              id="place"
-              value={selectedPlace}
-              onChange={(e) => setSelectedPlace(e.target.value)}
-              className="filter-select"
-            >
-              <option value="">Alla</option>
-              <option value="indoor">Inomhus</option>
-              <option value="outdoor">Utomhus</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <button onClick={clearFilters} className="clear-filters-btn">
-              Rensa filter
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Filter borttaget — visar alla aktiviteter */}
 
       {/* Aktivitetskorten */}
       <div className="activities-grid">
-        {filteredActivities.map((activity) => (
+        {activities.map((activity) => (
           <div key={activity.id} className="activity-card">
             <div className="activity-header">
               <h3>{activity.name}</h3>
