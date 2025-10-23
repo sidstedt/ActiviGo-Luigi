@@ -36,7 +36,7 @@
 
 .filters-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.5rem;
   align-items: end;
 }
@@ -48,12 +48,11 @@
 }
 
 .filters-row--top {
-  /* Now three columns: Category | Activity | Place (clear button moved) */
-  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
 }
 
 .filters-row--dates {
-  grid-template-columns: 1fr 1fr 160px; /* dateFrom | dateTo | button cell */
+  grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) 160px; /* dateFrom | dateTo | button cell */
 }
 
 .filter-group--right {
@@ -69,6 +68,7 @@
 .filter-group {
   display: flex;
   flex-direction: column;
+  min-width: 0; /* så element kan krympa inom grid-cellen */
 }
 
 .filter-group label {
@@ -84,9 +84,10 @@
   border-radius: 5px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0; /* förhindrar att innehåll tvingar ut cellen */
 }
-
-/* Previously used to make date inputs compact; removed so date fields fill their grid cell like other inputs. */
 
 .filter-input:focus, .filter-select:focus {
   outline: none;
@@ -223,6 +224,68 @@
   margin-top: 2rem;
 }
 
+/* Grupp-actions i kort: visa knappar sida vid sida */
+.activity-card .card-actions,
+.occurrences-grid .card-actions,
+.occurrence-card .actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  /* behåll tidigare beteende (wrap på små skärmar styrs via media queries) */
+}
+
+/* Se till att varje knapp tar lika mycket utrymme */
+.activity-card .card-actions > * ,
+.occurrences-grid .card-actions > * ,
+.occurrence-card .actions > * {
+  flex: 1 1 0;          /* dela utrymmet jämnt mellan barn */
+  min-width: 0;         /* låt knapparna krympa vid behov */
+  box-sizing: border-box;
+  text-align: center;   /* centrerar text i knapparna */
+}
+
+/* Behåll visuella stiljusteringar för knappar */
+.occurrences-grid .btn-primary,
+.occurrences-grid .btn-secondary,
+.occurrences-grid button {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* På mycket små skärmar: låt knapparna staplas men fortfarande fullbredd */
+@media (max-width: 640px) {
+  .activity-card .card-actions,
+  .occurrences-grid .card-actions,
+  .occurrence-card .actions {
+    flex-wrap: wrap;
+  }
+  .activity-card .card-actions > * ,
+  .occurrences-grid .card-actions > * ,
+  .occurrence-card .actions > * {
+    flex: 1 1 100%; /* full width när de staplas */
+  }
+}
+
+@media (max-width: 768px) {
+  .occurrences-grid .btn-primary,
+  .occurrences-grid .btn-secondary,
+  .occurrences-grid button {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .occurrences-grid .btn-primary,
+  .occurrences-grid .btn-secondary,
+  .occurrences-grid button {
+    padding: 0.3rem 0.45rem;
+    font-size: 0.75rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .occurrences-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -281,6 +344,21 @@
 
   .page-header p {
     font-size: 1rem;
+  }
+
+  /* På små skärmar: tillåt knappraden bryta och visa knapparna */
+  .activity-card .card-actions,
+  .occurrences-grid .card-actions,
+  .occurrence-card .actions {
+    flex-wrap: wrap;          /* bryt rad så knappar syns */
+    justify-content: flex-start;
+    overflow: visible;        /* visa innehållet istället för att dölja */
+    margin-top: 0.5rem;
+  }
+  .occurrences-grid .btn-primary,
+  .occurrences-grid .btn-secondary,
+  .occurrences-grid button {
+    white-space: normal;      /* tillåt radbrytning i knapp-text om nödvändigt */
   }
 }
 
