@@ -43,6 +43,7 @@ export default function Sidebar({
       { title: "Hem", url: "/", icon: "🏠" },
       { title: "Aktiviteter", url: "/admin/activities", icon: "🏃" },
       { title: "Zoner", url: "/admin/zones", icon: "🟦"},
+      { title: "Platser", url: "/admin/locations", icon: "📍"},
       { title: "Aktivitetsschema", url: "/admin/schedule", icon: "🗓️" },
       { title: "Användare", url: "/admin/users", icon: "👥" },
       { title: "Statistik", url: "/admin/statistics", icon: "📊" },
