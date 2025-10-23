@@ -4,7 +4,11 @@ import { NavLink } from "react-router-dom";
 import { logout as apiLogout } from "../services/api";
 import "../styles/HamburgerMenu.css"; // behåll
 
-export default function Sidebar({ userRole = "guest", roles = [], brand = "ActivityGo" }) {
+export default function Sidebar({
+  userRole = "guest",
+  roles = [],
+  brand = "ActivityGo",
+}) {
   const [open, setOpen] = useState(false);
   const panelRef = useRef(null);
   const buttonRef = useRef(null);
@@ -15,18 +19,18 @@ export default function Sidebar({ userRole = "guest", roles = [], brand = "Activ
     { title: "Hem", url: "/", icon: "🏠" },
     { title: "Aktiviteter", url: "/activities", icon: "🏃" },
   ];
-  
+
   const userMenu = [
     { title: "Hem", url: "/", icon: "🏠" },
     { title: "Bokningar", url: "/bookings", icon: "📅" },
-  ]
-  
+  ];
+
   // Only for authenticated users
   const authedMenu = [
     { title: "Sök & Boka", url: "/bookings", icon: "📅" },
     { title: "Mina bokningar", url: "/my-bookings", icon: "📋" },
     // Statistic link
-    { title: "Statistics", url: "/statistics", icon: "📊" },
+    // { title: "Statistics", url: "/statistics", icon: "📊" },
     // { title: "Mitt konto", url: "/account", icon: "👤" },
     { title: "Mitt konto", url: "/my-account", icon: "👤" },
   ];
@@ -70,7 +74,11 @@ export default function Sidebar({ userRole = "guest", roles = [], brand = "Activ
   }, [open]);
 
   const handleLogout = async () => {
-    try { await apiLogout(); } finally { setOpen(false); }
+    try {
+      await apiLogout();
+    } finally {
+      setOpen(false);
+    }
   };
 
   return (
@@ -138,7 +146,12 @@ export default function Sidebar({ userRole = "guest", roles = [], brand = "Activ
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
-              <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path
+                d="M6 6l12 12M6 18L18 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
           </button>
         </div>
@@ -148,11 +161,15 @@ export default function Sidebar({ userRole = "guest", roles = [], brand = "Activ
             <li key={item.title} role="none">
               <NavLink
                 to={item.url}
-                className={({ isActive }) => `hm-link ${isActive ? "active" : ""}`}
+                className={({ isActive }) =>
+                  `hm-link ${isActive ? "active" : ""}`
+                }
                 role="menuitem"
                 onClick={() => setOpen(false)}
               >
-                <span className="hm-icon" aria-hidden>{item.icon || "•"}</span>
+                <span className="hm-icon" aria-hidden>
+                  {item.icon || "•"}
+                </span>
                 <span className="hm-text">{item.title}</span>
               </NavLink>
             </li>
@@ -160,15 +177,28 @@ export default function Sidebar({ userRole = "guest", roles = [], brand = "Activ
 
           {!isLoggedIn ? (
             <li role="none">
-              <NavLink to="/login" className="hm-link" role="menuitem" onClick={() => setOpen(false)}>
-                <span className="hm-icon" aria-hidden>🔐</span>
+              <NavLink
+                to="/login"
+                className="hm-link"
+                role="menuitem"
+                onClick={() => setOpen(false)}
+              >
+                <span className="hm-icon" aria-hidden>
+                  🔐
+                </span>
                 <span className="hm-text">Logga in</span>
               </NavLink>
             </li>
           ) : (
             <li role="none">
-              <button type="button" className="hm-link hm-logout" onClick={handleLogout}>
-                <span className="hm-icon" aria-hidden>⎋</span>
+              <button
+                type="button"
+                className="hm-link hm-logout"
+                onClick={handleLogout}
+              >
+                <span className="hm-icon" aria-hidden>
+                  ⎋
+                </span>
                 <span className="hm-text">Logga ut</span>
               </button>
             </li>
@@ -176,7 +206,9 @@ export default function Sidebar({ userRole = "guest", roles = [], brand = "Activ
         </ul>
 
         <div className="hm-footer">
-          <small>© {new Date().getFullYear()} {brand}</small>
+          <small>
+            © {new Date().getFullYear()} {brand}
+          </small>
         </div>
       </nav>
     </header>

@@ -23,18 +23,13 @@
 
 
 .profile-stats {
-
     display: grid;
-
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin-bottom: 4rem;
-
     justify-content: center;
-    
     max-width: 700px; 
-    
-    margin-left: auto;
+    margin: auto;
 }
 
 .profile-stats h2 {
@@ -76,7 +71,6 @@
 }
 
 .total-spent {
-
     border: 2px solid #2ecc71;
     background: #ecf8f3;
 }
@@ -102,7 +96,6 @@
 }
 
 .spinner {
-
     width: 40px;
     height: 40px;
     border: 4px solid #f3f3f3;
@@ -148,7 +141,6 @@
     }
     
     .profile-stats {
-
         max-width: none; 
         margin-left: auto;
         margin-right: auto;
