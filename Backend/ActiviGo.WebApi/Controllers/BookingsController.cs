@@ -50,10 +50,18 @@ namespace ActiviGo.WebApi.Controllers
             }
         }
 
+        [HttpGet ("AdminGetBookings")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllBookingsAdmin(CancellationToken ct)
+        {
+            var bookings = await _bookingService.GetAllBookingsAdminAsync(ct);
+            return Ok(bookings);
+        }
+
         // ---------------------------
         // Read all bookings for user
         // ---------------------------
-        [HttpGet]
+        [HttpGet("UserGetBookings")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> GetAll(CancellationToken ct)
         {

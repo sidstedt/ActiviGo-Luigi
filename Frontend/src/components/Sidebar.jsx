@@ -19,10 +19,17 @@ export default function Sidebar({
     { title: "Aktiviteter", url: "/activities", icon: "🏃" },
   ];
 
+  const userMenu = [
+    { title: "Hem", url: "/", icon: "🏠" },
+    { title: "Bokningar", url: "/bookings", icon: "📅" },
+  ]
   // Only for authenticated users
   const authedMenu = [
     { title: "Sök & Boka", url: "/bookings", icon: "📅" },
     { title: "Mina bokningar", url: "/my-bookings", icon: "📋" },
+    // Statistic link
+    { title: "Statistics", url: "/statistics", icon: "📊" },
+    // { title: "Mitt konto", url: "/account", icon: "👤" },
     { title: "Mitt konto", url: "/my-account", icon: "👤" },
   ];
 

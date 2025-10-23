@@ -12,6 +12,8 @@ import ActivitiesPage from "./pages/ActivitiesPage.jsx";
 import ActivityOccurrencesPage from "./pages/ActivityOccurrencesPage.jsx";
 import MyBookingsPage from "./pages/MyBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+// imported statistics page
+import Statistics from "./pages/Statistics.jsx";
 import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
 import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
 import MyAccountPage from "./pages/MyAccountPage.jsx";
@@ -52,6 +54,12 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<StartPage userRole={userRole} roles={roles} />}>
         <Route index element={<DashboardHome />} />
+
+        <Route path="activities" element={<ActivitiesPage />} />
+        <Route path="bookings" element={<ActivityOccurrencesPage />} />
+        <Route path="login" element={<LoginPage />} />
+        {/* Route for statistics-page */}
+        <Route path="statistics" element={<Statistics />} />
         <Route path="activities" element={<ActivitiesPage />} />
         <Route path="bookings" element={<ActivityOccurrencesPage />} />
         <Route path="my-bookings" element={<MyBookingsPage />} />
@@ -87,6 +95,14 @@ function AppRoutes() {
           element={
             <RoleRoute allowed={["staff", "admin"]} roles={roles}>
               <StaffPanel />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/statistics"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <Statistics />
             </RoleRoute>
           }
         />

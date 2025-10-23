@@ -174,4 +174,11 @@ public class BookingService : IBookingService
 
         return _mapper.Map<List<BookingDto>>(bookings);
     }
+
+    public async Task<List<BookingDto>> GetAllBookingsAdminAsync(CancellationToken ct)
+    {
+        _logger.LogDebug("Hämtar alla bokningar för admin");
+        var allBookings = await _uow.Booking.GetAllBookingsAdminAsync(ct);
+        return _mapper.Map<List<BookingDto>>(allBookings);
+    }
 }
