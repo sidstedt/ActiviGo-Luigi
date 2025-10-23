@@ -155,8 +155,8 @@
 /* Activities Grid */
 .activities-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
 }
 
 .activity-card {
@@ -177,16 +177,16 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 1.5rem 1.5rem 1rem;
+  padding: 0.8rem 0.9rem 0.5rem;
   border-bottom: 1px solid #e1e8ed;
 }
 
 .activity-name {
-  font-size: 1.3rem;
+  font-size: 1.05rem;
   color: #2c3e50;
   margin: 0;
   flex: 1;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .activity-price {
@@ -197,14 +197,14 @@
 }
 
 .activity-content {
-  padding: 1.5rem;
+  padding: 0.8rem;
 }
 
 .activity-description {
   color: #7f8c8d;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 0.6rem;
+  font-size: 0.88rem;
 }
 
 .activity-details {
@@ -217,7 +217,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.35rem 0;
   border-bottom: 1px solid #f1f2f6;
 }
 
@@ -228,19 +228,19 @@
 .detail-label {
   font-weight: 600;
   color: #2c3e50;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .detail-value {
   color: #7f8c8d;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .activity-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 0.9rem;
   background: #f8f9fa;
   border-top: 1px solid #e1e8ed;
 }
@@ -277,10 +277,10 @@
   background: #3498db;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.45rem 0.9rem;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 600;
   transition: background-color 0.3s ease;
 }

@@ -15,5 +15,7 @@ namespace ActiviGo.Domain.Interfaces
 
         // Staff scope
         Task<List<Booking>> GetBookingsForOccurrenceAsync(int occurrenceId, CancellationToken ct);
+        Task<List<Booking>> GetAllBookingsAdminAsync(CancellationToken ct);
+
     }
 }
