@@ -131,6 +131,18 @@ export async function fetchZones() {
   return apiRequest('Zone');
 }
 
+export async function createZone(zoneData) {
+  return apiRequest('Zone', 'POST', zoneData)
+}
+
+export async function updateZone(id, zoneData) {
+  return apiRequest(`Zone/${id}`, 'PUT', zoneData)
+}
+
+export async function deleteZone(id) {
+  return apiRequest(`Zone/${id}`, 'DELETE')
+}
+
 // Zones (unused currently)
 // export async function fetchZonesWithRelations() { return apiRequest('Zone/withRelations'); }
 // export async function fetchZonesByLocation(locationId) { return apiRequest(`Zone/location/${locationId}`); }
