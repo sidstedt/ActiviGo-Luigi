@@ -1,28 +1,26 @@
-import React from "react";
+// ...imports
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
-import "../styles/Sidebar.css";
-import { logout } from "../services/api";
-import sidebarIcon from "../assets/weather/sidebaricon/image.png";
+import { logout as apiLogout } from "../services/api";
+import "../styles/HamburgerMenu.css"; // behåll
 
-// Collapsible, role-based sidebar (no CSS here)
-export default function Sidebar({
-  userRole = "guest",
-  roles = [],
-  collapsed = false,
-  onToggle,
-}) {
+export default function Sidebar({ userRole = "guest", roles = [], brand = "ActivityGo" }) {
+  const [open, setOpen] = useState(false);
+  const panelRef = useRef(null);
+  const buttonRef = useRef(null);
+
   const isLoggedIn = Array.isArray(roles) && roles.length > 0;
 
-  // Always visible
   const baseMenu = [
     { title: "Hem", url: "/", icon: "🏠" },
     { title: "Aktiviteter", url: "/activities", icon: "🏃" },
   ];
-
+  
   const userMenu = [
     { title: "Hem", url: "/", icon: "🏠" },
     { title: "Bokningar", url: "/bookings", icon: "📅" },
   ]
+  
   // Only for authenticated users
   const authedMenu = [
     { title: "Sök & Boka", url: "/bookings", icon: "📅" },
@@ -32,10 +30,9 @@ export default function Sidebar({
     // { title: "Mitt konto", url: "/account", icon: "👤" },
     { title: "Mitt konto", url: "/my-account", icon: "👤" },
   ];
-
   const staffExtra = [{ title: "Personalpanel", url: "/staff", icon: "🛠️" }];
-
   const hasRole = (r) => roles.includes(r) || userRole === r;
+
   let menuItems = [...baseMenu];
   if (hasRole("admin")) {
     menuItems = [
@@ -49,69 +46,139 @@ export default function Sidebar({
     menuItems = [...baseMenu, ...authedMenu, ...staffExtra];
   } else if (hasRole("user")) {
     menuItems = [...baseMenu, ...authedMenu];
-  } else {
-    menuItems = [...baseMenu];
   }
 
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (open && panelRef.current && !panelRef.current.contains(e.target)) {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [open]);
+
+  const handleLogout = async () => {
+    try { await apiLogout(); } finally { setOpen(false); }
+  };
+
   return (
-    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-      <div className="sidebar-header">
-        {!collapsed && <div className="brand">ActivityGo</div>}
+    <header className="hm-header" role="banner">
+      <div className="hm-bar">
+        {/* Burgarknapp med SVG (inga bilder/alt-texter) */}
         <button
+          ref={buttonRef}
+          className="hm-burger"
+          aria-label={open ? "Stäng meny" : "Öppna meny"}
+          aria-expanded={open}
+          aria-controls="hm-drawer"
+          onClick={() => setOpen((v) => !v)}
           type="button"
-          onClick={onToggle}
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? "Expandera sidomeny" : "Kollapsa sidomeny"}
-          className="collapse-btn"
         >
-          <img src={sidebarIcon} alt="toggle sidebar" width={18} height={18} />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="28"
+            height="28"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
         </button>
+
+        {/* Brand i topbaren (behålls) */}
+        <NavLink to="/" className="hm-brand" onClick={() => setOpen(false)}>
+          {brand}
+        </NavLink>
       </div>
 
-      <nav className="nav">
-        {menuItems.map((item) => (
-          <NavLink
-            key={item.title}
-            to={item.url}
-            className={({ isActive }) =>
-              `nav-item ${isActive ? "active" : ""} ${
-                collapsed ? "is-collapsed" : ""
-              }`
-            }
-            title={collapsed ? item.title : undefined}
-          >
-            <span className="icon" aria-hidden="true">
-              {item.icon || "•"}
-            </span>
-            {!collapsed && <span>{item.title}</span>}
-          </NavLink>
-        ))}
-        {!isLoggedIn && (
-          <NavLink
-            to="/login"
-            className={`nav-item ${collapsed ? "is-collapsed" : ""}`}
-            title={collapsed ? "Logga in" : undefined}
-          >
-            <span className="icon" aria-hidden="true">
-              🔐
-            </span>
-            {!collapsed && <span>Logga in</span>}
-          </NavLink>
-        )}
-        {isLoggedIn && (
+      {/* Backdrop */}
+      <div className={`hm-backdrop ${open ? "open" : ""}`} />
+
+      {/* Drawer */}
+      <nav
+        id="hm-drawer"
+        className={`hm-drawer ${open ? "open" : ""}`}
+        aria-hidden={!open}
+        ref={panelRef}
+      >
+        <div className="hm-drawer-header">
+          {/* Ta bort dubblett av brand här för att undvika “ActivityGo” x2 */}
+          {/* <span className="hm-title">{brand}</span> */}
+          <span className="sr-only" aria-hidden="true"></span>
           <button
+            className="hm-close"
+            onClick={() => setOpen(false)}
+            aria-label="Stäng meny"
             type="button"
-            onClick={logout}
-            className={`nav-item ${collapsed ? "is-collapsed" : ""}`}
-            title={collapsed ? "Logga ut" : undefined}
           >
-            <span className="icon" aria-hidden="true">
-              ⎋
-            </span>
-            {!collapsed && <span>Logga ut</span>}
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
           </button>
-        )}
+        </div>
+
+        <ul className="hm-list" role="menu">
+          {menuItems.map((item) => (
+            <li key={item.title} role="none">
+              <NavLink
+                to={item.url}
+                className={({ isActive }) => `hm-link ${isActive ? "active" : ""}`}
+                role="menuitem"
+                onClick={() => setOpen(false)}
+              >
+                <span className="hm-icon" aria-hidden>{item.icon || "•"}</span>
+                <span className="hm-text">{item.title}</span>
+              </NavLink>
+            </li>
+          ))}
+
+          {!isLoggedIn ? (
+            <li role="none">
+              <NavLink to="/login" className="hm-link" role="menuitem" onClick={() => setOpen(false)}>
+                <span className="hm-icon" aria-hidden>🔐</span>
+                <span className="hm-text">Logga in</span>
+              </NavLink>
+            </li>
+          ) : (
+            <li role="none">
+              <button type="button" className="hm-link hm-logout" onClick={handleLogout}>
+                <span className="hm-icon" aria-hidden>⎋</span>
+                <span className="hm-text">Logga ut</span>
+              </button>
+            </li>
+          )}
+        </ul>
+
+        <div className="hm-footer">
+          <small>© {new Date().getFullYear()} {brand}</small>
+        </div>
       </nav>
-    </aside>
+    </header>
   );
 }
