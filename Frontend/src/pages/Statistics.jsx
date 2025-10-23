@@ -163,14 +163,7 @@ export default function Statistics() {
       <ActivityDistributionPie activityOccurrences={activityOccurrences} />
 
       {/* Pass/tillfällen */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h2>Pass/Tillfällen</h2>
-        {activityOccurrences.length > 0 ? (
-          <p>{activityOccurrences.length} tillfällen hämtade.</p>
-        ) : (
-          <p>Inga pass/tillfällen hittades</p>
-        )}
-      </div>
+      <div style={{ marginBottom: "2rem" }}></div>
     </div>
   );
 }
