@@ -80,19 +80,30 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
-  align-items: end;
+  align-items: start; /* tidigare: end — byt till start för konsekvent topp-justering */
 }
 
+/* säkerställ att varje filter-grupp börjar upptill i sin cell */
 .filter-group {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  align-items: flex-start; /* se till att innehållet är vänsterjusterat och börjar upptill */
+}
+
+/* Tvinga alla direkta barn i grid att ligga i toppen - undviker att en kolumn sitter lägre */
+.filters-grid > * {
+  align-self: start;
 }
 
 .filter-group label {
   font-weight: 600;
   color: #2c3e50;
   margin-bottom: 0.5rem;
+  margin-top: 0; /* säkerställ konsekvent top-marginal */
   font-size: 0.9rem;
+  display: block;
 }
 
 .filter-input, .filter-select {
@@ -157,6 +168,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1rem;
+  grid-auto-rows: 1fr;
+  align-items: stretch;
 }
 
 .activity-card {
@@ -166,11 +179,23 @@
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #e1e8ed;
+  display: flex;
+  flex-direction: column;
 }
 
+/* se till att innehållet kan scrolla om det blir för stort istället för att trycka in layouten */
+.activity-content {
+  padding: 0.8rem;
+  flex: 1 1 auto;
+  min-height: 0; /* viktigt när föräldern använder flex och grid-auto-rows:1fr */
+  overflow: hidden; /* eller auto om du vill tillåta inre scroll */
+}
+
+/* Hover: lägg upp över andra kort istället för att trycka in dem */
 .activity-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  z-index: 5;
 }
 
 .activity-header {
@@ -179,14 +204,22 @@
   align-items: flex-start;
   padding: 0.8rem 0.9rem 0.5rem;
   border-bottom: 1px solid #e1e8ed;
+
+    /* Brytningsegenskaper */
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .activity-name {
+  display: block;
+  flex: 0 1 16ch;      /* tillåt krympning/growth inom flex-kontainer */
+  min-width: 0;        /* viktigt för att flex-barn ska kunna brytas */
+  max-width: 16ch;     /* ungefär 16 tecken */
+  margin: 0;
   font-size: 1.05rem;
   color: #2c3e50;
-  margin: 0;
-  flex: 1;
-  margin-right: 0.5rem;
 }
 
 .activity-price {
@@ -198,6 +231,7 @@
 
 .activity-content {
   padding: 0.8rem;
+  flex: 1 1 auto;
 }
 
 .activity-description {
@@ -240,9 +274,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.9rem;
+  padding: 0.6rem 1rem;
   background: #f8f9fa;
   border-top: 1px solid #e1e8ed;
+  margin-top: auto;
+  gap: 0.75rem; /* lite luft mellan vänster och höger sektion */
+  flex-wrap: wrap; /* gör att de bryts snyggt på mindre skärmar */
 }
 
 .activity-status {
@@ -287,6 +324,54 @@
 
 .view-details-btn:hover {
   background: #2980b9;
+}
+
+/* Gör "Ändra" och "Ta bort" lika stora och förhindra att texten bryts */
+.activity-card .card-actions {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  align-items: center;
+  flex: 0 1 auto;   /* krymp vid behov */
+  max-width: 100%;
+  min-width: 0;
+}
+
+.activity-card .card-actions > * {
+  flex: 1 1 0;
+  min-width: 0;            /* tillåt krympning inom flex-kontainern */
+  white-space: nowrap;     /* förhindra att knapptext bryts */
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Behåll knapp-styling men gör dem lite mindre för kompakt utseende */
+.activity-card .card-actions button,
+.activity-card .card-actions .view-details-btn,
+.activity-card .card-actions .edit-btn,
+.activity-card .card-actions .delete-btn {
+  padding: 0.32rem 0.6rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* Lite mindre padding om det fortfarande är trångt */
+@media (max-width: 640px) {
+  .activity-card .card-actions > * {
+    padding: 0.28rem 0.45rem;
+    font-size: 0.82rem;
+  }
+}
+
+/* På mycket små skärmar tillåt stapling så knappar inte blir för trånga */
+@media (max-width: 480px) {
+  .activity-card .card-actions {
+    flex-wrap: wrap;
+  }
+  .activity-card .card-actions > * {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
 }
 
 /* Responsive Design */
@@ -346,4 +431,35 @@
   .activity-card {
     margin: 0 0.5rem;
   }
+}
+
+/* Flytta ner "Rensa filter" så den inte sticker ut mellan 770px och 1010px */
+@media (min-width: 770px) and (max-width: 1010px) {
+  .filters-grid {
+    /* något smalare kolumner så innehåll bryts snyggt */
+    grid-template-columns: repeat(3, minmax(160px, 1fr));
+    align-items: start;
+    gap: 1rem;
+  }
+
+  /* Anta att "Rensa filter" ligger i sista .filter-group -> gör den fullbredd */
+  .filters-grid .filter-group:last-child {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .filters-grid .filter-group:last-child .clear-filters-btn {
+    margin-top: 0.5rem;
+  }
+
+  /* Säkerställ att inputs kan krympa inom sina celler */
+  .filters-grid .filter-group {
+    min-width: 0;
+  }
+}
+
+/* Säkerställ box-sizing så padding inte ökar kortbredden */
+.activity-card,
+.activity-card * {
+  box-sizing: border-box;
 }
