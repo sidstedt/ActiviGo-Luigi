@@ -273,27 +273,61 @@
   gap: 0.75rem;
 }
 
-.detail-item {
+/* varje egenskap får label överst och värdet under, vänsterjusterat */
+.activity-details .detail-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid #f1f2f6;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0.25rem 0;
+  align-items: flex-start; /* säkerställ vänsterjustering */
 }
 
-.detail-item:last-child {
-  border-bottom: none;
+.activity-details .detail-label,
+.activity-details .detail-value {
+  display: block;
+  text-align: left;
 }
 
-.detail-label {
+.activity-details .detail-label {
   font-weight: 600;
-  color: #2c3e50;
-  font-size: 0.82rem;
+  color: #222;
+  font-size: 0.92rem;
+  line-height: 1;
 }
 
-.detail-value {
+/* värden lite gråare — matchar .activity-description */
+.activity-details .detail-value {
   color: #7f8c8d;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
+  word-break: break-word;
+}
+
+/* Replace vertical separators with horizontal separators between items.
+   This draws a thin rule under each detail-item (except the last), which
+   looks correct both for stacked single-column and multi-column grid layouts. */
+.activity-details .detail-item {
+  padding: 0.35rem 0;
+  margin: 0;
+}
+
+.activity-details .detail-item:not(:last-child) {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+/* På mycket små skärmar kan linjen vara något mjukare/tunnare */
+@media (max-width: 480px) {
+  .activity-details .detail-item:not(:last-child) {
+    border-bottom-width: 1px;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ta bort eventuellt kolon från label-pseudo-element */
+.activity-details .detail-label::after {
+  content: "";
 }
 
 .activity-footer {
