@@ -176,12 +176,12 @@ export default function AdminActivitiesPage() {
         {activities.map((activity) => (
           <div key={activity.id} className="activity-card">
             {activity.imageUrl && (
-              <div className="card-image" style={{ marginBottom: '0.75rem' }}>
+              <div className="card-image" style={{ marginBottom: "0.75rem" }}>
                 <img
                   src={activity.imageUrl}
                   alt={activity.name}
                   loading="lazy"
-                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                  onError={(e) => (e.currentTarget.style.display = "none")}
                 />
               </div>
             )}
