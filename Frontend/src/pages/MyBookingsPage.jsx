@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { fetchUserBookings, cancelBooking } from "../services/api";
 import "../styles/MyBookingsPage.css";
 import BookingCard from "../components/BookingCard";
+import { formatDateLong, formatTimeHm } from "../utils/format"; 
+
 
 export default function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all"); // all, upcoming, past, cancelled
+  const [showDetails, setShowDetails] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   useEffect(() => {
     loadBookings();
@@ -39,6 +43,15 @@ export default function MyBookingsPage() {
     } catch (err) {
       alert("Kunde inte avboka aktiviteten: " + err.message);
     }
+  };
+
+  const handleShowDetails = (bk) => {
+    setSelectedBooking(bk);
+    setShowDetails(true);
+  };
+  const handleCloseDetails = () => {
+    setShowDetails(false);
+    setSelectedBooking(null);
   };
 
   const getFilteredBookings = () => {
@@ -160,11 +173,52 @@ export default function MyBookingsPage() {
                 key={booking.id}
                 booking={booking}
                 onCancel={() => handleCancelBooking(booking.id)}
-                onDetails={() => {/* TODO: Navigate to booking details */}}
+                onDetails={(bk) => handleShowDetails(bk)}
               />
             ))}
           </div>
         )}
+      </div>
+
+    {showDetails && selectedBooking && (
+        <BookingDetailsModal
+          booking={selectedBooking}
+          onClose={handleCloseDetails}
+        />
+      )}
+    </div>
+  );
+}
+function BookingDetailsModal({ booking, onClose }) {
+  // Stäng på ESC
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const stop = (e) => e.stopPropagation();
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal" onClick={stop} role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+        <div className="modal-header">
+          <h2 id="detailsTitle">{booking.activityName}</h2>
+          <button className="modal-close" onClick={onClose} aria-label="Stäng">×</button>
+        </div>
+
+        <div className="modal-body">
+          <div className="detail-row"><strong>Datum:</strong> {formatDateLong(booking.startTime)}</div>
+          <div className="detail-row"><strong>Tid:</strong> {formatTimeHm(booking.startTime)} – {formatTimeHm(booking.endTime)}</div>
+          <div className="detail-row"><strong>Plats:</strong> {booking.zoneName}</div>
+          <div className="detail-row"><strong>Status:</strong> {booking.status}</div>
+          <div className="detail-row"><strong>Pris:</strong> {booking.price} kr</div>
+          <div className="detail-row"><strong>Bokad:</strong> {formatDateLong(booking.createdAt)}</div>
+        </div>
+
+        <div className="modal-footer">
+          <button className="secondary-button" onClick={onClose}>Stäng</button>
+        </div>
       </div>
     </div>
   );

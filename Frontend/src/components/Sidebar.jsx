@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { logout as apiLogout } from "../services/api";
-import "../styles/HamburgerMenu.css"; // behåll
+import "../styles/HamburgerMenu.css"; 
 
 export default function Sidebar({
   userRole = "guest",
@@ -197,6 +197,7 @@ export default function Sidebar({
                 type="button"
                 className="hm-link hm-logout"
                 onClick={handleLogout}
+                
               >
                 <span className="hm-icon" aria-hidden>
                   ⎋

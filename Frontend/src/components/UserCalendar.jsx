@@ -2,16 +2,27 @@ import React, { useEffect, useMemo, useState } from "react";
 import { getCurrentUser, fetchUserBookings } from "../services/api.js";
 import "../styles/UserCalendar.css";
 
+/** ISO-vecka för ett datum */
 function getWeekNumber(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay() || 7;
+  const dayNum = d.getUTCDay() || 7; // 1..7 (mån..sön)
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
 }
+
+/** Antal ISO-veckor i ett år (52 eller 53) */
+function getWeeksInYear(year) {
+  const d = new Date(Date.UTC(year, 0, 1));
+  const day = d.getUTCDay() || 7;
+  const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+  return day === 4 || (isLeap && day === 3) ? 53 : 52;
+}
+
+/** Måndag för given ISO-vecka/år (lokal tid 00:00) */
 function getMondayOfWeek(year, week) {
   const simple = new Date(year, 0, 1 + (week - 1) * 7);
-  const dow = simple.getDay();
+  const dow = simple.getDay(); // 0..6 (sön..lör)
   const monday = new Date(simple);
   if (dow <= 4) monday.setDate(simple.getDate() - simple.getDay() + 1);
   else monday.setDate(simple.getDate() + 8 - simple.getDay());
@@ -19,13 +30,12 @@ function getMondayOfWeek(year, week) {
   return monday;
 }
 
+/** Start/Slut från olika möjliga fältnamn */
 function getStartEnd(booking) {
-
   const s = booking.startTime || booking.start || booking.from || booking.startsAt;
   const e = booking.endTime || booking.end || booking.to || booking.endsAt;
-
   const st = s ? new Date(s) : null;
-  const en = e ? new Date(e) : (st ? new Date(st.getTime() + 60 * 60000) : null);
+  const en = e ? new Date(e) : st ? new Date(st.getTime() + 60 * 60000) : null;
   return { st, en };
 }
 function getActivityName(booking) {
@@ -63,11 +73,11 @@ export default function UserWeekCalendar() {
   const startHour = 6;
   const endHour = 22;
   const ROW_HEIGHT = 48;
+
   const hours = useMemo(
     () => Array.from({ length: endHour - startHour + 1 }, (_, i) => startHour + i),
-    []
+    [startHour, endHour]
   );
-
 
   useEffect(() => {
     const user = getCurrentUser();
@@ -80,12 +90,15 @@ export default function UserWeekCalendar() {
       try {
         setLoading(true);
         setError(null);
-        const all = await fetchUserBookings(); 
+
+        const all = await fetchUserBookings();
+
         const monday = getMondayOfWeek(selectedYear, selectedWeek);
         const weekStart = new Date(monday);
         const weekEnd = new Date(monday);
-        weekEnd.setDate(monday.getDate() + 7); 
+        weekEnd.setDate(monday.getDate() + 7);
 
+        // Filtrera bokningar som startar under veckan
         const inWeek = (Array.isArray(all) ? all : []).filter((b) => {
           const { st } = getStartEnd(b);
           return st && st >= weekStart && st < weekEnd;
@@ -94,7 +107,7 @@ export default function UserWeekCalendar() {
         setBookings(inWeek);
       } catch (e) {
         console.error(e);
-        setError(e.message || "Kunde inte hämta bokningar");
+        setError(e?.message || "Kunde inte hämta bokningar");
       } finally {
         setLoading(false);
       }
@@ -103,24 +116,34 @@ export default function UserWeekCalendar() {
     load();
   }, [selectedYear, selectedWeek]);
 
-
   function handlePrevWeek() {
     if (selectedWeek === 1) {
-      setSelectedYear((y) => y - 1);
-      setSelectedWeek(52);
-    } else setSelectedWeek((w) => w - 1);
+      const prevYear = selectedYear - 1;
+      setSelectedYear(prevYear);
+      setSelectedWeek(getWeeksInYear(prevYear));
+    } else {
+      setSelectedWeek((w) => w - 1);
+    }
   }
   function handleNextWeek() {
-    if (selectedWeek === 52) {
+    const maxWeek = getWeeksInYear(selectedYear);
+    if (selectedWeek === maxWeek) {
       setSelectedYear((y) => y + 1);
       setSelectedWeek(1);
-    } else setSelectedWeek((w) => w + 1);
+    } else {
+      setSelectedWeek((w) => w + 1);
+    }
   }
   function handleToday() {
     const t = new Date();
     setSelectedYear(t.getFullYear());
     setSelectedWeek(getWeekNumber(t));
   }
+
+  const isSameDay = (a, b) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
 
   return (
     <div className="user-week-calendar">
@@ -140,14 +163,28 @@ export default function UserWeekCalendar() {
         </div>
       </div>
 
-      {error && <div className="uwc-error">{error}</div>}
-      {loading && <div className="uwc-loading">Laddar…</div>}
+      {error && (
+        <div className="uwc-error" role="status" aria-live="polite">
+          {error}
+        </div>
+      )}
+      {loading && (
+        <div className="uwc-loading" role="status" aria-live="polite">
+          Laddar…
+        </div>
+      )}
 
       <div className="uwc-grid" role="grid" aria-label="Veckokalender">
-        <div className="uwc-grid-header">
-          <div className="uwc-time-col" />
+        {/* Header-rad */}
+        <div className="uwc-grid-header" role="row">
+          <div className="uwc-time-col" role="columnheader" aria-hidden="true" />
           {weekDays.map((d, i) => (
-            <div key={i} className="uwc-day-col">
+            <div
+              key={i}
+              className={`uwc-day-col ${isSameDay(d, today) ? "is-today" : ""}`}
+              role="columnheader"
+              aria-current={isSameDay(d, today) ? "date" : undefined}
+            >
               {d.toLocaleDateString("sv-SE", {
                 weekday: "short",
                 day: "2-digit",
@@ -157,13 +194,15 @@ export default function UserWeekCalendar() {
           ))}
         </div>
 
+        {/* Kroppen (timmar + celler + overlay) */}
         <div
           className="uwc-grid-body"
           style={{
             gridTemplateRows: `repeat(${hours.length}, ${ROW_HEIGHT}px)`,
-            gridTemplateColumns: `80px repeat(7, 1fr)`,
+            // Kolumnlayouten ligger i CSS: grid-template-columns: 80px repeat(7, 1fr);
           }}
         >
+          {/* Tid- och cells-rader */}
           {hours.map((h, rowIdx) => (
             <React.Fragment key={`row-${rowIdx}`}>
               <div
@@ -182,19 +221,19 @@ export default function UserWeekCalendar() {
             </React.Fragment>
           ))}
 
+          {/* Overlay per dag */}
           {weekDays.map((d, dayIdx) => {
             const dY = d.getFullYear();
             const dM = d.getMonth();
             const dD = d.getDate();
 
+            // Robust dagsfilter via intervall
+            const dayStart = new Date(dY, dM, dD, 0, 0, 0, 0);
+            const dayEnd = new Date(dY, dM, dD + 1, 0, 0, 0, 0);
+
             const dayBookings = bookings.filter((b) => {
               const { st } = getStartEnd(b);
-              return (
-                st &&
-                st.getFullYear() === dY &&
-                st.getMonth() === dM &&
-                st.getDate() === dD
-              );
+              return st && st >= dayStart && st < dayEnd;
             });
 
             return (
@@ -211,15 +250,27 @@ export default function UserWeekCalendar() {
                   if (!st) return null;
                   const end = en || new Date(st.getTime() + 60 * 60000);
 
+                  // Visningsfönster för dagen
                   const visStart = new Date(d);
                   visStart.setHours(startHour, 0, 0, 0);
+                  const visEnd = new Date(d);
+                  visEnd.setHours(endHour, 0, 0, 0);
 
-                  const minutesFromStart = (st.getTime() - visStart.getTime()) / 60000;
-                  let durationMin = (end.getTime() - st.getTime()) / 60000;
+                  // Klipp till visningsfönstret
+                  const clampedStart = st < visStart ? visStart : st;
+                  const clampedEnd = end > visEnd ? visEnd : end;
+
+                  // Helt utanför fönstret?
+                  if (clampedEnd <= visStart || clampedStart >= visEnd) return null;
+
+                  const minutesFromStart =
+                    (clampedStart.getTime() - visStart.getTime()) / 60000;
+                  let durationMin =
+                    (clampedEnd.getTime() - clampedStart.getTime()) / 60000;
                   if (!isFinite(durationMin) || durationMin <= 0) durationMin = 60;
 
                   const top = (minutesFromStart / 60) * ROW_HEIGHT;
-                  const height = (durationMin / 60) * ROW_HEIGHT;
+                  const height = Math.max(2, (durationMin / 60) * ROW_HEIGHT); // min-höjd
 
                   const startLabel = `${String(st.getHours()).padStart(2, "0")}:${String(
                     st.getMinutes()
@@ -249,7 +300,9 @@ export default function UserWeekCalendar() {
         </div>
 
         {!loading && bookings.length === 0 && (
-          <div className="uwc-empty">Inga bokningar denna vecka.</div>
+          <div className="uwc-empty" role="status" aria-live="polite">
+            Inga bokningar denna vecka.
+          </div>
         )}
       </div>
     </div>
