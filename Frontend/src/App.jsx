@@ -19,6 +19,8 @@ import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
 import MyAccountPage from "./pages/MyAccountPage.jsx";
 import AdminLocationsPage from "./pages/AdminLocationsPage.jsx"
 import AdminZonesPage from './pages/AdminZonesPage.jsx'
+import BookingDetailsPage from "./pages/BookingDetailsPage.jsx";
+
 
 const DashboardHome = () => <HomePage />;
 const AdminDashboard = () => <div>Adminpanel</div>;
@@ -67,6 +69,7 @@ function AppRoutes() {
         <Route path="my-bookings" element={<MyBookingsPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="my-account" element={<MyAccountPage />} />
+        <Route path="my-bookings/:id" element={<BookingDetailsPage />} />
 
         <Route
           path="admin"

@@ -59,6 +59,7 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
             className="input"
+            style={{ color: 'black' }}
           />
           <input
             type="password"
@@ -67,6 +68,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             className="input"
+            style={{ color: 'black' }}
           />
           <button type="submit" className="login-button">
             Logga in

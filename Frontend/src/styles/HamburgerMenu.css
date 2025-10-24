@@ -152,14 +152,14 @@
 .hm-list {
   list-style: none;
   margin: 0;
-  padding: 0.5rem;
+  padding: 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
 .hm-link {
-  width: 100%;
+  width: 90%;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -200,6 +200,7 @@
 }
 
 .hm-logout {
+  width: 98%;
   color: #ffcccc;
 }
 

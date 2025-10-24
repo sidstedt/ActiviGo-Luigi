@@ -114,7 +114,7 @@ export default function MyAccountPage() {
     <div className="my-profile-page">
       <header className="page-header">
         <h1>Mina Sidor</h1>
-        <p>En översikt av din aktivitetshistorik och utgifter</p>
+        <p style={{ color: 'black' }}>En översikt av din aktivitetshistorik och utgifter</p>
       </header>
 
       <section className="profile-stats">

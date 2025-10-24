@@ -83,7 +83,10 @@ export default function BookingCard({ booking, onCancel, onDetails }) {
               Avboka
             </button>
           )}
-          <button className="details-btn" onClick={onDetails}>
+          <button
+            className="details-btn"
+            onClick={() => onDetails?.(booking)} 
+          >
             Se detaljer
           </button>
         </div>
