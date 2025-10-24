@@ -309,3 +309,27 @@
 .card-actions .edit-btn + .delete-btn {
   margin-left: 0.5rem;
 }
+
+/* Titel på första raden */
+.activity-header .activity-title {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* E-post direkt under titeln */
+.activity-header .activity-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: #666;
+  word-break: break-word;
+}
+
+/* Gör själva headern till en kolumnlayout */
+.activity-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 👈 centrerar innehållet horisontellt */
+  text-align: center;  /* 👈 centrerar texten vid radbrytning */
+}

@@ -519,3 +519,245 @@
 .activity-card * {
   box-sizing: border-box;
 }
+
+/* Modal backdrop och centrering (används av Visa-modalen) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 20px;
+}
+
+/* Stor modal som används för detaljer (Visa) */
+.modal.large {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(18, 38, 63, 0.12);
+  padding: 20px;
+  color: #111;
+  overflow: hidden;
+}
+
+/* Modal rubrik */
+.modal.large h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f1720;
+}
+
+/* Modal huvudsektion: två-kolumn layout (detaljer + bokningar) */
+.modal.large .modal-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+  margin-top: 12px;
+}
+
+/* Vänster kolumn: användarinformation */
+.modal.large .modal-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Höger kolumn: bokningar */
+.modal.large .modal-right {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #f0f2f4;
+  max-height: 420px;
+  overflow: auto;
+}
+
+/* Booking-lista */
+.modal.large .modal-right ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal.large .modal-right li {
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #eef1f3;
+}
+
+/* Meta-text */
+.modal.large .muted {
+  color: #6b7280;
+  font-size: 0.92rem;
+}
+
+/* Actions i modal (knappar) */
+.modal.large .modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Säkerställ att knapp-styling i modal är konsekvent */
+.modal.large .edit-btn,
+.modal.large .delete-btn,
+.modal.large .cancel-btn,
+.modal.large .btn-secondary,
+.modal.large .btn-danger {
+  min-width: 96px;
+  height: 40px;
+  padding: 0 14px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+/* Avvikande knappar */
+.modal.large .delete-btn,
+.modal.large .btn-danger {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+}
+
+.modal.large .edit-btn,
+.modal.large .btn-primary {
+  background: #3498db;
+  color: #fff;
+  border: none;
+}
+
+.modal.large .cancel-btn,
+.modal.large .btn-secondary {
+  background: transparent;
+  color: #334155;
+  border: 1px solid rgba(51,65,85,0.08);
+}
+
+/* Responsivt: stapla på små skärmar */
+@media (max-width: 720px) {
+  .modal.large .modal-body {
+    grid-template-columns: 1fr;
+  }
+  .modal.large .modal-right {
+    max-height: 260px;
+  }
+}
+
+/* Små estetiska detaljer */
+.modal.large p {
+  margin: 6px 0;
+  line-height: 1.45;
+  color: #1f2937;
+}
+
+/* Bekräfta-borttagning modal — samma visuella språk som .modal.large men smalare */
+.modal.confirm-delete,
+.modal.small {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(18, 38, 63, 0.12);
+  padding: 18px;
+  color: #111;
+  overflow: hidden;
+}
+
+/* Rubrik */
+.modal.confirm-delete h3,
+.modal.small h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f1720;
+}
+
+/* Text & layout */
+.modal.confirm-delete p,
+.modal.small p {
+  margin: 8px 0;
+  color: #555c66;
+  line-height: 1.45;
+}
+
+/* Minska onödigt vitt utrymme under knappar i confirm-delete / small modaler */
+.modal.confirm-delete,
+.modal.small {
+  /* lite mindre botten-padding så modalen krymper till innehållet */
+  padding: 18px 18px 12px;
+  display: inline-block; /* låter boxen anpassa höjden efter innehållet */
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+/* Ta bort eventuell extra marginal under sista texten i modalen */
+.modal.confirm-delete p:last-child,
+.modal.small p:last-child {
+  margin-bottom: 0;
+}
+
+/* Säkerställ att modal-actions inte lämnar extra under-marginal */
+.modal.confirm-delete .modal-actions,
+.modal.small .modal-actions {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/* Om knapparna ligger längst ner ändå — se till att modalen inte får onödig min-höjd */
+.modal.confirm-delete,
+.modal.small {
+  min-height: 0;
+  max-height: none;
+}
+
+/* Confirm-delete: knappar — Avbryt blå, Ta bort röd, högerjusterade med mellanrum */
+.modal.confirm-delete .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/* Avbryt = blå (btn-secondary) */
+.modal.confirm-delete .btn-secondary {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  min-width: 96px;
+  height: 40px;
+  padding: 0 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.modal.confirm-delete .btn-secondary:hover {
+  background: #2980b9;
+}
+
+/* Ta bort = röd (btn-danger) */
+.modal.confirm-delete .btn-danger {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  min-width: 96px;
+  height: 40px;
+  padding: 0 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.modal.confirm-delete .btn-danger:hover {
+  background: #c0392b;
+}
