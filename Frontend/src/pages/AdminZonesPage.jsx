@@ -8,6 +8,7 @@ import {
   deleteZone,
 } from "../services/api";
 import "../styles/ActivitiesPage.css"; // återanvänd samma styling
+import "../styles/ActivityCard.css"; // kort-styling (samma som ActivitiesPage)
 
 export default function AdminZonesPage() {
   const [zones, setZones] = useState([]);
@@ -71,7 +72,11 @@ export default function AdminZonesPage() {
       : Boolean(z?.IsOutdoor);
 
   const getZoneLocationId = (z) =>
-    z?.locationId ?? z?.LocationId ?? z?.location?.id ?? z?.location?.Id ?? null;
+    z?.locationId ??
+    z?.LocationId ??
+    z?.location?.id ??
+    z?.location?.Id ??
+    null;
 
   // Lookup location name using several possible shapes for location objects
   const findLocationNameFromLocations = (zone) => {
@@ -98,17 +103,16 @@ export default function AdminZonesPage() {
     return null;
   };
 
-
-    const getZoneLocationName = (z) => {
+  const getZoneLocationName = (z) => {
     return (
-        z?.locationName ??           // ✅ det du nu skickar från backend
-        z?.LocationName ?? 
-        z?.location?.name ?? 
-        z?.location?.Name ?? 
-        findLocationNameFromLocations(z) ?? 
-        ""
+      z?.locationName ?? // ✅ det du nu skickar från backend
+      z?.LocationName ??
+      z?.location?.name ??
+      z?.location?.Name ??
+      findLocationNameFromLocations(z) ??
+      ""
     );
-    };
+  };
 
   // Filtrering
   useEffect(() => {
@@ -116,14 +120,16 @@ export default function AdminZonesPage() {
 
     if (searchTerm) {
       const s = searchTerm.toLowerCase();
-      filtered = filtered.filter((z) => getZoneName(z).toLowerCase().includes(s));
+      filtered = filtered.filter((z) =>
+        getZoneName(z).toLowerCase().includes(s)
+      );
     }
 
-  if (selectedLocation) {
-    filtered = filtered.filter(
-      (z) => String(getZoneLocationName(z)) === String(selectedLocation)
-    );
-  }
+    if (selectedLocation) {
+      filtered = filtered.filter(
+        (z) => String(getZoneLocationName(z)) === String(selectedLocation)
+      );
+    }
 
     if (selectedPlaceType) {
       if (selectedPlaceType === "outdoor")
@@ -163,10 +169,12 @@ export default function AdminZonesPage() {
 
   const handleEdit = (zone) => {
     let zoneToEdit = { ...zone };
-    if (!zoneToEdit.locationId && zoneToEdit.locationName && locations.length > 0) {
-      const found = locations.find(
-        (l) => l.name === zoneToEdit.locationName
-      );
+    if (
+      !zoneToEdit.locationId &&
+      zoneToEdit.locationName &&
+      locations.length > 0
+    ) {
+      const found = locations.find((l) => l.name === zoneToEdit.locationName);
       if (found) {
         zoneToEdit.locationId = found.id;
       }
@@ -184,7 +192,9 @@ export default function AdminZonesPage() {
     if (!deleteTarget) return;
     try {
       await deleteZone(getZoneId(deleteTarget));
-      setZones((prev) => prev.filter((z) => getZoneId(z) !== getZoneId(deleteTarget)));
+      setZones((prev) =>
+        prev.filter((z) => getZoneId(z) !== getZoneId(deleteTarget))
+      );
       setShowDeleteModal(false);
       setDeleteTarget(null);
     } catch (err) {
@@ -194,7 +204,7 @@ export default function AdminZonesPage() {
 
   if (loading) return <p>Laddar zoner...</p>;
   if (error) return <p>{error}</p>;
-    
+
   return (
     <div className="activities-page">
       <header className="page-header">
@@ -276,28 +286,46 @@ export default function AdminZonesPage() {
           const isOut = getZoneIsOutdoor(zone);
           const locationName = getZoneLocationName(zone) || "Okänd plats";
 
-          console.log("zone", zone, "locationName", findLocationNameFromLocations(zone));
-            
+          console.log(
+            "zone",
+            zone,
+            "locationName",
+            findLocationNameFromLocations(zone)
+          );
+
           return (
             <div key={getZoneId(zone) ?? name} className="activity-card">
               <div className="activity-header">
                 <h3>{name}</h3>
               </div>
               <div className="activity-content">
-                <p>
-                  <strong>Typ:</strong> {isOut ? "Utomhus" : "Inomhus"}
-                </p>
-                <p>
-                  <strong>Plats:</strong> {locationName}
-                </p>
+                {/* Egenskaper: varje .detail-item är separat så separator och vänster-justering fungerar */}
+                <div className="activity-details">
+                  <div className="detail-item">
+                    <div className="detail-label">Typ</div>
+                    <div className="detail-value">
+                      {isOut ? "Utomhus" : "Inomhus"}
+                    </div>
+                  </div>
+
+                  <div className="detail-item">
+                    <div className="detail-label">Plats</div>
+                    <div className="detail-value">{locationName}</div>
+                  </div>
+                </div>
               </div>
               <div className="activity-footer">
-                <button className="edit-btn" onClick={() => handleEdit(zone)}>
-                  ✏️ Ändra
-                </button>
-                <button className="delete-btn" onClick={() => handleDelete(zone)}>
-                  🗑️ Ta bort
-                </button>
+                <div className="card-actions">
+                  <button className="edit-btn" onClick={() => handleEdit(zone)}>
+                    Ändra
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(zone)}
+                  >
+                    Ta bort
+                  </button>
+                </div>
               </div>
             </div>
           );
