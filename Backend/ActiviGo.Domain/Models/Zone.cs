@@ -21,6 +21,6 @@ namespace ActiviGo.Domain.Models
         [Required]
         public Location Location { get; set; } = null!;
 
-        //public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = true;
     }
 }
