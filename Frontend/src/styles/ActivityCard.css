@@ -6,7 +6,6 @@
   transition: box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
   min-height: 220px;
 }
 
