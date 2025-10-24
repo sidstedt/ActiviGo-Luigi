@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   fetchAdminBookings,
   fetchUserBookings,
@@ -13,8 +14,13 @@ import {
 } from "../utils/statistics";
 import MonthlyBookingsLineChart from "../components/stats/MonthlyBookingsLineChart";
 import ActivityDistributionPie from "../components/stats/ActivityDistributionPie";
+import "../styles/Statistics.css";
 
 export default function Statistics() {
+  const location = useLocation();
+  const isAdminStatistics = (location?.pathname || "").includes(
+    "/admin/statistics"
+  );
   const [bookings, setBookings] = useState([]);
   const [activityOccurrences, setActivityOccurrences] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -82,13 +88,23 @@ export default function Statistics() {
   }, [bookings, selectedYear]);
 
   if (loading) {
-    return <div style={{ padding: "2rem" }}>Laddar statistik...</div>;
+    return (
+      <div
+        className={`statistics-page ${isAdminStatistics ? "admin" : ""}`}
+        style={{ padding: "2rem" }}
+      >
+        Laddar statistik...
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div style={{ padding: "2rem", color: "red" }}>
-        <h2>Fel vid hämtning</h2>
+      <div
+        className={`statistics-page ${isAdminStatistics ? "admin" : ""}`}
+        style={{ padding: "2rem" }}
+      >
+        <h2 style={{ color: "#ff9090" }}>Fel vid hämtning</h2>
         <p>
           <strong>Felmeddelande:</strong> {error.message}
         </p>
@@ -107,7 +123,15 @@ export default function Statistics() {
   const totalOccurrences = activityOccurrences.length;
 
   return (
-    <div style={{ padding: "2rem" }}>
+    <div
+      className={`statistics-page ${isAdminStatistics ? "admin" : ""}`}
+      style={{ padding: "2rem" }}
+    >
+      <style>
+        {`
+          background: linear-gradient(135deg, rgba(16,185,129,0.85), rgba(34,197,94,0.85));
+        `}
+      </style>
       <h1>Statistik</h1>
 
       {/* Översikt */}
