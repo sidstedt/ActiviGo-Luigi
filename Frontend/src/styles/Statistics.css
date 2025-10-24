@@ -1,0 +1,42 @@
+/* Scoped styles for the Statistics page */
+.statistics-page {
+  color: inherit;
+  background: linear-gradient(135deg, rgba(16,185,129,0.85), rgba(34,197,94,0.85));
+  min-height: 192vh;
+}
+
+/* Admin variant: force light text to match green background */
+.statistics-page.admin {
+  color: #ffffff;
+}
+
+/* Ensure common text elements render white */
+.statistics-page.admin h1,
+.statistics-page.admin h2,
+.statistics-page.admin h3,
+.statistics-page.admin h4,
+.statistics-page.admin p,
+.statistics-page.admin label,
+.statistics-page.admin select,
+.statistics-page.admin option,
+.statistics-page.admin strong,
+.statistics-page.admin span,
+.statistics-page.admin li,
+.statistics-page.admin div,
+.statistics-page.admin a {
+  color: #ffffff;
+}
+
+/* MUI X-Charts and SVG labels (axis ticks, arc labels, etc.) */
+.statistics-page.admin svg text {
+  fill: #ffffff;
+}
+
+/* Toggle button colors to be readable on green background */
+.statistics-page.admin .MuiToggleButton-root {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.statistics-page.admin .MuiToggleButton-root.Mui-selected {
+  background: rgba(255, 255, 255, 0.15);
+}
