@@ -522,6 +522,7 @@ export default function ActivityOccurrencesPage() {
                   lat={lat}
                   lon={lon}
                   description={activity?.description}
+                  imageUrl={activity?.imageUrl}
                 />
               );
             })}
