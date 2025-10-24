@@ -47,7 +47,6 @@ export default function Statistics() {
         setBookings(bookingsData || []);
         setActivityOccurrences(occurrencesData || []);
       } catch (err) {
-        console.error("Fel vid hämtning av data:", err);
         setError(err);
       } finally {
         setLoading(false);

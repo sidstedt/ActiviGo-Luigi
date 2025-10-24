@@ -71,7 +71,6 @@ export default function AdminSchedulePage() {
         });
       } catch {}
     } catch (e) {
-      console.error(e);
       setError(e.message || "Kunde inte ladda data");
     } finally {
       setLoading(false);
@@ -152,7 +151,6 @@ export default function AdminSchedulePage() {
       await loadData();
       closeModal();
     } catch (e) {
-      console.error(e);
       setError(e.message || "Kunde inte spara");
     } finally {
       setLoading(false);

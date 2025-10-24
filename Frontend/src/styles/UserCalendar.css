@@ -1,4 +1,4 @@
-/* === User Week Calendar === */
+/* User Week Calendar styles */
 .user-schedule {
   background: #fff;
   border: 1px solid #e5e7eb;
@@ -136,18 +136,18 @@
 .booking-time {
   display: block;
   font-size: 11px;
-  opacity: 1; /* <-- fixar synlig text */
-  color: #065f46; /* mörkgrön text syns tydligt */
+  opacity: 1;
+  color: #065f46;
 }
 
-/* Tom vy */
+/* Tom vy (Empty view) */
 .empty {
   padding: 12px;
   text-align: center;
   color: #6b7280;
 }
 
-/* --- Mobilanpassning --- */
+/* Mobilanpassning */
 @media (max-width: 768px) {
   .grid-header,
   .grid-body {

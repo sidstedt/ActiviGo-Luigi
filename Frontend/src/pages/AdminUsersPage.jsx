@@ -129,7 +129,6 @@ export default function AdminUsersPage() {
       setFilteredUsers(Array.isArray(data) ? data : []);
     } catch (err) {
       setError("Kunde inte hämta användare");
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -231,7 +230,6 @@ export default function AdminUsersPage() {
         : [];
       setDetailsBookings(Array.isArray(bookings) ? bookings : []);
     } catch (err) {
-      console.error("Kunde inte hämta bokningar", err);
       setDetailsBookings([]);
     } finally {
       setDetailsLoading(false);
