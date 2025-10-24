@@ -14,7 +14,9 @@ namespace ActiviGo.Application.DTOs
         public int LocationId { get; set; }
         public string LocationName { get; set; } 
         public int ActivityId { get; set; }
-        public string ActivityName { get; set; } 
+        public string ActivityName { get; set; }
+        public bool IsActive { get; set; } 
+
     }
 
     public class ZoneReadDto
@@ -29,7 +31,9 @@ namespace ActiviGo.Application.DTOs
         //public int ActivityId { get; set; }
         //public string? ActivityName { get; set; }
 
-        public string EnvironmentMessage { get; set; } 
+        public string EnvironmentMessage { get; set; }
+        public bool IsActive { get; set; } 
+
     }
 
     public class ZoneUpdateDto
@@ -38,11 +42,8 @@ namespace ActiviGo.Application.DTOs
         public string Name { get; set; } = string.Empty;
         public bool IsOutdoor { get; set; }
         public int LocationId { get; set; }
-        //public string LocationName { get; set; } = string.Empty;
-
-        ////navigation
-        //public int ActivityId { get; set; }
-        //public string ActivityName { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
+ 
     }
 
     public class ZoneResponseDto
@@ -50,6 +51,8 @@ namespace ActiviGo.Application.DTOs
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public bool IsOutdoor { get; set; }
+        public bool IsActive { get; set; }
+
     }
 
     public class CreateZoneDto
@@ -57,6 +60,8 @@ namespace ActiviGo.Application.DTOs
         public string Name { get; set; } = string.Empty;
         public bool IsOutdoor { get; set; }
         public int LocationId { get; set; }
+        public bool IsActive { get; set; } 
+
     }
 
 }

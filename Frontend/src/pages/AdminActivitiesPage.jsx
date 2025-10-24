@@ -112,6 +112,7 @@ export default function AdminActivitiesPage() {
       categoryId: Number(payloadFromModal.categoryId) || 1,
       zoneId: Number(payloadFromModal.zoneId) || zones[0]?.zoneId || 1,
       staffId: payloadFromModal.staffId || null,
+      imageUrl: payloadFromModal.imageUrl || null,
       startTime: payloadFromModal.startTime || new Date().toISOString(),
     };
 
@@ -174,6 +175,16 @@ export default function AdminActivitiesPage() {
       <div className="activities-grid">
         {activities.map((activity) => (
           <div key={activity.id} className="activity-card">
+            {activity.imageUrl && (
+              <div className="card-image" style={{ marginBottom: '0.75rem' }}>
+                <img
+                  src={activity.imageUrl}
+                  alt={activity.name}
+                  loading="lazy"
+                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                />
+              </div>
+            )}
             <div className="activity-header">
               <h3>{activity.name}</h3>
             </div>
