@@ -17,10 +17,10 @@ import Statistics from "./pages/Statistics.jsx";
 import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
 import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
 import MyAccountPage from "./pages/MyAccountPage.jsx";
-import AdminLocationsPage from "./pages/AdminLocationsPage.jsx"
-import AdminZonesPage from './pages/AdminZonesPage.jsx'
+import AdminLocationsPage from "./pages/AdminLocationsPage.jsx";
+import AdminZonesPage from "./pages/AdminZonesPage.jsx";
+import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 import BookingDetailsPage from "./pages/BookingDetailsPage.jsx";
-
 
 const DashboardHome = () => <HomePage />;
 const AdminDashboard = () => <div>Adminpanel</div>;
@@ -62,7 +62,7 @@ function AppRoutes() {
         <Route path="activities" element={<ActivitiesPage />} />
         <Route path="bookings" element={<ActivityOccurrencesPage />} />
         <Route path="login" element={<LoginPage />} />
-        {/* Route for statistics-page */}
+        <Route path="users" element={<AdminUsersPage />} />
         <Route path="statistics" element={<Statistics />} />
         <Route path="activities" element={<ActivitiesPage />} />
         <Route path="bookings" element={<ActivityOccurrencesPage />} />
@@ -77,8 +77,8 @@ function AppRoutes() {
             <RoleRoute allowed={["admin"]} roles={roles}>
               <Navigate to="/" replace />
             </RoleRoute>
-  }
-/>
+          }
+        />
         <Route
           path="admin/schedule"
           element={
@@ -124,6 +124,14 @@ function AppRoutes() {
           element={
             <RoleRoute allowed={["admin"]} roles={roles}>
               <Statistics />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/users"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminUsersPage />
             </RoleRoute>
           }
         />

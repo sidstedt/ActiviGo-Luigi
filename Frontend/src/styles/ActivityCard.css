@@ -6,7 +6,6 @@
   transition: box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
   min-height: 220px;
 }
 
@@ -277,4 +276,60 @@
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 12px;
+}
+
+/* Se till att knapp-stylingen för kortens actions är blå (samma som ActivityCard) */
+.activity-card .card-actions .edit-btn,
+.activity-card .card-actions .delete-btn,
+.card-actions .edit-btn,
+.card-actions .delete-btn {
+  background: #3498db;
+  color: #ffffff;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  transition: background-color 0.15s ease;
+  -webkit-transition: background-color 0.15s ease;
+  -moz-transition: background-color 0.15s ease;
+  -ms-transition: background-color 0.15s ease;
+  -o-transition: background-color 0.15s ease;
+}
+
+.activity-card .card-actions .edit-btn:hover,
+.activity-card .card-actions .delete-btn:hover,
+.card-actions .edit-btn:hover,
+.card-actions .delete-btn:hover {
+  background: #2980b9;
+}
+
+/* Liten mellanrum mellan knapparna */
+.card-actions .edit-btn + .delete-btn {
+  margin-left: 0.5rem;
+}
+
+/* Titel på första raden */
+.activity-header .activity-title {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* E-post direkt under titeln */
+.activity-header .activity-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: #666;
+  word-break: break-word;
+}
+
+/* Gör själva headern till en kolumnlayout */
+.activity-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 👈 centrerar innehållet horisontellt */
+  text-align: center;  /* 👈 centrerar texten vid radbrytning */
 }

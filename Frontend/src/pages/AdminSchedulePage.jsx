@@ -29,7 +29,7 @@ function getMondayOfWeek(year, week) {
   monday.setHours(0, 0, 0, 0);
   return monday;
 }
-// Weekly calendar (Mon–Sun) 08:00–20:00 with hourly rows and overlays sized by exact duration.
+// Weekly calendar (Mon–Sun) 06:00–23:00 with hourly rows and overlays sized by exact duration.
 export default function AdminSchedulePage() {
   const [occurrences, setOccurrences] = useState([]);
   const [activities, setActivities] = useState([]);
@@ -96,8 +96,8 @@ export default function AdminSchedulePage() {
   }, [selectedYear, selectedWeek]);
 
   // Hourly grid and overlay layout
-  const startHour = 8;
-  const endHour = 20;
+  const startHour = 6;
+  const endHour = 22;
   const ROW_HEIGHT = 48; // px
   const hours = useMemo(
     () =>
@@ -182,234 +182,247 @@ export default function AdminSchedulePage() {
 
   return (
     <div className="admin-schedule">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 8,
-        }}
-      >
-        <h1 style={{ margin: 0 }}>Aktivitetsschema</h1>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            style={{ fontSize: 15, padding: "2px 8px" }}
-          >
-            {yearOptions.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={handlePrevWeek}
-            style={{ fontSize: 18, padding: "2px 8px" }}
-          >
-            &lt;
-          </button>
-          <span
-            style={{ fontWeight: 600, minWidth: 36, textAlign: "center" }}
-          >{`v${selectedWeek}`}</span>
-          <button
-            onClick={handleNextWeek}
-            style={{ fontSize: 18, padding: "2px 8px" }}
-          >
-            &gt;
-          </button>
-          <select
-            value={selectedWeek}
-            onChange={(e) => setSelectedWeek(Number(e.target.value))}
-            style={{ fontSize: 15, padding: "2px 8px" }}
-          >
-            {weekOptions.map((w) => (
-              <option key={w} value={w}>{`v${w}`}</option>
-            ))}
-          </select>
-        </div>
+      <h1 className="admin-schedule-title">Aktivitetsschema</h1>
+      <div className="admin-schedule-search-bar">
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+        >
+          {yearOptions.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={handlePrevWeek}
+        >
+          &lt;
+        </button>
+        <span className="week-label">{`v${selectedWeek}`}</span>
+        <button
+          onClick={handleNextWeek}
+        >
+          &gt;
+        </button>
+        <select
+          value={selectedWeek}
+          onChange={(e) => setSelectedWeek(Number(e.target.value))}
+        >
+          {weekOptions.map((w) => (
+            <option key={w} value={w}>{`v${w}`}</option>
+          ))}
+        </select>
       </div>
       {error && <div className="error-box">{error}</div>}
       {loading && <div className="loading">Laddar…</div>}
-
+            {/* 📅 Kalendern */}
       <div className="calendar-grid" role="grid" aria-label="Veckokalender">
-        <div className="grid-header">
-          <div className="time-col" />
-          {weekDays.map((d, i) => (
-            <div key={i} className="day-col">
-              {d.toLocaleDateString("sv-SE", {
-                weekday: "short",
-                day: "2-digit",
-                month: "2-digit",
-              })}
-            </div>
-          ))}
-        </div>
-        <div
-          className="grid-body"
-          style={{
-            gridTemplateRows: `repeat(${hours.length}, ${ROW_HEIGHT}px)`,
-            gridTemplateColumns: `80px repeat(7, 1fr)`,
-          }}
-        >
-          {hours.map((h, rowIdx) => (
-            <React.Fragment key={`row-${rowIdx}`}>
-              <div
-                className="time-col"
-                style={{ gridColumn: 1, gridRow: rowIdx + 1 }}
-              >
-                {`${String(h).padStart(2, "0")}:00`}
-              </div>
-              {weekDays.map((d, dayIdx) => (
-                <div
-                  key={`cell-${dayIdx}-${rowIdx}`}
-                  className="cell empty"
-                  style={{
-                    gridColumn: dayIdx + 2,
-                    gridRow: rowIdx + 1,
-                    position: "relative",
-                    padding: 0,
-                  }}
-                >
-                  {[0, 15, 30, 45].map((m, qi) => (
-                    <button
-                      key={`q-${qi}`}
-                      className={"slot-quarter"}
-                      title={`Lägg till ${String(h).padStart(2, "0")}:${String(
-                        m
-                      ).padStart(2, "0")}`}
-                      onClick={() => openCreate(d, h, m)}
-                      style={{
-                        position: "absolute",
-                        left: 0,
-                        width: "100%",
-                        height: "25%",
-                        top: `${qi * 25}%`,
-                        background: "transparent",
-                        border: 0,
-                        cursor: "pointer",
-                        padding: 0,
-                        margin: 0,
-                      }}
-                    />
-                  ))}
-                </div>
-              ))}
-            </React.Fragment>
-          ))}
+        {/** Håll koll på fönsterbredd för att bestämma om vi ska visa tidkolumnen */}
+        {(() => {
+          const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+          React.useEffect(() => {
+            const handleResize = () => setIsMobile(window.innerWidth < 768);
+            window.addEventListener("resize", handleResize);
+            return () => window.removeEventListener("resize", handleResize);
+          }, []);
 
-          {weekDays.map((d, dayIdx) => {
-            const dY = d.getFullYear();
-            const dM = d.getMonth();
-            const dD = d.getDate();
-            const dayOccs = occurrences.filter((o) => {
-              const st = new Date(o.startTime);
-              return (
-                st.getFullYear() === dY &&
-                st.getMonth() === dM &&
-                st.getDate() === dD
-              );
-            });
-            try {
-              console.debug(
-                `Day ${dayIdx} ${d.toDateString()} occurrences:`,
-                dayOccs.length
-              );
-            } catch {}
-            return (
+          return (
+            <>
+              {/* Grid header */}
               <div
-                key={`overlay-${dayIdx}`}
-                className="day-overlay"
+                className="grid-header"
                 style={{
-                  gridColumn: dayIdx + 2,
-                  gridRow: `1 / ${hours.length + 1}`,
-                  position: "relative",
-                  zIndex: 5,
-                  pointerEvents: "none",
+                  gridTemplateColumns: isMobile
+                    ? "repeat(7, 1fr)"
+                    : "80px repeat(7, 1fr)",
                 }}
               >
-                {dayOccs.map((o) => {
-                  const st = new Date(o.startTime);
-                  // Fallback: compute end from duration if API doesn't provide endTime
-                  const en = o.endTime
-                    ? new Date(o.endTime)
-                    : new Date(
-                        st.getTime() + (Number(o.durationMinutes) || 60) * 60000
-                      );
-                  // Always use the day's visible start (e.g. 08:00)
-                  const visStart = new Date(d);
-                  visStart.setHours(startHour, 0, 0, 0);
-                  // Calculate top/height from day's start
-                  const minutesFromStart =
-                    (st.getTime() - visStart.getTime()) / 60000;
-                  let durationMin = (en.getTime() - st.getTime()) / 60000;
-                  if (!isFinite(durationMin) || durationMin <= 0)
-                    durationMin = Number(o.durationMinutes) || 60;
-                  const top = (minutesFromStart / 60) * ROW_HEIGHT;
-                  const height = (durationMin / 60) * ROW_HEIGHT;
-                  const startLabel = `${String(st.getHours()).padStart(
-                    2,
-                    "0"
-                  )}:${String(st.getMinutes()).padStart(2, "0")}`;
-                  const endLabel = `${String(en.getHours()).padStart(
-                    2,
-                    "0"
-                  )}:${String(en.getMinutes()).padStart(2, "0")}`;
-                  return (
-                    <button
-                      key={`occ-${o.id}`}
-                      className="occurrence overlay show"
-                      style={{
-                        position: "absolute",
-                        top: `${top}px`,
-                        left: 0,
-                        right: 0,
-                        height: `${height}px`,
-                        zIndex: 10,
-                        pointerEvents: "auto",
-                        opacity: 1,
-                        paddingRight: "56px",
-                      }}
-                      onClick={() => openEdit(o)}
-                      title={`${startLabel}–${endLabel} ${
-                        activityMap[o.activityId]?.name ||
-                        o.activityName ||
-                        "Aktivitet"
-                      }`}
+                {!isMobile && <div className="time-col" />}
+                {weekDays.map((d, i) => (
+                  <div key={i} className="day-col">
+                    {d.toLocaleDateString("sv-SE", {
+                      weekday: "short",
+                      day: "2-digit",
+                      month: "2-digit",
+                    })}
+                  </div>
+                ))}
+              </div>
+
+              {/* Grid body */}
+              <div
+                className="grid-body"
+                style={{
+                  gridTemplateRows: `repeat(${hours.length}, ${ROW_HEIGHT}px)`,
+                  gridTemplateColumns: isMobile
+                    ? "repeat(7, 1fr)"
+                    : "80px repeat(7, 1fr)",
+                }}
+              >
+                {!isMobile &&
+                  hours.map((h, rowIdx) => (
+                    <div
+                      key={`time-${rowIdx}`}
+                      className="time-col"
+                      style={{ gridColumn: 1, gridRow: rowIdx + 1 }}
                     >
-                      <span
-                        style={{
-                          pointerEvents: "none",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {o.activityName ||
-                          activityMap[o.activityId]?.name ||
-                          ""}
-                      </span>
-                      <span
-                        style={{
-                          position: "absolute",
-                          top: "2px",
-                          right: "6px",
-                          fontSize: "11px",
-                          color: "#065f46",
-                          opacity: 0.9,
-                          pointerEvents: "none",
-                        }}
-                      >
-                        {startLabel}–{endLabel}
-                      </span>
-                    </button>
+                      {`${String(h).padStart(2, "0")}:00`}
+                    </div>
+                  ))}
+
+                {hours.map((h, rowIdx) =>
+                  weekDays.map((d, dayIdx) => (
+                    <div
+                      key={`cell-${dayIdx}-${rowIdx}`}
+                      className="cell empty"
+                      style={{
+                        gridColumn: isMobile ? dayIdx + 1 : dayIdx + 2,
+                        gridRow: rowIdx + 1,
+                        position: "relative",
+                        padding: 0,
+                      }}
+                    >
+                      {[0, 15, 30, 45].map((m, qi) => (
+                        <button
+                          key={`q-${qi}`}
+                          className="slot-quarter"
+                          title={`Lägg till ${String(h).padStart(2, "0")}:${String(
+                            m
+                          ).padStart(2, "0")}`}
+                          onClick={() => openCreate(d, h, m)}
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            width: "100%",
+                            height: "25%",
+                            top: `${qi * 25}%`,
+                            background: "transparent",
+                            border: 0,
+                            cursor: "pointer",
+                            padding: 0,
+                            margin: 0,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  ))
+                )}
+
+                {/* Overlay-block (aktiviteter) */}
+                {weekDays.map((d, dayIdx) => {
+                  const dY = d.getFullYear();
+                  const dM = d.getMonth();
+                  const dD = d.getDate();
+                  const dayOccs = occurrences.filter((o) => {
+                    const st = new Date(o.startTime);
+                    return (
+                      st.getFullYear() === dY &&
+                      st.getMonth() === dM &&
+                      st.getDate() === dD
+                    );
+                  });
+
+                  return (
+                    <div
+                      key={`overlay-${dayIdx}`}
+                      className="day-overlay"
+                      style={{
+                        gridColumn: isMobile ? dayIdx + 1 : dayIdx + 2,
+                        gridRow: `1 / ${hours.length + 1}`,
+                        position: "relative",
+                        zIndex: 5,
+                        pointerEvents: "none",
+                      }}
+                    >
+                      {dayOccs.map((o) => {
+                        const st = new Date(o.startTime);
+                        const en = o.endTime
+                          ? new Date(o.endTime)
+                          : new Date(
+                              st.getTime() +
+                                (Number(o.durationMinutes) || 60) * 60000
+                            );
+
+                        const visStart = new Date(d);
+                        visStart.setHours(startHour, 0, 0, 0);
+                        const minutesFromStart =
+                          (st.getTime() - visStart.getTime()) / 60000;
+                        let durationMin = (en.getTime() - st.getTime()) / 60000;
+                        if (!isFinite(durationMin) || durationMin <= 0)
+                          durationMin = Number(o.durationMinutes) || 60;
+                        const top = (minutesFromStart / 60) * ROW_HEIGHT;
+                        const height = (durationMin / 60) * ROW_HEIGHT;
+                        const startLabel = `${String(st.getHours()).padStart(
+                          2,
+                          "0"
+                        )}:${String(st.getMinutes()).padStart(2, "0")}`;
+                        const endLabel = `${String(en.getHours()).padStart(
+                          2,
+                          "0"
+                        )}:${String(en.getMinutes()).padStart(2, "0")}`;
+
+                        return (
+                          <button
+                            key={`occ-${o.id}`}
+                            className="occurrence overlay show"
+                            style={{
+                              position: "absolute",
+                              top: `${top}px`,
+                              left: 0,
+                              right: 0,
+                              height: `${height}px`,
+                              zIndex: 10,
+                              pointerEvents: "auto",
+                              opacity: 1,
+                              fontSize: "12px",
+                              padding: "2px 4px",
+                              boxSizing: "border-box",
+                            }}
+                            onClick={() => openEdit(o)}
+                            title={`${startLabel}–${endLabel} ${
+                              activityMap[o.activityId]?.name ||
+                              o.activityName ||
+                              "Aktivitet"
+                            }`}
+                          >
+                            <span
+                              style={{
+                                pointerEvents: "none",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {o.activityName ||
+                                activityMap[o.activityId]?.name ||
+                                ""}
+                            </span>
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: "2px",
+                                right: "6px",
+                                fontSize: "9px",
+                                color: "#065f46",
+                                opacity: 0.9,
+                                pointerEvents: "none",
+                              }}
+                            >
+                              {startLabel}–{endLabel}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   );
                 })}
               </div>
-            );
-          })}
-        </div>
+            </>
+          );
+        })()}
       </div>
+
 
       {modalOpen && (
         <OccurrenceModal
