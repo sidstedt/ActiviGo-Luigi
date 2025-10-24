@@ -252,9 +252,7 @@ export default function ActivityOccurrencesPage() {
     // Minst antal platser kvar
     if (minSlots !== "" && !isNaN(Number(minSlots))) {
       const minN = Number(minSlots);
-      filtered = filtered.filter(
-        (o) => (o.availableSlots ?? 0) >= minN
-      );
+      filtered = filtered.filter((o) => (o.availableSlots ?? 0) >= minN);
     }
 
     // Date filters
