@@ -8,7 +8,6 @@ namespace ActiviGo.Application.DTOs
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? ImageUrl { get; set; }
-
         public int MaxParticipants { get; set; }
         public int DurationMinutes { get; set; } = 60;
         public bool IsPrivate { get; set; } = false;
@@ -24,7 +23,6 @@ namespace ActiviGo.Application.DTOs
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? ImageUrl { get; set; }
-
         public int MaxParticipants { get; set; }
         public int DurationMinutes { get; set; }
         public bool IsPrivate { get; set; } = false;
@@ -41,7 +39,6 @@ namespace ActiviGo.Application.DTOs
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string? ImageUrl { get; set; }
-
         public int MaxParticipants { get; set; }
         public int DurationMinutes { get; set; }
         public bool IsAvailable { get; set; }
