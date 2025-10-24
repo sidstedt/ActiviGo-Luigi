@@ -33,6 +33,7 @@ export default function ActivityModal({
   const [isAvailable, setIsAvailable] = useState(
     initialData?.isAvailable ?? true
   );
+  const [imageUrl, setImageUrl] = useState(initialData?.imageUrl ?? "");
   const [zoneId, setZoneId] = useState(
     initialData?.zoneId || zones?.[0]?.zoneId || 0
   );
@@ -82,6 +83,7 @@ export default function ActivityModal({
       categoryName: categories[Number(categoryId)]?.name || "",
       zoneId: Number(zoneId) || 0,
       staffId: staffId || null,
+      imageUrl: imageUrl?.trim() || null,
       startTime: dateStr && timeStr ? `${dateStr}T${timeStr}:00` : undefined,
     });
   };
@@ -198,6 +200,34 @@ export default function ActivityModal({
               placeholder="Valfri beskrivning"
             />
           </label>
+
+          <div className="form-row">
+            <label htmlFor="imageUrl">Bild-URL</label>
+            <input
+              id="imageUrl"
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+            />
+          </div>
+
+          {/* Optional quick preview */}
+          {!!imageUrl && (
+            <div className="form-row">
+              <img
+                src={imageUrl}
+                alt="Förhandsvisning"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: 160,
+                  objectFit: "cover",
+                  borderRadius: 8,
+                }}
+                onError={(e) => (e.currentTarget.style.display = "none")}
+              />
+            </div>
+          )}
 
           <div style={{ display: "flex", gap: "1rem" }}>
             <label>
