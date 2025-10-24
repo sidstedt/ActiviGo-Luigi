@@ -91,62 +91,83 @@ export default function ActivitiesPage() {
       {/* Results */}
       <div className="results-section">
         <div className="activities-grid">
-          {filteredActivities.map((activity) => (
-            <div key={activity.id} className="activity-card">
-              <div className="activity-header">
-                <h3 className="activity-name">{activity.name}</h3>
-              </div>
+          {filteredActivities.map((activity) => {
+            const imageUrl =
+              (typeof activity.imageUrl === "string" && activity.imageUrl) ||
+              null;
 
-              <div className="activity-content">
-                <p className="activity-description">{activity.description}</p>
-
-                <div className="activity-details">
-                  {/* Address */}
-                  <div className="detail-item">
-                    <span className="detail-label">Adress:</span>
-                    <span className="detail-value">
-                      {getLocationAddress(activity.zoneId) || "Okänd adress"}
-                    </span>
-                  </div>
-
-                  <div className="detail-item">
-                    <span className="detail-label">Max deltagare:</span>
-                    <span className="detail-value">
-                      {activity.maxParticipants}
-                    </span>
-                  </div>
-
-                  <div className="detail-item">
-                    <span className="detail-label">Längd:</span>
-                    <span className="detail-value">
-                      {activity.durationMinutes} min
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="activity-footer">
-                <div className="activity-status">
-                  {activity.isPrivate && (
-                    <span className="status-badge private">Privat</span>
+            return (
+              <div key={activity.id} className="activity-card">
+                <div className="activity-header">
+                  {imageUrl && (
+                    <div className="activity-image-wrapper">
+                      <img
+                        src={imageUrl}
+                        alt={activity.name}
+                        className="activity-thumbnail"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    </div>
                   )}
+                  <h3 className="activity-name">{activity.name}</h3>
                 </div>
 
-                <button
-                  className="view-details-btn"
-                  onClick={() => {
-                    const token = localStorage.getItem("accessToken");
-                    const target = token
-                      ? `/bookings?activity=${activity.id}`
-                      : `/login?next=/bookings%3Factivity%3D${activity.id}`;
-                    window.location.href = target;
-                  }}
-                >
-                  Sök & Boka
-                </button>
+                <div className="activity-content">
+                  <p className="activity-description">
+                    {activity.description}
+                  </p>
+
+                  <div className="activity-details">
+                    {/* Address */}
+                    <div className="detail-item">
+                      <span className="detail-label">Adress:</span>
+                      <span className="detail-value">
+                        {getLocationAddress(activity.zoneId) || "Okänd adress"}
+                      </span>
+                    </div>
+
+                    <div className="detail-item">
+                      <span className="detail-label">Max deltagare:</span>
+                      <span className="detail-value">
+                        {activity.maxParticipants}
+                      </span>
+                    </div>
+
+                    <div className="detail-item">
+                      <span className="detail-label">Längd:</span>
+                      <span className="detail-value">
+                        {activity.durationMinutes} min
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="activity-footer">
+                  <div className="activity-status">
+                    {activity.isPrivate && (
+                      <span className="status-badge private">Privat</span>
+                    )}
+                  </div>
+
+                  <button
+                    className="view-details-btn"
+                    onClick={() => {
+                      const token = localStorage.getItem("accessToken");
+                      const target = token
+                        ? `/bookings?activity=${activity.id}`
+                        : `/login?next=/bookings%3Factivity%3D${activity.id}`;
+                      window.location.href = target;
+                    }}
+                  >
+                    Sök & Boka
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
