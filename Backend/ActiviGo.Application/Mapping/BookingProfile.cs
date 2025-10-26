@@ -14,6 +14,10 @@ namespace ActiviGo.Application.Mapping
                 .ForMember(dest => dest.ActivityName, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Name))
                 .ForMember(dest => dest.ActivityDescription, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Description))
                 .ForMember(dest => dest.ActivityPrice, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Price))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Price))
+                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.ActivityOccurrence.StartTime))
+                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.ActivityOccurrence.EndTime))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.ZoneName, opt => opt.MapFrom(src => src.ActivityOccurrence.Zone.Name))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.ActivityOccurrence.Activity.Category.Name));
 

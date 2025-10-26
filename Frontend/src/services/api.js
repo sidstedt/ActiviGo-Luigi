@@ -10,41 +10,68 @@ import { jwtDecode } from "jwt-decode";
 async function apiRequest(endpoint, method = 'GET', data = null, skipAuth = false) {
   const config = {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
   };
 
-  // Add token if available (unless skipAuth is true)
+  // Lägg på token om vi inte hoppar över auth
   if (!skipAuth) {
     const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
+    if (token) config.headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // Add body for POST/PUT/PATCH
+  // Body för POST/PUT/PATCH
   if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
     config.body = JSON.stringify(data);
   }
 
-  const response = await fetch(`${API_BASE_URL}/${endpoint}`, config);
+  const url = `${API_BASE_URL}/${endpoint}`;
 
-  // Handle 204 no content
+  // VIKTIGT: 'let' (inte 'const') så vi kan göra retry på 401
+  let response = await fetch(url, config);
+
+  // Auto-refresh vid 401 (om inte skipAuth), försök EN gång till
+  if (response.status === 401 && !skipAuth) {
+    try {
+      const refreshed = await refreshAccessToken();
+      if (refreshed) {
+        const newToken = localStorage.getItem('accessToken');
+        if (newToken) config.headers['Authorization'] = `Bearer ${newToken}`;
+        response = await fetch(url, config); // retry
+      }
+    } catch (err) {
+      // Ignorera -> faller igenom till felhantering nedan
+    }
+  }
+
+  // 204 No Content
   if (response.status === 204) {
     return null;
   }
 
-  // Handle errors
+  // Förbättrad felhantering (visar Identity-fel/ModelState)
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ 
-      message: `HTTP ${response.status}: ${response.statusText}` 
-    }));
-    throw new Error(error.message || 'Ett fel uppstod');
+    let bodyText = '';
+    try { bodyText = await response.text(); } catch (e) {}
+    let errorJson = {};
+    try { errorJson = bodyText ? JSON.parse(bodyText) : {}; } catch (e) {}
+
+    const identityErrors =
+      (errorJson.errors && Array.isArray(errorJson.errors) && errorJson.errors.map(e => e.description || e.code || e).join('\n')) ||
+      (errorJson.Errors && Array.isArray(errorJson.Errors) && errorJson.Errors.map(e => e.description || e.code || e).join('\n')) ||
+      errorJson.title ||
+      errorJson.message ||
+      errorJson.Message ||
+      bodyText;
+
+    const msg = identityErrors || `HTTP ${response.status}: ${response.statusText}`;
+    const err = new Error(msg);
+    err.details = errorJson;
+    throw err;
   }
-  
+
   return response.json();
 }
+
 
 // ============================================
 // ACTIVITIES
@@ -52,15 +79,35 @@ async function apiRequest(endpoint, method = 'GET', data = null, skipAuth = fals
 export async function fetchActivities() {
   return apiRequest(`Activities`);
 }
-export async function fetchActivityById(id) {
-  return apiRequest(`Activities/${id}`);
+
+export async function createActivity(activityData) {
+  return apiRequest('Activities', 'POST', activityData);
 }
+
+export async function updateActivity(id, activityData) {
+  return apiRequest(`Activities/${id}`, 'PUT', activityData);
+}
+
+export async function deleteActivity(id) {
+  return apiRequest(`Activities/${id}`, 'DELETE');
+}
+
 
 // ============================================
 // ACTIVITY OCCURRENCES
 // ============================================
 export async function fetchActivityOccurrences() {
   return apiRequest('ActivityOccurrence');
+}
+
+export async function createActivityOccurrence(data) {
+  // data: { startTime, durationMinutes?, activityId, zoneId? }
+  return apiRequest('ActivityOccurrence', 'POST', data);
+}
+
+export async function updateActivityOccurrence(id, data) {
+  // data: { startTime, endTime, durationMinutes, activityId, zoneId, isActive }
+  return apiRequest(`ActivityOccurrence/${id}`, 'PUT', data);
 }
 
 // ============================================
@@ -74,18 +121,68 @@ export async function fetchWeatherForecastBatch(queries) {
 // ============================================
 // BOOKINGS
 // ============================================
+export async function fetchUserBookings(userId) {
+  // If userId provided, call endpoint with query param; otherwise call generic endpoint
+  const endpoint = userId
+    ? `Bookings/UserGetBookings?userId=${encodeURIComponent(userId)}`
+    : "Bookings/UserGetBookings";
+  return apiRequest(endpoint);
+}
+
+export async function fetchBookingById(id) {
+  return apiRequest(`Bookings/${id}`);
+}
+
+export async function createBooking(bookingData) {
+  return apiRequest('Bookings', 'POST', bookingData);
+}
+
+export async function cancelBooking(id) {
+  return apiRequest(`Bookings/${id}`, 'DELETE');
+}
+
+export async function fetchAdminBookings() {
+  return apiRequest('Bookings/AdminGetBookings');
+}
+
 
 // ============================================
 // CATEGORIES
 // ============================================
+// Categories (unused currently)
+export async function fetchCategories()
+{ return apiRequest('Category'); }
+// export async function fetchCategoriesWithActivities() { return apiRequest('Category/withActivities'); }
 
 // ============================================
 // ZONES
 // ============================================
+export async function fetchZones() {
+  return apiRequest('Zone');
+}
+
+export async function createZone(zoneData) {
+  return apiRequest('Zone', 'POST', zoneData)
+}
+
+export async function updateZone(id, zoneData) {
+  return apiRequest(`Zone/${id}`, 'PUT', zoneData)
+}
+
+export async function deleteZone(id) {
+  return apiRequest(`Zone/${id}`, 'DELETE')
+}
+
+// Zones (unused currently)
+// export async function fetchZonesWithRelations() { return apiRequest('Zone/withRelations'); }
+// export async function fetchZonesByLocation(locationId) { return apiRequest(`Zone/location/${locationId}`); }
 
 // ============================================
 // STAFF
 // ============================================
+export async function fetchStaff() {
+  return apiRequest('Users/staff');
+}
 
 // ============================================
 // AUTH
@@ -102,10 +199,16 @@ export async function login(email, password) {
   // Decode token for user info
   const decoded = jwtDecode(data.accessToken);
   const roles = (decoded.roles?.split(',') || []).map(r => String(r).trim().toLowerCase());
+  const firstName = decoded.given_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]; 
+  const lastName = decoded.family_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]; 
+  const displayName = [firstName, lastName].filter(Boolean).join(' ') || decoded.unique_name || decoded.name || decoded.email;
+  const jwtEmail = decoded.email || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || null;
   const user = {
     id: decoded.sub,
-    username: decoded.unique_name,
-    email: decoded.email,
+    username: displayName,
+    firstName: firstName || null,
+    lastName: lastName || null,
+    email: jwtEmail,
     roles: Array.isArray(roles) ? roles : [roles]
   };
   
@@ -127,7 +230,7 @@ export async function refreshAccessToken() {
   if (!refreshToken) return false;
   
   try {
-    const data = await apiRequest('Auth/refresh', 'POST', refreshToken, true);
+    const data = await apiRequest('Auth/refresh', 'POST', {refreshToken}, true);
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
     return true;
@@ -136,6 +239,72 @@ export async function refreshAccessToken() {
     return false;
   }
 }
+
+// Current user (from token or cache)
+export function getCurrentUser() {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      // roles may be a comma string, or an array under 'role'
+      let roles = [];
+      if (decoded.roles) {
+        roles = String(decoded.roles).split(',').map(r => String(r).trim().toLowerCase()).filter(Boolean);
+      } else if (decoded.role) {
+        roles = Array.isArray(decoded.role) ? decoded.role.map(r => String(r).toLowerCase()) : [String(decoded.role).toLowerCase()];
+      }
+      const firstName = decoded.given_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]; 
+      const lastName = decoded.family_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]; 
+      const email = decoded.email || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || null;
+      const displayName = [firstName, lastName].filter(Boolean).join(' ') 
+        || decoded.unique_name || decoded.name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] 
+        || email || null;
+      const user = {
+        id: decoded.sub,
+        username: displayName,
+        firstName: firstName || null,
+        lastName: lastName || null,
+        email,
+        roles
+      };
+      localStorage.setItem('user', JSON.stringify(user));
+      return user;
+    } catch {
+      // fall through to cached
+    }
+  }
+  try {
+    const cached = localStorage.getItem('user');
+    if (cached) {
+      const user = JSON.parse(cached);
+      return user || null;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+// ============================================
+// LOCATIONS
+// ============================================
+export async function fetchLocations() {
+  return apiRequest('Location');
+}
+
+export async function createLocation(locationData) {
+  return apiRequest('Location', 'POST', locationData)
+}
+
+export async function updateLocation(id, locationData) {
+  return apiRequest(`Location/${id}`, 'PUT', locationData);
+}
+
+export async function deleteLocation(id) {
+  return apiRequest(`Location/${id}`, 'DELETE');
+}
+
+// (unused) export async function fetchLocationById(id) { return apiRequest(`Location/${id}`); }
 
 // ============================================
 // USERS
@@ -163,23 +332,50 @@ export async function resetPassword(email, token, newPassword) {
   }, true);
 }
 
+//Change password
+export async function changePassword(currentPassword, newPassword, confirmPassword) {
+  // Skicka flera alias som många backends accepterar
+  const payload = {
+    // vanliga namn
+    currentPassword,
+    newPassword,
+    confirmPassword,
+
+    // alias som vissa DTO:er använder
+    oldPassword: currentPassword,
+    confirmNewPassword: confirmPassword
+  };
+
+  return apiRequest('Users/change-password', 'POST', payload);
+}
+
+// --- USERS (admin) ---
+export async function fetchUsers() {
+  return apiRequest("Users"); // GET /api/Users
+}
+
 // ============================================
-// ADMIN
+// ADMIN CRUD – Användare, Aktiviteter, Bokningar, Statistik
 // ============================================
-/**
- * src/services/api.js
- * * Hanterar alla nätverksanrop, t.ex. att hämta aktiviteter.
- * I ett riktigt projekt, byt ut mock-data mot riktiga fetch-anrop.
- */
 
-// Simulerar din befintliga API-URL
+// ========== USERS ==========
+export async function fetchAllUsers() {
+  return apiRequest("Admin/users");
+}
 
-// Mock-data för att demonstrera visuell presentation
-export const mockActivities = [
-    { id: 1, name: "CrossFit-Passet", description: "Högintensivt pass med fokus på styrka och kondition.", date: "Idag, 18:00", location: "Huvudsalen", capacity: 20, bookedCount: 15 },
-    { id: 2, name: "Yoga Flow - Morgon", description: "Mjukt flöde för att starta dagen med fokus på andning och rörlighet.", date: "Imorgon, 07:00", location: "Studion", capacity: 15, bookedCount: 5 },
-    { id: 3, name: "Spinning: Intervall", description: "Tufft intervallpass på cykel.", date: "Torsdag, 19:30", location: "Spinninghallen", capacity: 30, bookedCount: 30 },
-    { id: 4, name: "Basket: Öppen träning", description: "Informell match och träning, öppen för alla nivåer.", date: "Måndag, 20:00", location: "Idrottshallen", capacity: 40, bookedCount: 10 },
-];
+export async function fetchUserById(id) {
+  return apiRequest(`Admin/users/${id}`);
+}
 
+// Admin: skapa, uppdatera, ta bort användare
+export async function createAdminUser(userData) {
+  return apiRequest("Admin/users", "POST", userData);
+}
 
+export async function updateAdminUser(id, userData) {
+  return apiRequest(`Admin/users/${id}`, "PUT", userData);
+}
+
+export async function deleteAdminUser(id) {
+  return apiRequest(`Admin/users/${id}`, "DELETE");
+}

@@ -1,14 +1,28 @@
 import React from "react";
-import { Routes, Route, Navigate, BrowserRouter, useInRouterContext } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  BrowserRouter,
+  useInRouterContext,
+} from "react-router-dom";
 import StartPage from "./pages/StartPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ActivitiesPage from "./pages/ActivitiesPage.jsx";
 import ActivityOccurrencesPage from "./pages/ActivityOccurrencesPage.jsx";
+import MyBookingsPage from "./pages/MyBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+// imported statistics page
+import Statistics from "./pages/Statistics.jsx";
+import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
+import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
+import MyAccountPage from "./pages/MyAccountPage.jsx";
+import AdminLocationsPage from "./pages/AdminLocationsPage.jsx";
+import AdminZonesPage from "./pages/AdminZonesPage.jsx";
+import AdminUsersPage from "./pages/AdminUsersPage.jsx";
+import BookingDetailsPage from "./pages/BookingDetailsPage.jsx";
 
 const DashboardHome = () => <HomePage />;
-const AdminDashboard = () => <div>Adminpanel</div>;
-const StaffPanel = () => <div>Personalpanel</div>;
 
 function RoleRoute({ allowed = [], roles = [], children }) {
   if (allowed.length === 0) return children;
@@ -27,7 +41,9 @@ function AppRoutes() {
     }
   })();
 
-  const roles = Array.isArray(storedUser?.roles) ? storedUser.roles.map(r => String(r).toLowerCase()) : [];
+  const roles = Array.isArray(storedUser?.roles)
+    ? storedUser.roles.map((r) => String(r).toLowerCase())
+    : [];
   const userRole = roles.includes("admin")
     ? "admin"
     : roles.includes("staff")
@@ -40,23 +56,63 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<StartPage userRole={userRole} roles={roles} />}>
         <Route index element={<DashboardHome />} />
-        <Route path="activities" element={<ActivitiesPage />} />
-        <Route path="bookings" element={<ActivityOccurrencesPage />} />
-        <Route path="login" element={<LoginPage />} />
 
+  <Route path="activities" element={<ActivitiesPage />} />
+  <Route path="bookings" element={<ActivityOccurrencesPage />} />
+  <Route path="login" element={<LoginPage />} />
+  <Route path="users" element={<AdminUsersPage />} />
+  <Route path="statistics" element={<Statistics />} />
+  <Route path="my-bookings" element={<MyBookingsPage />} />
+  <Route path="my-account" element={<MyAccountPage />} />
+  <Route path="my-bookings/:id" element={<BookingDetailsPage />} />
+
+        {/* Ingen separat AdminDashboard, admin routes hanteras nedan */}
         <Route
-          path="admin"
+          path="admin/schedule"
           element={
             <RoleRoute allowed={["admin"]} roles={roles}>
-              <AdminDashboard />
+              <AdminSchedulePage />
             </RoleRoute>
           }
         />
         <Route
-          path="staff"
+          path="admin/activities"
           element={
-            <RoleRoute allowed={["staff", "admin"]} roles={roles}>
-              <StaffPanel />
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminActivitiesPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/locations"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminLocationsPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/zones"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminZonesPage />
+            </RoleRoute>
+          }
+        />
+        {/* Ingen separat StaffPanel, hanteras via roller */}
+        <Route
+          path="admin/statistics"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <Statistics />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="admin/users"
+          element={
+            <RoleRoute allowed={["admin"]} roles={roles}>
+              <AdminUsersPage />
             </RoleRoute>
           }
         />
@@ -69,7 +125,7 @@ function AppRoutes() {
 
 export default function App() {
   const isInRouter = useInRouterContext();
-  // Fallback: auto-wrap in BrowserRouter if rendered outside a Router
+
   if (!isInRouter) {
     return (
       <BrowserRouter>

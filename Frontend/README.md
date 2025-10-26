@@ -1,16 +1,98 @@
-# React + Vite
+# ActiviGo — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Kortfattat
 
-Currently, two official plugins are available:
+- Frontend byggd med Vite + React.
+- Huvudmapp: `src/`. Viktiga sidor finns i `src/pages/`.
+- Kommunicerar med backend via `src/services/api.js`. Default base-url: `https://localhost:7127/api`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Snabbstart (utveckling)
 
-## React Compiler
+1. Öppna terminal i mappen Frontend
+2. Installera beroenden:
+   npm install
+3. Starta dev-server:
+   npm run dev
+4. Öppna browser: vanligtvis http://localhost:5173
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Bygg för produktion
 
-## Expanding the ESLint configuration
+- npm run build
+- Utdata läggs i `dist/` (se vite.config.js för inställningar)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Miljökonfiguration
+
+- API-base url ställs i `src/services/api.js` (konstant `API_BASE_URL`).
+- Om ni använder token-auth, lägg till hantering i `apiRequest` (headers).
+
+Projektstruktur (kort)
+
+- src/
+  - pages/ — vyer (ActivitiesPage, AdminUsersPage, ...)
+  - components/ — återanvändbara komponenter (ActivityCard, Modal, ...)
+  - services/ — API wrapper (`api.js`)
+  - styles/ — css filer
+  - utils/ — hjälpfunktioner
+
+Vanliga kommandon
+
+- npm install
+- npm run dev
+- npm run build
+- npm run preview
+
+API-flöde (översikt)
+
+```mermaid
+flowchart LR
+  Browser["Browser (React)"]
+  API["Backend API\nhttps://localhost:7127/api"]
+  DB["Databas (SQL / EF Core)"]
+
+  Browser -->|HTTP JSON| API
+  API -->|ORM / EF Core| DB
+  DB -->|data| API
+  API -->|JSON| Browser
+```
+
+Sekvens: öppna användardetaljer (Visa)
+
+```mermaid
+sequenceDiagram
+  participant U as User (browser)
+  participant FE as Frontend (React)
+  participant API as Backend API
+  participant DB as Database
+
+  U->>FE: Klicka "Visa"
+  FE->>API: GET /api/Bookings/UserGetBookings?userId={id}
+  API->>DB: SELECT bookings WHERE UserId={id}
+  DB-->>API: Booking-lista
+  API-->>FE: JSON bookings
+  FE-->>U: Visar bokningar i modal
+```
+
+Tips för utveckling
+
+- Använd devtools för att inspektera `src/services/api.js` anrop och responses.
+- Admin-sidor (AdminUsersPage.jsx) antar backend-endpoints under `/api/Admin/*`.
+- Om CORS-problem uppstår: konfigurera backend att tillåta `http://localhost:5173`.
+
+Felsökning
+
+- 404 från `/api/Admin/users/{id}` → kontrollera vilken endpoint frontend anropar (Admin/users versus Admin/users/{id}).
+- Fel vid JSON-parse → apiRequest försöker parse text till JSON; kontrollera backend-response.
+
+Styleguide & komponenter
+
+- Modal-stilar i `src/styles/ActivityModal.css` / `ActivitiesPage.css`.
+- Återanvänd `Modal.jsx` för enhetlighet.
+
+Bidra
+
+- Skapa en branch per feature/fix.
+- Följ kodstil i projektet (prettier/eslint är konfigurerade enligt repo).
+
+Licens & kontakt
+
+- Läs repo-root README för licens och kontaktinformation.

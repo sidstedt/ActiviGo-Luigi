@@ -1,0 +1,763 @@
+/* Activities Page Styles */
+.activities-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+}
+
+/* Loading and Error States */
+.loading, .error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message h2 {
+  color: #e74c3c;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.retry-button:hover {
+  background: #2980b9;
+}
+
+/* Filters Section */
+.filters-section {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  align-items: start; /* tidigare: end — byt till start för konsekvent topp-justering */
+}
+
+/* säkerställ att varje filter-grupp börjar upptill i sin cell */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  align-items: flex-start; /* se till att innehållet är vänsterjusterat och börjar upptill */
+}
+
+/* Tvinga alla direkta barn i grid att ligga i toppen - undviker att en kolumn sitter lägre */
+.filters-grid > * {
+  align-self: start;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  margin-top: 0; /* säkerställ konsekvent top-marginal */
+  font-size: 0.9rem;
+  display: block;
+}
+
+.filter-input, .filter-select {
+  padding: 0.75rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.filter-input:focus, .filter-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.clear-filters-btn {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.clear-filters-btn:hover {
+  background: #7f8c8d;
+}
+
+/* Results Section */
+.results-section {
+  margin-top: 2rem;
+}
+
+.results-header {
+  margin-bottom: 2rem;
+}
+
+.results-header h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 2px dashed #bdc3c7;
+}
+
+.no-results p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* Activities Grid */
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  grid-auto-rows: 1fr;
+  align-items: stretch;
+}
+
+.activity-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e1e8ed;
+  display: flex;
+  flex-direction: column;
+}
+
+/* se till att innehållet kan scrolla om det blir för stort istället för att trycka in layouten */
+.activity-content {
+  padding: 0.8rem;
+  flex: 1 1 auto;
+  min-height: 0; /* viktigt när föräldern använder flex och grid-auto-rows:1fr */
+  overflow: hidden; /* eller auto om du vill tillåta inre scroll */
+}
+
+/* Hover: lägg upp över andra kort istället för att trycka in dem */
+.activity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  z-index: 5;
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0rem 0.9rem 0rem;
+
+    /* Brytningsegenskaper */
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Activity Image Thumbnail */
+.activity-image-wrapper {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activity-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.activity-card:hover .activity-thumbnail {
+  transform: scale(1.1);
+}
+
+.activity-name {
+  display: block;
+  flex: 1 1 auto;      /* tillåt krympning/growth inom flex-kontainer */
+  min-width: 0;        /* viktigt för att flex-barn ska kunna brytas */
+  margin: 0;
+  font-size: 1.05rem;
+  color: #2c3e50;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.activity-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #27ae60;
+  white-space: nowrap;
+}
+
+.activity-content {
+  padding: 0.8rem;
+  flex: 1 1 auto;
+}
+
+.activity-description {
+  color: #7f8c8d;
+  line-height: 1.4;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.activity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* varje egenskap får label överst och värdet under, vänsterjusterat */
+.activity-details .detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0.25rem 0;
+  align-items: flex-start; /* säkerställ vänsterjustering */
+}
+
+.activity-details .detail-label,
+.activity-details .detail-value {
+  display: block;
+  text-align: left;
+}
+
+.activity-details .detail-label {
+  font-weight: 600;
+  color: #222;
+  font-size: 0.92rem;
+  line-height: 1;
+}
+
+/* värden lite gråare — matchar .activity-description */
+.activity-details .detail-value {
+  color: #7f8c8d;
+  font-size: 0.88rem;
+  word-break: break-word;
+}
+
+/* Replace vertical separators with horizontal separators between items.
+   This draws a thin rule under each detail-item (except the last), which
+   looks correct both for stacked single-column and multi-column grid layouts. */
+.activity-details .detail-item {
+  padding: 0.35rem 0;
+  margin: 0;
+}
+
+.activity-details .detail-item:not(:last-child) {
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* På mycket små skärmar kan linjen vara något mjukare/tunnare */
+@media (max-width: 480px) {
+  .activity-details .detail-item:not(:last-child) {
+    border-bottom-width: 1px;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ta bort eventuellt kolon från label-pseudo-element */
+.activity-details .detail-label::after {
+  content: "";
+}
+
+.activity-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  background: #f8f9fa;
+  border-top: 1px solid #e1e8ed;
+  margin-top: auto;
+  gap: 0.75rem; /* lite luft mellan vänster och höger sektion */
+  flex-wrap: wrap; /* gör att de bryts snyggt på mindre skärmar */
+}
+
+.activity-status {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.available {
+  background: #d5f4e6;
+  color: #27ae60;
+}
+
+.status-badge.unavailable {
+  background: #fadbd8;
+  color: #e74c3c;
+}
+
+.status-badge.private {
+  background: #e8f4fd;
+  color: #3498db;
+}
+
+.view-details-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background: #2980b9;
+}
+
+/* Gör "Ändra" och "Ta bort" lika stora och förhindra att texten bryts */
+.activity-card .card-actions {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  align-items: center;
+  flex: 0 1 auto;   /* krymp vid behov */
+  max-width: 100%;
+  min-width: 0;
+}
+
+.activity-card .card-actions > * {
+  flex: 1 1 0;
+  min-width: 0;            /* tillåt krympning inom flex-kontainern */
+  white-space: nowrap;     /* förhindra att knapptext bryts */
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Behåll knapp-styling men gör dem lite mindre för kompakt utseende */
+.activity-card .card-actions button,
+.activity-card .card-actions .view-details-btn,
+.activity-card .card-actions .edit-btn,
+.activity-card .card-actions .delete-btn {
+  padding: 0.32rem 0.6rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* Lite mindre padding om det fortfarande är trångt */
+@media (max-width: 640px) {
+  .activity-card .card-actions > * {
+    padding: 0.28rem 0.45rem;
+    font-size: 0.82rem;
+  }
+}
+
+/* På mycket små skärmar tillåt stapling så knappar inte blir för trånga */
+@media (max-width: 480px) {
+  .activity-card .card-actions {
+    flex-wrap: wrap;
+  }
+  .activity-card .card-actions > * {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .activities-page {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .activities-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .activity-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .activity-name {
+    margin-right: 0;
+  }
+
+  .activity-footer {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .activity-status {
+    justify-content: center;
+  }
+
+  .view-details-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .filters-section {
+    padding: 1.5rem;
+  }
+
+  .activity-card {
+    margin: 0 0.5rem;
+  }
+}
+
+/* Flytta ner "Rensa filter" så den inte sticker ut mellan 770px och 1010px */
+@media (min-width: 770px) and (max-width: 1010px) {
+  .filters-grid {
+    /* något smalare kolumner så innehåll bryts snyggt */
+    grid-template-columns: repeat(3, minmax(160px, 1fr));
+    align-items: start;
+    gap: 1rem;
+  }
+
+  /* Anta att "Rensa filter" ligger i sista .filter-group -> gör den fullbredd */
+  .filters-grid .filter-group:last-child {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .filters-grid .filter-group:last-child .clear-filters-btn {
+    margin-top: 0.5rem;
+  }
+
+  /* Säkerställ att inputs kan krympa inom sina celler */
+  .filters-grid .filter-group {
+    min-width: 0;
+  }
+}
+
+/* Säkerställ box-sizing så padding inte ökar kortbredden */
+.activity-card,
+.activity-card * {
+  box-sizing: border-box;
+}
+
+/* Modal backdrop och centrering (används av Visa-modalen) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 20px;
+}
+
+/* Stor modal som används för detaljer (Visa) */
+.modal.large {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(18, 38, 63, 0.12);
+  padding: 20px;
+  color: #111;
+  overflow: hidden;
+}
+
+/* Modal rubrik */
+.modal.large h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f1720;
+}
+
+/* Modal huvudsektion: två-kolumn layout (detaljer + bokningar) */
+.modal.large .modal-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+  margin-top: 12px;
+}
+
+/* Vänster kolumn: användarinformation */
+.modal.large .modal-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Höger kolumn: bokningar */
+.modal.large .modal-right {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #f0f2f4;
+  max-height: 420px;
+  overflow: auto;
+}
+
+/* Booking-lista */
+.modal.large .modal-right ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal.large .modal-right li {
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #eef1f3;
+}
+
+/* Meta-text */
+.modal.large .muted {
+  color: #6b7280;
+  font-size: 0.92rem;
+}
+
+/* Actions i modal (knappar) */
+.modal.large .modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Säkerställ att knapp-styling i modal är konsekvent */
+.modal.large .edit-btn,
+.modal.large .delete-btn,
+.modal.large .cancel-btn,
+.modal.large .btn-secondary,
+.modal.large .btn-danger {
+  min-width: 96px;
+  height: 40px;
+  padding: 0 14px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+/* Avvikande knappar */
+.modal.large .delete-btn,
+.modal.large .btn-danger {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+}
+
+.modal.large .edit-btn,
+.modal.large .btn-primary {
+  background: #3498db;
+  color: #fff;
+  border: none;
+}
+
+.modal.large .cancel-btn,
+.modal.large .btn-secondary {
+  background: transparent;
+  color: #334155;
+  border: 1px solid rgba(51,65,85,0.08);
+}
+
+/* Responsivt: stapla på små skärmar */
+@media (max-width: 720px) {
+  .modal.large .modal-body {
+    grid-template-columns: 1fr;
+  }
+  .modal.large .modal-right {
+    max-height: 260px;
+  }
+}
+
+/* Små estetiska detaljer */
+.modal.large p {
+  margin: 6px 0;
+  line-height: 1.45;
+  color: #1f2937;
+}
+
+/* Bekräfta-borttagning modal — samma visuella språk som .modal.large men smalare */
+.modal.confirm-delete,
+.modal.small {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(18, 38, 63, 0.12);
+  padding: 18px;
+  color: #111;
+  overflow: hidden;
+}
+
+/* Rubrik */
+.modal.confirm-delete h3,
+.modal.small h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f1720;
+}
+
+/* Text & layout */
+.modal.confirm-delete p,
+.modal.small p {
+  margin: 8px 0;
+  color: #555c66;
+  line-height: 1.45;
+}
+
+/* Minska onödigt vitt utrymme under knappar i confirm-delete / small modaler */
+.modal.confirm-delete,
+.modal.small {
+  /* lite mindre botten-padding så modalen krymper till innehållet */
+  padding: 18px 18px 12px;
+  display: inline-block; /* låter boxen anpassa höjden efter innehållet */
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+/* Ta bort eventuell extra marginal under sista texten i modalen */
+.modal.confirm-delete p:last-child,
+.modal.small p:last-child {
+  margin-bottom: 0;
+}
+
+/* Säkerställ att modal-actions inte lämnar extra under-marginal */
+.modal.confirm-delete .modal-actions,
+.modal.small .modal-actions {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/* Om knapparna ligger längst ner ändå — se till att modalen inte får onödig min-höjd */
+.modal.confirm-delete,
+.modal.small {
+  min-height: 0;
+  max-height: none;
+}
+
+/* Confirm-delete: knappar — Avbryt blå, Ta bort röd, högerjusterade med mellanrum */
+.modal.confirm-delete .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/* Avbryt = blå (btn-secondary) */
+.modal.confirm-delete .btn-secondary {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  min-width: 96px;
+  height: 40px;
+  padding: 0 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.modal.confirm-delete .btn-secondary:hover {
+  background: #2980b9;
+}
+
+/* Ta bort = röd (btn-danger) */
+.modal.confirm-delete .btn-danger {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  min-width: 96px;
+  height: 40px;
+  padding: 0 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.modal.confirm-delete .btn-danger:hover {
+  background: #c0392b;
+}

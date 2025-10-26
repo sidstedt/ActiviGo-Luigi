@@ -20,9 +20,108 @@
   margin-bottom: 0.5rem;
 }
 
-.page-header .subtitle {
+.page-header p {
   font-size: 1.2rem;
   color: #7f8c8d;
+}
+
+/* Filters Section */
+.filters-section {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.filters-row {
+  display: grid;
+  gap: 1rem;
+  align-items: end;
+}
+
+.filters-row--top {
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+}
+
+.filters-row--dates {
+  grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) 160px; /* dateFrom | dateTo | button cell */
+}
+
+.filter-group--right {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+}
+
+.filter-group--right .clear-filters-btn {
+  margin-top: 0.25rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* så element kan krympa inom grid-cellen */
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.filter-input, .filter-select {
+  padding: 0.75rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0; /* förhindrar att innehåll tvingar ut cellen */
+}
+
+.filter-input:focus, .filter-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.clear-filters-btn {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.clear-filters-btn:hover {
+  background: #7f8c8d;
+}
+
+/* Results Section */
+.results-section {
+  margin-top: 2rem;
+}
+
+.results-header {
+  margin-bottom: 2rem;
+}
+
+.results-header h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
 }
 
 .loading {
@@ -125,6 +224,68 @@
   margin-top: 2rem;
 }
 
+/* Grupp-actions i kort: visa knappar sida vid sida */
+.activity-card .card-actions,
+.occurrences-grid .card-actions,
+.occurrence-card .actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  /* behåll tidigare beteende (wrap på små skärmar styrs via media queries) */
+}
+
+/* Se till att varje knapp tar lika mycket utrymme */
+.activity-card .card-actions > * ,
+.occurrences-grid .card-actions > * ,
+.occurrence-card .actions > * {
+  flex: 1 1 0;          /* dela utrymmet jämnt mellan barn */
+  min-width: 0;         /* låt knapparna krympa vid behov */
+  box-sizing: border-box;
+  text-align: center;   /* centrerar text i knapparna */
+}
+
+/* Behåll visuella stiljusteringar för knappar */
+.occurrences-grid .btn-primary,
+.occurrences-grid .btn-secondary,
+.occurrences-grid button {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* På mycket små skärmar: låt knapparna staplas men fortfarande fullbredd */
+@media (max-width: 640px) {
+  .activity-card .card-actions,
+  .occurrences-grid .card-actions,
+  .occurrence-card .actions {
+    flex-wrap: wrap;
+  }
+  .activity-card .card-actions > * ,
+  .occurrences-grid .card-actions > * ,
+  .occurrence-card .actions > * {
+    flex: 1 1 100%; /* full width när de staplas */
+  }
+}
+
+@media (max-width: 768px) {
+  .occurrences-grid .btn-primary,
+  .occurrences-grid .btn-secondary,
+  .occurrences-grid button {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .occurrences-grid .btn-primary,
+  .occurrences-grid .btn-secondary,
+  .occurrences-grid button {
+    padding: 0.3rem 0.45rem;
+    font-size: 0.75rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .occurrences-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -138,6 +299,19 @@
 @media (max-width: 768px) {
   .occurrences-page {
     padding: 1.5rem;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .filters-row--top {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-row--dates {
+    grid-template-columns: 1fr 1fr;
   }
 
   .occurrences-grid {
@@ -155,6 +329,10 @@
     padding: 1rem;
   }
 
+  .filters-section {
+    padding: 1.5rem;
+  }
+
   .occurrences-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -164,8 +342,23 @@
     font-size: 1.75rem;
   }
 
-  .page-header .subtitle {
+  .page-header p {
     font-size: 1rem;
+  }
+
+  /* På små skärmar: tillåt knappraden bryta och visa knapparna */
+  .activity-card .card-actions,
+  .occurrences-grid .card-actions,
+  .occurrence-card .actions {
+    flex-wrap: wrap;          /* bryt rad så knappar syns */
+    justify-content: flex-start;
+    overflow: visible;        /* visa innehållet istället för att dölja */
+    margin-top: 0.5rem;
+  }
+  .occurrences-grid .btn-primary,
+  .occurrences-grid .btn-secondary,
+  .occurrences-grid button {
+    white-space: normal;      /* tillåt radbrytning i knapp-text om nödvändigt */
   }
 }
 

@@ -29,22 +29,56 @@ namespace ActiviGo.WebApi.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var userId = GetUserId();
-            var booking = await _bookingService.CreateBookingAsync(userId, dto, ct);
-
-            return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
+            try
+            {
+                var booking = await _bookingService.CreateBookingAsync(userId, dto, ct);
+                return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Business rule violations: full, duplicate, etc.
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                // Fallback to avoid leaking server details; logs should capture the stack.
+                return StatusCode(500, new { message = "Ett oväntat fel uppstod vid bokning." });
+            }
         }
 
-        // ---------------------------
-        // Read all bookings for user
-        // ---------------------------
-        [HttpGet]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> GetAll(CancellationToken ct)
+        [HttpGet ("AdminGetBookings")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllBookingsAdmin(CancellationToken ct)
         {
-            var userId = GetUserId();
-            var bookings = await _bookingService.GetAllBookingsAsync(userId, ct);
+            var bookings = await _bookingService.GetAllBookingsAdminAsync(ct);
             return Ok(bookings);
         }
+
+        // ---------------------------
+        // Read all bookings for user (or specific user if ID provided)
+        // ---------------------------
+        [HttpGet("UserGetBookings")]
+        [Authorize(Roles = "Admin, Staff, User")]
+        public async Task<IActionResult> GetAll([FromQuery] Guid? userId, CancellationToken ct)
+        {
+            // Om ingen userId skickas → hämta från JWT claims (inloggad användare)
+            var effectiveUserId = userId ?? GetUserId();
+
+            // Om användaren inte är admin och försöker hämta någon annans bokningar → neka
+            var isAdmin = User.IsInRole("Admin");
+            if (!isAdmin && userId.HasValue && userId.Value != effectiveUserId)
+            {
+                return Forbid("Endast administratörer kan hämta andra användares bokningar.");
+            }
+
+            var bookings = await _bookingService.GetAllBookingsAsync(effectiveUserId, ct);
+            return Ok(bookings);
+        }
+
 
         // ---------------------------
         // Read booking by id

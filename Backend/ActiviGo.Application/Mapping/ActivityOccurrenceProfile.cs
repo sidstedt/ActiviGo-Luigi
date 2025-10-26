@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ActiviGo.Domain.Models;
 using ActiviGo.Application.DTOs;
+using ActiviGo.Domain.Enum;
 
 namespace ActiviGo.Application.Mapping
 {
@@ -38,11 +39,11 @@ namespace ActiviGo.Application.Mapping
                 )
                 .ForMember(
                     dest => dest.ParticipantsCount,
-                    opt => opt.MapFrom(src => src.Bookings.Count)
+                    opt => opt.MapFrom(src => src.Bookings.Count(b => b.Status != BookingStatus.Canceled))
                 )
                 .ForMember(
                     dest => dest.AvailableSlots,
-                    opt => opt.MapFrom(src => src.Activity.MaxParticipants - src.Bookings.Count)
+                    opt => opt.MapFrom(src => src.Activity.MaxParticipants - src.Bookings.Count(b => b.Status != BookingStatus.Canceled))
                 );
         }
     }

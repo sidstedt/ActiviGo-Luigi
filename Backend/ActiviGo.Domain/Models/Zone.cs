@@ -11,7 +11,6 @@ namespace ActiviGo.Domain.Models
         [Required]
         public bool IsOutdoor { get; set; } = false;
 
-        //navigation 
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
         public ICollection<ActivityOccurrence> ActivityOccurrences { get; set; } = new List<ActivityOccurrence>();
@@ -20,5 +19,7 @@ namespace ActiviGo.Domain.Models
 
         [Required]
         public Location Location { get; set; } = null!;
+
+        public bool IsActive { get; set; } = true;
     }
 }
