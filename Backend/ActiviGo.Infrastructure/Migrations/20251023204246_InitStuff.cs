@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ActiviGo.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class updatedModels : Migration
+    public partial class InitStuff : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -228,6 +228,7 @@ namespace ActiviGo.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     IsOutdoor = table.Column<bool>(type: "bit", nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -251,7 +252,7 @@ namespace ActiviGo.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsPrivate = table.Column<bool>(type: "bit", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
                     MaxParticipants = table.Column<int>(type: "int", nullable: false),
@@ -351,9 +352,9 @@ namespace ActiviGo.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("4e05514c-d583-4c2c-b55b-97a44aaeaf73"), null, "User", "USER" },
-                    { new Guid("8e0861fc-c798-41b0-8bfb-e24a7979c4ec"), null, "Admin", "ADMIN" },
-                    { new Guid("c4bb39b1-d711-4d39-8e70-7b27dae15bb3"), null, "Staff", "STAFF" }
+                    { new Guid("367c8a72-9034-4764-ab25-8c5b1655c42b"), null, "Admin", "ADMIN" },
+                    { new Guid("a0fcb9b2-ed91-49b6-806b-85834b17af81"), null, "Staff", "STAFF" },
+                    { new Guid("a6113448-1dcc-4ea2-82f8-f23db840f3bf"), null, "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -361,11 +362,11 @@ namespace ActiviGo.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UpdatedAt", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("240babc8-287b-49a9-904f-ff81d301eb50"), 0, "66aa839d-b8c4-4c84-aca2-0aeeaad6d7ed", new DateTime(2025, 10, 24, 12, 36, 4, 899, DateTimeKind.Utc).AddTicks(9059), "user1@example.com", true, "Anna", true, "Andersson", false, null, "USER1@EXAMPLE.COM", "USER1@EXAMPLE.COM", "AQAAAAIAAYagAAAAEEqk7M4rEf69t/ngi65PW1NTmRBUwXBIBE18h75r33uyCXYsLBIXQ8oo4/jaLOuJfw==", null, false, null, false, new DateTime(2025, 10, 24, 12, 36, 4, 899, DateTimeKind.Utc).AddTicks(9067), "user1@example.com" },
-                    { new Guid("34e150ae-706e-46cb-8043-199f15adc38d"), 0, "b704333e-a731-4853-9ea8-84ecada89d1c", new DateTime(2025, 10, 24, 12, 36, 5, 152, DateTimeKind.Utc).AddTicks(3445), "sara@activigo.se", true, "Sara", true, "Sund", false, null, "SARA@ACTIVIGO.SE", "SARA@ACTIVIGO.SE", "AQAAAAIAAYagAAAAEI+8HrgwoVHaBEqmBMnbUiW0d4FXlY9g5fQ3Z/oX3/nFFHNSkuRPxp4HWk+Jjg1oJw==", null, false, null, false, new DateTime(2025, 10, 24, 12, 36, 5, 152, DateTimeKind.Utc).AddTicks(3454), "sara@activigo.se" },
-                    { new Guid("a673d0a7-7719-45bd-80b3-a0b5055fb54a"), 0, "80058734-38f2-4857-9350-adfa56e0510d", new DateTime(2025, 10, 24, 12, 36, 5, 305, DateTimeKind.Utc).AddTicks(736), "simon@activigo.se", true, "Simon", true, "Strand", false, null, "SIMON@ACTIVIGO.SE", "SIMON@ACTIVIGO.SE", "AQAAAAIAAYagAAAAEDfspFCZNXYeodwYcjiIU0kABKCP7YuvoC8ehc33UtOc9l/L+lXhHg73SEV+j7KrKQ==", null, false, null, false, new DateTime(2025, 10, 24, 12, 36, 5, 305, DateTimeKind.Utc).AddTicks(742), "simon@A.com" },
-                    { new Guid("ba556bf4-37ae-49c1-9c73-3ed329956a79"), 0, "93c133bd-380a-4589-bcec-a259ffcadd7e", new DateTime(2025, 10, 24, 12, 36, 5, 29, DateTimeKind.Utc).AddTicks(3572), "user2@example.com", true, "Bertil", true, "Berg", false, null, "USER2@EXAMPLE.COM", "USER2@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGJdARdxyeL0h6AUfxRNCHcT5Fb1gp9ygPJ3viWOZZBXn0xWHxCWwv+amXuojNoRDQ==", null, false, null, false, new DateTime(2025, 10, 24, 12, 36, 5, 29, DateTimeKind.Utc).AddTicks(3579), "user2@example.com" },
-                    { new Guid("f3d6f133-7c9a-47a7-92e0-1f1ce7592e68"), 0, "4bd2a149-0fca-4593-8934-2d339f6e0f80", new DateTime(2025, 10, 24, 12, 36, 5, 443, DateTimeKind.Utc).AddTicks(1952), "admin@activigo.se", true, "Admin", true, "Super", false, null, "ADMIN@ACTIVIGO.SE", "ADMIN@ACTIVIGO.SE", "AQAAAAIAAYagAAAAEFsHNB5mp4fE7n4xbcb5yJsq1siwBrAfx+wWp2BJJp9a1DVnqRxEXdq/3s8Z47yoQA==", null, false, null, false, new DateTime(2025, 10, 24, 12, 36, 5, 443, DateTimeKind.Utc).AddTicks(1958), "admin@activigo.se" }
+                    { new Guid("2fb3e5d9-a940-447a-b1ca-c9cfa8dd2310"), 0, "6f5d46f2-f47b-458e-bcfe-c55ecac32596", new DateTime(2025, 10, 23, 20, 42, 45, 92, DateTimeKind.Utc).AddTicks(7988), "simon@activigo.se", true, "Simon", true, "Strand", false, null, "SIMON@ACTIVIGO.SE", "SIMON@ACTIVIGO.SE", "AQAAAAIAAYagAAAAEOjZ4rZBzC+Q1Oa5bAKCSIHatbAbtk+8TXQe+lM4u+aGQNzXFbpejvjXwGHIuIqZww==", null, false, null, false, new DateTime(2025, 10, 23, 20, 42, 45, 92, DateTimeKind.Utc).AddTicks(7994), "simon@A.com" },
+                    { new Guid("338df323-56c4-47c3-a80c-8cfe1e7fbfdc"), 0, "bf4bb3be-1bb6-4fd8-81b9-f4868bcf61b1", new DateTime(2025, 10, 23, 20, 42, 45, 10, DateTimeKind.Utc).AddTicks(7413), "sara@activigo.se", true, "Sara", true, "Sund", false, null, "SARA@ACTIVIGO.SE", "SARA@ACTIVIGO.SE", "AQAAAAIAAYagAAAAEP/VNxdKIynpxY6ubb1xDn1guLO0UKceK0LTMHJAsbs9e/JZA7Yc9aURY4ygxvkp9w==", null, false, null, false, new DateTime(2025, 10, 23, 20, 42, 45, 10, DateTimeKind.Utc).AddTicks(7428), "sara@activigo.se" },
+                    { new Guid("92d29cd9-2fa9-4dc5-bcf9-65e97f82a287"), 0, "d2df7c25-1a40-425f-b970-44a95dcf9db2", new DateTime(2025, 10, 23, 20, 42, 44, 850, DateTimeKind.Utc).AddTicks(5990), "user1@example.com", true, "Anna", true, "Andersson", false, null, "USER1@EXAMPLE.COM", "USER1@EXAMPLE.COM", "AQAAAAIAAYagAAAAEKpu9mHcqHkjPftFChnwbYS+V+b/NzXp/kGeIpjCz4JuPxtgxxOwg5PFUQuTsQQcXg==", null, false, null, false, new DateTime(2025, 10, 23, 20, 42, 44, 850, DateTimeKind.Utc).AddTicks(5993), "user1@example.com" },
+                    { new Guid("e9700ae7-8328-4ed4-983d-b03362b9f59e"), 0, "936278af-ef9c-4dce-a058-8b93926ed58a", new DateTime(2025, 10, 23, 20, 42, 44, 927, DateTimeKind.Utc).AddTicks(878), "user2@example.com", true, "Bertil", true, "Berg", false, null, "USER2@EXAMPLE.COM", "USER2@EXAMPLE.COM", "AQAAAAIAAYagAAAAEEdtDXrr6z3a+H2dTNZa+LAScZWFZiIJT5vDpJ02LgszDg62ZYIl6X8KMyr53HTqHg==", null, false, null, false, new DateTime(2025, 10, 23, 20, 42, 44, 927, DateTimeKind.Utc).AddTicks(888), "user2@example.com" },
+                    { new Guid("f326b96e-f4c4-403f-bd2c-4af59df11c50"), 0, "8a1f157b-b6f4-4933-920d-4602de877040", new DateTime(2025, 10, 23, 20, 42, 45, 185, DateTimeKind.Utc).AddTicks(7419), "admin@activigo.se", true, "Admin", true, "Super", false, null, "ADMIN@ACTIVIGO.SE", "ADMIN@ACTIVIGO.SE", "AQAAAAIAAYagAAAAEL5FQIAJQO+8wMWHIm+VX/izsJAjZT2f5qYLbhnIxCiYlGXMhcGeiQbDXtkLgaCLyw==", null, false, null, false, new DateTime(2025, 10, 23, 20, 42, 45, 185, DateTimeKind.Utc).AddTicks(7425), "admin@activigo.se" }
                 });
 
             migrationBuilder.InsertData(
@@ -400,34 +401,34 @@ namespace ActiviGo.Infrastructure.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("4e05514c-d583-4c2c-b55b-97a44aaeaf73"), new Guid("240babc8-287b-49a9-904f-ff81d301eb50") },
-                    { new Guid("c4bb39b1-d711-4d39-8e70-7b27dae15bb3"), new Guid("34e150ae-706e-46cb-8043-199f15adc38d") },
-                    { new Guid("c4bb39b1-d711-4d39-8e70-7b27dae15bb3"), new Guid("a673d0a7-7719-45bd-80b3-a0b5055fb54a") },
-                    { new Guid("4e05514c-d583-4c2c-b55b-97a44aaeaf73"), new Guid("ba556bf4-37ae-49c1-9c73-3ed329956a79") },
-                    { new Guid("8e0861fc-c798-41b0-8bfb-e24a7979c4ec"), new Guid("f3d6f133-7c9a-47a7-92e0-1f1ce7592e68") }
+                    { new Guid("a0fcb9b2-ed91-49b6-806b-85834b17af81"), new Guid("2fb3e5d9-a940-447a-b1ca-c9cfa8dd2310") },
+                    { new Guid("a0fcb9b2-ed91-49b6-806b-85834b17af81"), new Guid("338df323-56c4-47c3-a80c-8cfe1e7fbfdc") },
+                    { new Guid("a6113448-1dcc-4ea2-82f8-f23db840f3bf"), new Guid("92d29cd9-2fa9-4dc5-bcf9-65e97f82a287") },
+                    { new Guid("a6113448-1dcc-4ea2-82f8-f23db840f3bf"), new Guid("e9700ae7-8328-4ed4-983d-b03362b9f59e") },
+                    { new Guid("367c8a72-9034-4764-ab25-8c5b1655c42b"), new Guid("f326b96e-f4c4-403f-bd2c-4af59df11c50") }
                 });
 
             migrationBuilder.InsertData(
                 table: "Zones",
-                columns: new[] { "Id", "CreatedAt", "IsOutdoor", "LocationId", "Name", "UpdatedAt" },
+                columns: new[] { "Id", "CreatedAt", "IsActive", "IsOutdoor", "LocationId", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 1, "Yoga & Pilates Sal", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2, "Spinning Sal", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 3, "Klättervägg", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 4, "Tennisbana Utomhus", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 5, "Fotbollsplan Huvud", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 6, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 6, "25m Bassäng", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 7, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 7, "Relaxavdelning", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 8, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 8, "Stora Gymmet", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 9, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 8, "Lilla Gymmet", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 10, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 8, "Utegym", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 11, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 8, "Tennisbana 1", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 12, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 8, "Tennisbana 2", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 13, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 8, "Multifunktionssal", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 14, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 5, "Fotbollsplan A", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 15, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 5, "Fotbollsplan B", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 16, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 5, "Fotbollsplan C", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, 1, "Yoga & Pilates Sal", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, 2, "Spinning Sal", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, 3, "Klättervägg", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, 4, "Tennisbana Utomhus", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, 5, "Fotbollsplan Huvud", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, 6, "25m Bassäng", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 7, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, 7, "Relaxavdelning", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 8, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, 8, "Stora Gymmet", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 9, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, 8, "Lilla Gymmet", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 10, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, 8, "Utegym", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 11, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, 8, "Tennisbana 1", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 12, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, 8, "Tennisbana 2", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 13, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, 8, "Multifunktionssal", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 14, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, 5, "Fotbollsplan A", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 15, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, 5, "Fotbollsplan B", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 16, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, true, 5, "Fotbollsplan C", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -435,23 +436,23 @@ namespace ActiviGo.Infrastructure.Migrations
                 columns: new[] { "Id", "CategoryId", "CreatedAt", "Description", "DurationMinutes", "ImageUrl", "IsAvailable", "IsPrivate", "MaxParticipants", "Name", "Price", "StaffId", "UpdatedAt", "ZoneId" },
                 values: new object[,]
                 {
-                    { 1, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lugn yogaklass för rörlighet och fokus", 60, "", true, false, 15, "Yoga Grund", 150m, new Guid("34e150ae-706e-46cb-8043-199f15adc38d"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 2, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Stabilitet och bålstyrka", 55, "", true, false, 15, "Pilates Core", 150m, new Guid("a673d0a7-7719-45bd-80b3-a0b5055fb54a"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 3, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Högintensiv cykelträning", 45, "", true, false, 20, "Spinning Intervall", 180m, new Guid("a673d0a7-7719-45bd-80b3-a0b5055fb54a"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 },
-                    { 4, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Utomhusträning med bollteknik", 90, "", true, false, 22, "Fotbollsträning", 120m, new Guid("34e150ae-706e-46cb-8043-199f15adc38d"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 5, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Grundläggande säkerhet och teknik", 75, "", true, false, 10, "Klättring Introduktion", 200m, new Guid("a673d0a7-7719-45bd-80b3-a0b5055fb54a"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 3 },
-                    { 6, 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Teknikpass för bättre effektivitet i vattnet", 60, "", true, false, 12, "Simteknik", 160m, new Guid("34e150ae-706e-46cb-8043-199f15adc38d"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 6 },
-                    { 7, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Avslappning och mental återhämtning", 45, "", true, false, 12, "Relax & Meditation", 100m, new Guid("34e150ae-706e-46cb-8043-199f15adc38d"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 7 },
-                    { 8, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Instruktörsletta baslyft och teknik", 60, "", true, false, 16, "Styrketräning Bas", 170m, new Guid("34e150ae-706e-46cb-8043-199f15adc38d"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 8 },
-                    { 9, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Kort och intensivt pass", 35, "", true, false, 14, "HIIT Express", 140m, new Guid("a673d0a7-7719-45bd-80b3-a0b5055fb54a"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 9 },
-                    { 10, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cirkelträning utomhus", 50, "", true, false, 20, "Utegym Cirkel", 30m, new Guid("a673d0a7-7719-45bd-80b3-a0b5055fb54a"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 10 },
-                    { 11, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Boka bana för singelspel", 60, "", true, true, 2, "Tennis Singel", 120m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 11 },
-                    { 12, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Boka bana för dubbelspel", 60, "", true, true, 4, "Tennis Dubbel", 160m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 12 },
-                    { 13, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Öppen tillgång till gymmet", 120, "", true, false, 40, "Öppet Gym", 90m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 8 },
-                    { 14, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Självservice utomhusträning", 120, "", true, false, 30, "Öppet Utegym", 50m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 10 },
-                    { 15, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Allsidigt pass i multifunktionssal", 55, "", true, false, 18, "Multifunktion Flex", 150m, new Guid("a673d0a7-7719-45bd-80b3-a0b5055fb54a"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 13 },
-                    { 16, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Spontan fotboll – drop-in", 90, "", true, false, 28, "Fotboll Öppen Träning", 50m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 14 },
-                    { 17, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Självservice bokning av plan", 120, "", true, true, 22, "Bokning Fotbollsplan A", 200m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 14 }
+                    { 1, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lugn yogaklass för rörlighet och fokus", 60, null, true, false, 15, "Yoga Grund", 150m, new Guid("338df323-56c4-47c3-a80c-8cfe1e7fbfdc"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 2, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Stabilitet och bålstyrka", 55, null, true, false, 15, "Pilates Core", 150m, new Guid("2fb3e5d9-a940-447a-b1ca-c9cfa8dd2310"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
+                    { 3, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Högintensiv cykelträning", 45, null, true, false, 20, "Spinning Intervall", 180m, new Guid("2fb3e5d9-a940-447a-b1ca-c9cfa8dd2310"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 },
+                    { 4, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Utomhusträning med bollteknik", 90, null, true, false, 22, "Fotbollsträning", 120m, new Guid("338df323-56c4-47c3-a80c-8cfe1e7fbfdc"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
+                    { 5, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Grundläggande säkerhet och teknik", 75, null, true, false, 10, "Klättring Introduktion", 200m, new Guid("2fb3e5d9-a940-447a-b1ca-c9cfa8dd2310"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 3 },
+                    { 6, 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Teknikpass för bättre effektivitet i vattnet", 60, null, true, false, 12, "Simteknik", 160m, new Guid("338df323-56c4-47c3-a80c-8cfe1e7fbfdc"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 6 },
+                    { 7, 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Avslappning och mental återhämtning", 45, null, true, false, 12, "Relax & Meditation", 100m, new Guid("338df323-56c4-47c3-a80c-8cfe1e7fbfdc"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 7 },
+                    { 8, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Instruktörsletta baslyft och teknik", 60, null, true, false, 16, "Styrketräning Bas", 170m, new Guid("338df323-56c4-47c3-a80c-8cfe1e7fbfdc"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 8 },
+                    { 9, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Kort och intensivt pass", 35, null, true, false, 14, "HIIT Express", 140m, new Guid("2fb3e5d9-a940-447a-b1ca-c9cfa8dd2310"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 9 },
+                    { 10, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cirkelträning utomhus", 50, null, true, false, 20, "Utegym Cirkel", 30m, new Guid("2fb3e5d9-a940-447a-b1ca-c9cfa8dd2310"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 10 },
+                    { 11, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Boka bana för singelspel", 60, null, true, true, 2, "Tennis Singel", 120m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 11 },
+                    { 12, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Boka bana för dubbelspel", 60, null, true, true, 4, "Tennis Dubbel", 160m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 12 },
+                    { 13, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Öppen tillgång till gymmet", 120, null, true, false, 40, "Öppet Gym", 90m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 8 },
+                    { 14, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Självservice utomhusträning", 120, null, true, false, 30, "Öppet Utegym", 50m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 10 },
+                    { 15, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Allsidigt pass i multifunktionssal", 55, null, true, false, 18, "Multifunktion Flex", 150m, new Guid("2fb3e5d9-a940-447a-b1ca-c9cfa8dd2310"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 13 },
+                    { 16, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Spontan fotboll – drop-in", 90, null, true, false, 28, "Fotboll Öppen Träning", 50m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 14 },
+                    { 17, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Självservice bokning av plan", 120, null, true, true, 22, "Bokning Fotbollsplan A", 200m, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 14 }
                 });
 
             migrationBuilder.InsertData(
@@ -484,14 +485,14 @@ namespace ActiviGo.Infrastructure.Migrations
                 columns: new[] { "Id", "ActivityOccurrenceId", "CreatedAt", "Status", "UpdatedAt", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 11, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("240babc8-287b-49a9-904f-ff81d301eb50") },
-                    { 2, 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 4, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("ba556bf4-37ae-49c1-9c73-3ed329956a79") },
-                    { 3, 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("240babc8-287b-49a9-904f-ff81d301eb50") },
-                    { 4, 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("ba556bf4-37ae-49c1-9c73-3ed329956a79") },
-                    { 5, 16, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("240babc8-287b-49a9-904f-ff81d301eb50") },
-                    { 6, 19, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("ba556bf4-37ae-49c1-9c73-3ed329956a79") },
-                    { 7, 20, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("240babc8-287b-49a9-904f-ff81d301eb50") },
-                    { 8, 23, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("ba556bf4-37ae-49c1-9c73-3ed329956a79") }
+                    { 1, 11, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("92d29cd9-2fa9-4dc5-bcf9-65e97f82a287") },
+                    { 2, 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 4, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("e9700ae7-8328-4ed4-983d-b03362b9f59e") },
+                    { 3, 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("92d29cd9-2fa9-4dc5-bcf9-65e97f82a287") },
+                    { 4, 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("e9700ae7-8328-4ed4-983d-b03362b9f59e") },
+                    { 5, 16, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("92d29cd9-2fa9-4dc5-bcf9-65e97f82a287") },
+                    { 6, 19, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("e9700ae7-8328-4ed4-983d-b03362b9f59e") },
+                    { 7, 20, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("92d29cd9-2fa9-4dc5-bcf9-65e97f82a287") },
+                    { 8, 23, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc), new Guid("e9700ae7-8328-4ed4-983d-b03362b9f59e") }
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,48 +1,52 @@
-/* ==== AppModal – isolerade klassnamn för att undvika krockar ==== */
-.app-modal-overlay {
+.overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* över allt annat */
+  z-index: 1000;
   transition: opacity 0.2s ease-in-out;
-  opacity: 0;
 }
-.app-modal-overlay.show { opacity: 1; }
 
-.app-modal {
-  background-color: #ffffff;
-  color: #000; /* svart text */
-  padding: 30px 25px;
-  border-radius: 16px;
-  min-width: 320px;
-  max-width: 420px;
-  width: 92vw;           /* responsivt */
-  max-height: 88vh;
-  overflow: auto;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-  transform: scale(0.98);
+.overlay:not(.show) {
   opacity: 0;
 }
-.app-modal.show {
-  transform: scale(1);
+
+.overlay.show {
   opacity: 1;
 }
 
-.app-modal-title {
+.modal {
+  background-color: #ffffff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  min-width: 320px;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.modal:not(.show) {
+  transform: scale(0.8);
+}
+
+.modal.show {
+  transform: scale(1);
+}
+
+.title {
   font-size: 24px;
-  font-weight: 600;
-  color: #000;
+  font-weight: 300;
+  color: #2d3748;
   margin-bottom: 20px;
   text-align: center;
 }
 
-.app-modal-close {
+.close-button {
   margin-top: 20px;
   padding: 12px 14px;
   background-color: #4a5568;
@@ -53,23 +57,8 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.app-modal-close:hover { background-color: #2d3748; }
 
-/* formulär-styles som din MyAccountPage använder i modalen */
-.change-password-form .form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
-.change-password-form label { font-weight:600; color:#2c3e50; }
-.change-password-form input {
-  padding:10px 12px;
-  border:1px solid #e1e8ed;
-  border-radius:8px;
-  color:#000;      /* svart text */
-  background:#fff; /* vit bakgrund */
+.close-button:hover {
+  background-color: #2d3748;
 }
-.form-error { color:#e74c3c; margin-top:.5rem; text-align:center; font-weight:600; }
-.form-success { color:#27ae60; margin-top:.5rem; text-align:center; font-weight:600; }
-.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:12px; }
 
-@media (max-width: 480px) {
-  .app-modal { width: 94vw; border-radius:12px; padding:20px 16px; }
-  .app-modal-title { font-size:20px; }
-}

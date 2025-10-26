@@ -12,8 +12,7 @@ export default function AppModal({ title, children, onClose }) {
   }, []);
 
   const handleMouseDown = (e) => {
-    // ⬇️ matcha nya klassnamnet
-    if (e.target.closest(".app-modal")) {
+    if (e.target.closest(".modal")) {
       mouseDownInside.current = true;
     } else {
       mouseDownInside.current = false;
@@ -31,15 +30,15 @@ export default function AppModal({ title, children, onClose }) {
     (
       <div
         ref={overlayRef}
-        className={`app-modal-overlay ${show ? "show" : ""}`}
+        className={`overlay ${show ? "show" : ""}`}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         role="dialog"
         aria-modal="true"
         aria-label={title}
       >
-        <div className={`app-modal ${show ? "show" : ""}`}>
-          <h3 className="app-modal-title">{title}</h3>
+        <div className={`modal ${show ? "show" : ""}`}>
+          <h3 className="title">{title}</h3>
           {children}
           <button
             type="button"
@@ -47,7 +46,7 @@ export default function AppModal({ title, children, onClose }) {
               setShow(false);
               setTimeout(onClose, 200);
             }}
-            className="app-modal-close"
+            className="close-button"
           >
             Stäng
           </button>

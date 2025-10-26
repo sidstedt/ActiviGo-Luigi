@@ -10,68 +10,42 @@ import { jwtDecode } from "jwt-decode";
 async function apiRequest(endpoint, method = 'GET', data = null, skipAuth = false) {
   const config = {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
 
-  // Lägg på token om vi inte hoppar över auth
+  // Add token if available (unless skipAuth is true)
   if (!skipAuth) {
     const token = localStorage.getItem('accessToken');
-    if (token) config.headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
   }
 
-  // Body för POST/PUT/PATCH
+  // Add body for POST/PUT/PATCH
   if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
     config.body = JSON.stringify(data);
   }
 
-  const url = `${API_BASE_URL}/${endpoint}`;
+  const response = await fetch(`${API_BASE_URL}/${endpoint}`, config);
 
-  // VIKTIGT: 'let' (inte 'const') så vi kan göra retry på 401
-  let response = await fetch(url, config);
-
-  // Auto-refresh vid 401 (om inte skipAuth), försök EN gång till
-  if (response.status === 401 && !skipAuth) {
-    try {
-      const refreshed = await refreshAccessToken();
-      if (refreshed) {
-        const newToken = localStorage.getItem('accessToken');
-        if (newToken) config.headers['Authorization'] = `Bearer ${newToken}`;
-        response = await fetch(url, config); // retry
-      }
-    } catch (err) {
-      // Ignorera -> faller igenom till felhantering nedan
-    }
-  }
-
-  // 204 No Content
+  // Handle 204 no content
   if (response.status === 204) {
     return null;
   }
 
-  // Förbättrad felhantering (visar Identity-fel/ModelState)
+  // Handle errors
   if (!response.ok) {
-    let bodyText = '';
-    try { bodyText = await response.text(); } catch (e) {}
-    let errorJson = {};
-    try { errorJson = bodyText ? JSON.parse(bodyText) : {}; } catch (e) {}
-
-    const identityErrors =
-      (errorJson.errors && Array.isArray(errorJson.errors) && errorJson.errors.map(e => e.description || e.code || e).join('\n')) ||
-      (errorJson.Errors && Array.isArray(errorJson.Errors) && errorJson.Errors.map(e => e.description || e.code || e).join('\n')) ||
-      errorJson.title ||
-      errorJson.message ||
-      errorJson.Message ||
-      bodyText;
-
-    const msg = identityErrors || `HTTP ${response.status}: ${response.statusText}`;
-    const err = new Error(msg);
-    err.details = errorJson;
-    throw err;
+    const error = await response.json().catch(() => ({ 
+      message: `HTTP ${response.status}: ${response.statusText}` 
+    }));
+    const msg = error.message || error.Message || `HTTP ${response.status}: ${response.statusText}`;
+    throw new Error(msg);
   }
-
+  
   return response.json();
 }
-
 
 // ============================================
 // ACTIVITIES
@@ -230,7 +204,7 @@ export async function refreshAccessToken() {
   if (!refreshToken) return false;
   
   try {
-    const data = await apiRequest('Auth/refresh', 'POST', {refreshToken}, true);
+    const data = await apiRequest('Auth/refresh', 'POST', refreshToken, true);
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
     return true;
@@ -330,23 +304,6 @@ export async function resetPassword(email, token, newPassword) {
     token,
     newPassword
   }, true);
-}
-
-//Change password
-export async function changePassword(currentPassword, newPassword, confirmPassword) {
-  // Skicka flera alias som många backends accepterar
-  const payload = {
-    // vanliga namn
-    currentPassword,
-    newPassword,
-    confirmPassword,
-
-    // alias som vissa DTO:er använder
-    oldPassword: currentPassword,
-    confirmNewPassword: confirmPassword
-  };
-
-  return apiRequest('Users/change-password', 'POST', payload);
 }
 
 // --- USERS (admin) ---
