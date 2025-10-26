@@ -12,10 +12,4 @@
         public string Email { get; set; } = null!;
         public string ResetUrl { get; set; } = null!;
     }
-    public class ChangePasswordDto
-    {
-        public string CurrentPassword { get; set; } = default!;
-        public string NewPassword { get; set; } = default!;
-        public string ConfirmPassword { get; set; } = default!;
-    }
 }
