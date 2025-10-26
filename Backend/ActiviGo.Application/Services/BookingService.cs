@@ -181,4 +181,56 @@ public class BookingService : IBookingService
         var allBookings = await _uow.Booking.GetAllBookingsAdminAsync(ct);
         return _mapper.Map<List<BookingDto>>(allBookings);
     }
+
+    public async Task<bool> UpdateBookingStatusAsync(Guid userId, int bookingId, UpdateBookingDto dto, CancellationToken ct)
+    {
+        _logger.LogDebug("Uppdaterar bokningsstatus: UserId={UserId} BookingId={BookingId} Status={Status}", 
+            userId, bookingId, dto.Status);
+
+        var booking = await _uow.Booking.GetBookingByIdAsync(userId, bookingId, ct);
+        if (booking == null)
+        {
+            _logger.LogWarning("Bokning saknas: BookingId={BookingId}", bookingId);
+            return false;
+        }
+
+        // Kontrollera att användaren äger bokningen
+        if (booking.UserId != userId)
+        {
+            _logger.LogWarning("Åtkomst nekad för bokningsuppdatering: UserId={UserId} BookingId={BookingId}", 
+                userId, bookingId);
+            return false;
+        }
+
+        // Validera statusövergångar
+        if (!IsValidStatusTransition(booking.Status, dto.Status))
+        {
+            _logger.LogWarning("Ogiltig statusövergång: Från {FromStatus} till {ToStatus}", 
+                booking.Status, dto.Status);
+            throw new InvalidOperationException($"Ogiltig statusövergång från {booking.Status} till {dto.Status}");
+        }
+
+        // Uppdatera status
+        booking.Status = dto.Status;
+        booking.UpdatedAt = DateTime.UtcNow;
+
+        await _uow.SaveChangesAsync();
+
+        _logger.LogInformation("Bokningsstatus uppdaterad: BookingId={BookingId} Status={Status}", 
+            bookingId, dto.Status);
+
+        return true;
+    }
+
+    private bool IsValidStatusTransition(BookingStatus fromStatus, BookingStatus toStatus)
+    {
+        // Definiera giltiga statusövergångar
+        return (fromStatus, toStatus) switch
+        {
+            (BookingStatus.Reserved, BookingStatus.Confirmed) => true,
+            (BookingStatus.Reserved, BookingStatus.Canceled) => true,
+            (BookingStatus.Confirmed, BookingStatus.Canceled) => true,
+            _ => false
+        };
+    }
 }

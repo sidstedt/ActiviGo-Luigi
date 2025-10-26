@@ -66,7 +66,6 @@ namespace ActiviGo.Infrastructure.Repositories
         public async Task<Booking?> GetBookingByIdAsync(Guid userId, int bookingId, CancellationToken ct)
         {
             return await _ctx.Bookings
-                .AsNoTracking()
                 .Where(b => b.UserId == userId && b.Id == bookingId)
                 .Include(b => b.ActivityOccurrence)
                     .ThenInclude(ao => ao.Activity)

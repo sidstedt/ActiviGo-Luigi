@@ -141,6 +141,11 @@ export async function cancelBooking(id) {
   return apiRequest(`Bookings/${id}`, 'DELETE');
 }
 
+export async function confirmBooking(id) {
+  // Använd riktig backend-endpoint för att bekräfta bokning
+  return apiRequest(`Bookings/${id}`, 'PUT', { status: 'Confirmed' });
+}
+
 export async function fetchAdminBookings() {
   return apiRequest('Bookings/AdminGetBookings');
 }

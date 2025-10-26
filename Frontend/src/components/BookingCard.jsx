@@ -39,8 +39,10 @@ function canCancelBooking(booking) {
   return booking.status === "Reserved" && now < twoHoursBefore;
 }
 
-export default function BookingCard({ booking, onCancel, onDetails }) {
+export default function BookingCard({ booking, onCancel, onDetails, onPayment }) {
   const canCancel = canCancelBooking(booking);
+  const canPay = booking.status === "Reserved";
+  
   return (
     <div className="booking-card">
       <div className="booking-header">
@@ -78,6 +80,11 @@ export default function BookingCard({ booking, onCancel, onDetails }) {
 
       <div className="booking-footer">
         <div className="booking-actions">
+          {canPay && (
+            <button className="payment-btn" onClick={() => onPayment?.(booking)}>
+              💳 Betala nu
+            </button>
+          )}
           {canCancel && (
             <button className="cancel-btn" onClick={onCancel}>
               Avboka

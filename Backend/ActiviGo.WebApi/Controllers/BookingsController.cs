@@ -98,7 +98,32 @@ namespace ActiviGo.WebApi.Controllers
         // ---------------------------
         // Update booking
         // ---------------------------
-        
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateBookingDto dto, CancellationToken ct)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = GetUserId();
+            try
+            {
+                var result = await _bookingService.UpdateBookingStatusAsync(userId, id, dto, ct);
+                
+                if (!result)
+                    return NotFound(new { message = "Booking not found or you don't have permission to update it." });
+
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Business rule violations: invalid status transition, etc.
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                // Fallback to avoid leaking server details; logs should capture the stack.
+                return StatusCode(500, new { message = "Ett oväntat fel uppstod vid uppdatering av bokning." });
+            }
+        }
 
         // ---------------------------
         // Cancel booking

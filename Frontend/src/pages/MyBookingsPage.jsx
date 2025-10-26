@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchUserBookings, cancelBooking } from "../services/api";
+import { fetchUserBookings, cancelBooking, confirmBooking } from "../services/api";
 import "../styles/MyBookingsPage.css";
 import BookingCard from "../components/BookingCard";
+import PaymentModal from "../components/PaymentModal";
 import { formatDateLong, formatTimeHm } from "../utils/format"; 
 
 
@@ -12,6 +13,8 @@ export default function MyBookingsPage() {
   const [filter, setFilter] = useState("all"); // all, upcoming, past, cancelled
   const [showDetails, setShowDetails] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentBooking, setPaymentBooking] = useState(null);
 
   useEffect(() => {
     loadBookings();
@@ -51,6 +54,37 @@ export default function MyBookingsPage() {
   const handleCloseDetails = () => {
     setShowDetails(false);
     setSelectedBooking(null);
+  };
+
+  const handlePayment = (booking) => {
+    setPaymentBooking(booking);
+    setShowPayment(true);
+  };
+
+  const handleClosePayment = () => {
+    setShowPayment(false);
+    setPaymentBooking(null);
+  };
+
+  const handlePaymentSuccess = async (bookingId) => {
+    try {
+      // Simulera API-anrop för att bekräfta bokning
+      await confirmBooking(bookingId);
+      
+      // Uppdatera lokal state
+      setBookings(prevBookings => 
+        prevBookings.map(booking => 
+          booking.id === bookingId 
+            ? { ...booking, status: 'Confirmed' }
+            : booking
+        )
+      );
+      
+      // Visa bekräftelse
+      alert('Bokning bekräftad! Du kommer att få en bekräftelse via e-post.');
+    } catch (err) {
+      alert('Ett fel uppstod vid bekräftelse: ' + err.message);
+    }
   };
 
   const getFilteredBookings = () => {
@@ -173,6 +207,7 @@ export default function MyBookingsPage() {
                 booking={booking}
                 onCancel={() => handleCancelBooking(booking.id)}
                 onDetails={(bk) => handleShowDetails(bk)}
+                onPayment={(bk) => handlePayment(bk)}
               />
             ))}
           </div>
@@ -185,6 +220,14 @@ export default function MyBookingsPage() {
           onClose={handleCloseDetails}
         />
       )}
+
+    {showPayment && paymentBooking && (
+      <PaymentModal
+        booking={paymentBooking}
+        onClose={handleClosePayment}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
+    )}
     </div>
   );
 }
