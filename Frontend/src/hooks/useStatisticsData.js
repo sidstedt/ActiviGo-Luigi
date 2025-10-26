@@ -45,7 +45,6 @@ export function useStatisticsData() {
           setActivityOccurrences(occurrencesData || []);
         }
       } catch (err) {
-        console.error("Fel vid hämtning av data:", err);
         setError(err);
       } finally {
         setLoading(false);

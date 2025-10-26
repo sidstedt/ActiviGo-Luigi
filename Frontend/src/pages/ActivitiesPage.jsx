@@ -40,7 +40,6 @@ export default function ActivitiesPage() {
       setLocations(locationsData || []);
     } catch (err) {
       setError(err.message || "Kunde inte hämta data");
-      console.error("Fel vid hämtning av data:", err);
     } finally {
       setLoading(false);
     }

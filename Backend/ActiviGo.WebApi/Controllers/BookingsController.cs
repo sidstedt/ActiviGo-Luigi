@@ -59,16 +59,26 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         // ---------------------------
-        // Read all bookings for user
+        // Read all bookings for user (or specific user if ID provided)
         // ---------------------------
         [HttpGet("UserGetBookings")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> GetAll(CancellationToken ct)
+        [Authorize(Roles = "Admin, Staff, User")]
+        public async Task<IActionResult> GetAll([FromQuery] Guid? userId, CancellationToken ct)
         {
-            var userId = GetUserId();
-            var bookings = await _bookingService.GetAllBookingsAsync(userId, ct);
+            // Om ingen userId skickas → hämta från JWT claims (inloggad användare)
+            var effectiveUserId = userId ?? GetUserId();
+
+            // Om användaren inte är admin och försöker hämta någon annans bokningar → neka
+            var isAdmin = User.IsInRole("Admin");
+            if (!isAdmin && userId.HasValue && userId.Value != effectiveUserId)
+            {
+                return Forbid("Endast administratörer kan hämta andra användares bokningar.");
+            }
+
+            var bookings = await _bookingService.GetAllBookingsAsync(effectiveUserId, ct);
             return Ok(bookings);
         }
+
 
         // ---------------------------
         // Read booking by id

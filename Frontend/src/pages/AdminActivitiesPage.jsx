@@ -52,7 +52,6 @@ export default function AdminActivitiesPage() {
         const data = await fetchCategories();
         if (mounted) setCategories(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error("Kunde inte hämta kategorier:", err);
       } finally {
         if (mounted) setCategoriesLoading(false);
       }
@@ -81,7 +80,6 @@ export default function AdminActivitiesPage() {
       setOccurrences(Array.isArray(occData) ? occData : []);
     } catch (err) {
       setError("Kunde inte hämta aktiviteter");
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -129,7 +127,6 @@ export default function AdminActivitiesPage() {
       // refresha data så UI visar ny aktivitet
       await loadData();
     } catch (err) {
-      console.error("Fel vid sparande av aktivitet:", err);
       alert("Misslyckades spara aktivitet. Se console för mer info.");
     }
   };
@@ -176,12 +173,12 @@ export default function AdminActivitiesPage() {
         {activities.map((activity) => (
           <div key={activity.id} className="activity-card">
             {activity.imageUrl && (
-              <div className="card-image" style={{ marginBottom: '0.75rem' }}>
+              <div className="card-image" style={{ marginBottom: "0.75rem" }}>
                 <img
                   src={activity.imageUrl}
                   alt={activity.name}
                   loading="lazy"
-                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                  onError={(e) => (e.currentTarget.style.display = "none")}
                 />
               </div>
             )}

@@ -26,7 +26,6 @@ export default function MyBookingsPage() {
       setBookings(bookingsData);
     } catch (err) {
       setError(err.message || "Kunde inte hämta dina bokningar");
-      console.error("Fel vid hämtning av bokningar:", err);
     } finally {
       setLoading(false);
     }

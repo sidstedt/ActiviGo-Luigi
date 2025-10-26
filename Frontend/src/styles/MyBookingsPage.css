@@ -387,7 +387,7 @@
   background: #fff;
   color: #000; /* svart text */
   width: min(640px, 92vw);
-  max-height: 88vh;
+  max-height: 75vh;
   border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
   overflow: hidden;
