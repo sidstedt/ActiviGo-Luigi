@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { fetchUserBookings } from "../services/api"; 
 import "../styles/MyAccountPage.css"; 
 import Modal from "../components/Modal";
+import { changePassword } from "../services/api";
 
 const COST_THRESHOLD = 1000;
 /**
@@ -25,6 +26,13 @@ export default function MyAccountPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showGymOfferModal, setShowGymOfferModal] = useState(false);
+  const [showChangePw, setShowChangePw] = useState(false);
+  const [oldPw, setOldPw] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
+  const [pwError, setPwError] = useState("");
+  const [pwSuccess, setPwSuccess] = useState("");
+  const [pwLoading, setPwLoading] = useState(false);
 
   useEffect(() => {
     loadBookings();
@@ -44,6 +52,30 @@ export default function MyAccountPage() {
       setLoading(false);
     }
   };
+      const handleChangePassword = async (e) => {
+      e.preventDefault();
+      setPwError("");
+      setPwSuccess("");
+
+      if (newPw !== confirmPw) {
+        setPwError("De nya lösenorden matchar inte.");
+        return;
+      }
+
+      try {
+        setPwLoading(true);
+        await changePassword(oldPw, newPw, confirmPw); 
+        setPwSuccess("Lösenordet har ändrats!");
+        setOldPw("");
+        setNewPw("");
+        setConfirmPw("");
+        setTimeout(() => setShowChangePw(false), 1500);
+      } catch (err) {
+        setPwError(err.message || "Misslyckades med att ändra lösenordet.");
+      } finally {
+        setPwLoading(false);
+      }
+    };
 
   /**
    * Beräknar den totala kostnaden för alla aktiviteter 
@@ -137,7 +169,13 @@ export default function MyAccountPage() {
             <span className="amount">{bookings.length}</span> st
           </p>
         </div>
-        
+        <button
+            type="button"
+            className="primary-btn"
+            onClick={() => setShowChangePw(true)}
+          >
+            Byt lösenord
+          </button>
       </section>
 {showGymOfferModal && (
         <Modal 
@@ -145,11 +183,11 @@ export default function MyAccountPage() {
           onClose={() => setShowGymOfferModal(false)}
         >
           <div className="offer-modal-content">
-            <p>Vi ser att du har spenderat över **{formatCurrency(COST_THRESHOLD)} kr** på våra aktiviteter! Du är en riktig hälsohjälte.</p>
+            <p>Vi ser att du har spenderat över <strong>{formatCurrency(COST_THRESHOLD)} kr</strong> på våra aktiviteter! Du är en riktig hälsohjälte.</p>
             <p>
-              Som tack erbjuder vi dig **20% rabatt** på vårt årsabonnemang för gymkort. 
-              Då får du obegränsad tillgång till alla våra träningsanläggningar!
-            </p>
+          +   Som tack erbjuder vi dig <strong>20% rabatt</strong> på vårt årsabonnemang för gymkort. 
+          +   Då får du obegränsad tillgång till alla våra träningsanläggningar!
+          + </p>
             <p className="modal-cta">
               <button 
                 className="modal-button primary-btn"
@@ -171,6 +209,66 @@ export default function MyAccountPage() {
           </div>
         </Modal>
       )}
+      {showChangePw && (
+  <Modal title="Byt lösenord" onClose={() => { 
+    setShowChangePw(false); 
+    setPwError(""); setPwSuccess("");
+    setOldPw(""); setNewPw(""); setConfirmPw("");
+  }}>
+    <form onSubmit={handleChangePassword} className="change-password-form">
+      <div className="form-row">
+        <label>Nuvarande lösenord</label>
+        <input
+          type="password"
+          value={oldPw}
+          onChange={(e) => setOldPw(e.target.value)}
+          required
+          autoComplete="current-password"
+        />
+      </div>
+
+      <div className="form-row">
+        <label>Nytt lösenord</label>
+        <input
+          type="password"
+          value={newPw}
+          onChange={(e) => setNewPw(e.target.value)}
+          required
+          autoComplete="new-password"
+          placeholder="Minst 8 tecken"
+        />
+      </div>
+
+      <div className="form-row">
+        <label>Upprepa nytt lösenord</label>
+        <input
+          type="password"
+          value={confirmPw}
+          onChange={(e) => setConfirmPw(e.target.value)}
+          required
+          autoComplete="new-password"
+        />
+      </div>
+
+      {pwError && <p className="form-error">{pwError}</p>}
+      {pwSuccess && <p className="form-success">{pwSuccess}</p>}
+
+      <div className="modal-actions">
+        <button type="button" className="secondary-btn" onClick={() => {
+          setShowChangePw(false);
+          setPwError(""); setPwSuccess("");
+          setOldPw(""); setNewPw(""); setConfirmPw("");
+        }}>
+          Avbryt
+        </button>
+        <button type="submit" className="primary-btn" disabled={pwLoading}>
+          {pwLoading ? "Sparar..." : "Spara nytt lösenord"}
+        </button>
+      </div>
+    </form>
+  </Modal>
+)}
+
     </div>
   );
 }

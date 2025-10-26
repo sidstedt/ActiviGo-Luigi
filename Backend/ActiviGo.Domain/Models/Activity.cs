@@ -10,7 +10,7 @@ namespace ActiviGo.Domain.Models
         public string Description { get; set; } = string.Empty;
         [Required, Range(typeof(decimal), "0", "500.00")]
         public decimal Price { get; set; }
-        public string? ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
 
         [Required]
         public bool IsPrivate { get; set; }

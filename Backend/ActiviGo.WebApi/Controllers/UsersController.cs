@@ -1,4 +1,5 @@
-﻿using ActiviGo.Application.Interfaces;
+﻿using ActiviGo.Application.DTOs;
+using ActiviGo.Application.Interfaces;
 using ActiviGo.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +15,13 @@ namespace ActiviGo.WebApi.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IEmailService _emailService;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(UserManager<User> userManager, IEmailService emailService)
+        public UsersController(UserManager<User> userManager, IEmailService emailService, ILogger<UsersController> logger)
         {
             _userManager = userManager;
             _emailService = emailService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -138,5 +141,62 @@ namespace ActiviGo.WebApi.Controllers
 
             return Ok(new { message = "Password has been reset successfully." });
         }
-    }
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto request)
+        {
+            try
+            {
+                if (request is null)
+                    return BadRequest(new { message = "Invalid payload." });
+
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                if (string.IsNullOrWhiteSpace(request.CurrentPassword) ||
+                    string.IsNullOrWhiteSpace(request.NewPassword) ||
+                    string.IsNullOrWhiteSpace(request.ConfirmPassword))
+                {
+                    return BadRequest(new { message = "Alla fält måste fyllas i." });
+                }
+
+                if (request.NewPassword != request.ConfirmPassword)
+                {
+                    return BadRequest(new { message = "De nya lösenorden matchar inte." });
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                    return Unauthorized(new { message = "Kunde inte hitta användaren." });
+
+                var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Byte av lösenord misslyckades.",
+                        errors = result.Errors
+                    });
+                }
+
+                // INTE nödvändig i JWT-scenario (kan kasta)
+                // await _signInManager.RefreshSignInAsync(user);
+
+                return Ok(new { message = "Lösenordet är uppdaterat." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ChangePassword threw.");
+                return StatusCode(500, new
+                {
+                    message = "Internal error in ChangePassword.",
+                    detail = ex.Message,
+                    stack = ex.StackTrace
+                });
+            }
+        }
+
+
+        }
 }

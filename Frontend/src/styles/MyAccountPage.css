@@ -206,3 +206,41 @@
         }
     }
 }
+.change-password-form .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.change-password-form label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.change-password-form input {
+  padding: 10px 12px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  color: #000;
+  background: #fff;
+}
+
+.form-error {
+  color: #c0392b;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.form-success {
+  color: #27ae60;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
