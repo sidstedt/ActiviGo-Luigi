@@ -20,7 +20,6 @@ async function fetchActivities() {
         await new Promise(resolve => setTimeout(resolve, 500)); 
         return mockActivities.map(a => ({...a})); 
     } catch (error) {
-        console.error("Kunde inte nå backend, använder mock-data:", error);
         return mockActivities.map(a => ({...a}));
     }
 }
@@ -133,7 +132,6 @@ function DashboardPage() {
                 setLoading(false);
             })
             .catch(err => {
-                console.error("API-fel vid laddning:", err);
                 setError("Kunde inte ladda aktiviteter. Kontrollera API-anslutningen.");
                 setLoading(false);
             });
@@ -174,7 +172,6 @@ function DashboardPage() {
                 setBookingMessage({ type: 'error', text: result.message || "Ett okänt fel uppstod vid bokning." });
             }
         } catch (err) {
-            console.error("Bokningsfel:", err);
             setActivities(prevActivities => 
                 prevActivities.map(a => 
                     a.id === activityId ? { ...a, isBookingPending: false } : a
@@ -303,21 +300,21 @@ function DashboardPage() {
                                 value="3 Kommande Pass" 
                                 icon="🗓️" 
                                 linkText="Hantera bokningar"
-                                onClick={() => console.log("Gå till Mina Bokningar")}
+                                onClick={() => {}}
                             />
                             <StatCard 
                                 title="Nästa Pass" 
                                 value="CrossFit 18:00 (Idag)" 
                                 icon="⏱️" 
                                 linkText="Avboka / Ändra"
-                                onClick={() => console.log("Gå till pass-detaljer")}
+                                onClick={() => {}}
                             />
                             <StatCard 
                                 title="Favoritaktivitet" 
                                 value="Yoga Flow" 
                                 icon="🧘‍♀️" 
                                 linkText="Boka igen"
-                                onClick={() => console.log("Gå till Sök & Boka")}
+                                onClick={() => {}}
                             />
                         </div>
 

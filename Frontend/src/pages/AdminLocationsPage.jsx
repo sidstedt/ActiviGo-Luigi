@@ -7,6 +7,7 @@ import {
   deleteLocation,
 } from "../services/api";
 import "../styles/ActivitiesPage.css";
+import "../styles/ActivityCard.css"; // återanvänd kort-styling
 
 export default function LocationPage() {
   const [locations, setLocations] = useState([]);
@@ -40,7 +41,9 @@ export default function LocationPage() {
     let filtered = [...locations];
     if (searchTerm) {
       const s = searchTerm.toLowerCase();
-      filtered = filtered.filter((l) => (l.name || "").toLowerCase().includes(s));
+      filtered = filtered.filter((l) =>
+        (l.name || "").toLowerCase().includes(s)
+      );
     }
     setFilteredLocations(filtered);
   }, [locations, searchTerm]);
@@ -125,26 +128,59 @@ export default function LocationPage() {
         </div>
       </div>
 
-      {/* Plats-korten */}
+      {/* Plats-korten (samma stil som ActivityCard) */}
       <div className="activities-grid">
         {filteredLocations.map((location) => (
           <div key={location.id} className="activity-card">
             <div className="activity-header">
               <h3>{location.name}</h3>
             </div>
+
             <div className="activity-content">
-              <p><strong>Adress:</strong> {location.address}</p>
-              <p><strong>Lat:</strong> {location.latitude}</p>
-              <p><strong>Long:</strong> {location.longitude}</p>
-              {location.description && <p><strong>Beskrivning:</strong> {location.description}</p>}
+              <div className="activity-details">
+                <div className="detail-item">
+                  <div className="detail-label">Adress</div>
+                  <div className="detail-value">
+                    {location.address || "Okänd adress"}
+                  </div>
+                </div>
+
+                <div className="detail-item">
+                  <div className="detail-label">Lat</div>
+                  <div className="detail-value">{location.latitude ?? "-"}</div>
+                </div>
+
+                <div className="detail-item">
+                  <div className="detail-label">Long</div>
+                  <div className="detail-value">
+                    {location.longitude ?? "-"}
+                  </div>
+                </div>
+
+                {location.description && (
+                  <div className="detail-item">
+                    <div className="detail-label">Beskrivning</div>
+                    <div className="detail-value">{location.description}</div>
+                  </div>
+                )}
+              </div>
             </div>
+
             <div className="activity-footer">
-              <button className="edit-btn" onClick={() => handleEdit(location)}>
-                ✏️ Ändra
-              </button>
-              <button className="delete-btn" onClick={() => handleDelete(location)}>
-                🗑️ Ta bort
-              </button>
+              <div className="card-actions">
+                <button
+                  className="edit-btn"
+                  onClick={() => handleEdit(location)}
+                >
+                  Ändra
+                </button>
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDelete(location)}
+                >
+                  Ta bort
+                </button>
+              </div>
             </div>
           </div>
         ))}

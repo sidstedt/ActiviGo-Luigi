@@ -41,6 +41,7 @@ export default function ActivityOccurrencesPage() {
   const [selectedPlace, setSelectedPlace] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [minSlots, setMinSlots] = useState("");
 
   useEffect(() => {
     loadData();
@@ -55,6 +56,7 @@ export default function ActivityOccurrencesPage() {
     dateFrom,
     dateTo,
     selectedCategory,
+    minSlots,
     selectedPlace,
   ]);
 
@@ -124,7 +126,6 @@ export default function ActivityOccurrencesPage() {
           });
           setForecasts(map);
         } catch (e) {
-          console.error("Failed to load weather data:", e);
         }
       }
 
@@ -135,7 +136,6 @@ export default function ActivityOccurrencesPage() {
       }
     } catch (err) {
       setError(err.message || "Kunde inte hämta data");
-      console.error("Fel vid hämtning av data:", err);
     } finally {
       setLoading(false);
     }
@@ -247,6 +247,12 @@ export default function ActivityOccurrencesPage() {
       }
     }
 
+    // Minst antal platser kvar
+    if (minSlots !== "" && !isNaN(Number(minSlots))) {
+      const minN = Number(minSlots);
+      filtered = filtered.filter((o) => (o.availableSlots ?? 0) >= minN);
+    }
+
     // Date filters
     if (dateFrom) {
       const fromDate = new Date(dateFrom);
@@ -307,6 +313,7 @@ export default function ActivityOccurrencesPage() {
     setSelectedPlace("");
     setDateFrom("");
     setDateTo("");
+    setMinSlots("");
   };
 
   // Open confirm modal (auth-gated)
@@ -353,7 +360,6 @@ export default function ActivityOccurrencesPage() {
       setShowConfirm(false);
       setSelectedOccurrenceId(null);
     } catch (e) {
-      console.error("Booking failed", e);
       setBookingError(e?.message || "Kunde inte skapa bokningen. Försök igen.");
     } finally {
       setBookingLoading(false);
@@ -448,6 +454,20 @@ export default function ActivityOccurrencesPage() {
                 <option value="indoor">Inomhus</option>
                 <option value="outdoor">Utomhus</option>
               </select>
+            </div>
+
+            {/* Minst antal platser kvar */}
+            <div className="filter-group">
+              <label htmlFor="minSlots">Minst antal platser kvar</label>
+              <input
+                id="minSlots"
+                type="number"
+                min="0"
+                value={minSlots}
+                onChange={(e) => setMinSlots(e.target.value)}
+                className="filter-input"
+                placeholder="0"
+              />
             </div>
 
             {/* Clear Filters moved to dates row */}

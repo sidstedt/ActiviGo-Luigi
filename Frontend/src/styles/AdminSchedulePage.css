@@ -5,7 +5,56 @@
 	z-index: 2;
 }
 .admin-schedule { padding: 16px; }
-.admin-schedule h1 { margin: 0 0 12px; }
+.admin-schedule-title {
+	margin: 0 0 8px;
+	font-size: 2rem;
+	font-weight: 700;
+	color: #1e293b;
+}
+
+.admin-schedule-search-bar {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 18px;
+	background: #f3f4f6;
+	padding: 10px 16px;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(30,41,59,0.04);
+}
+.admin-schedule-search-bar select {
+	font-size: 1rem;
+	padding: 4px 12px;
+	border: 1px solid #cbd5e1;
+	border-radius: 6px;
+	background: #fff;
+	color: #1e293b;
+	transition: border 0.2s;
+}
+.admin-schedule-search-bar select:focus {
+	border-color: #2563eb;
+	outline: none;
+}
+.admin-schedule-search-bar button {
+	font-size: 1.1rem;
+	padding: 4px 12px;
+	background: #2563eb;
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+.admin-schedule-search-bar button:hover {
+	background: #1d4ed8;
+}
+.admin-schedule-search-bar .week-label {
+	font-weight: 600;
+	min-width: 36px;
+	text-align: center;
+	color: #334155;
+	font-size: 1.1rem;
+}
 .error-box { background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; }
 .loading { margin: 8px 0; }
 
@@ -46,3 +95,30 @@
 .duration-choices .choices { display: flex; flex-wrap: wrap; gap: 8px; }
 .duration-choices .choice { padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 9999px; cursor: pointer; user-select: none; }
 .duration-choices .choice.selected { background: #2563eb; color: #fff; border-color: #1d4ed8; }
+
+@media (max-width: 768px) {
+  .grid-header,
+  .grid-body {
+    grid-template-columns: repeat(7, 1fr) !important;
+	grid-auto-rows: 40px;
+	background: white;
+  }
+  .grid-header .day-col {
+	font-size: 11px;
+	padding: 4px;
+	background: white !important;
+  }
+    .grid-body .time-col {
+    display: none !important;
+    background: transparent !important;
+  }
+  .time-col {
+    display: none;
+	    font-size: 10px;
+    padding: 4px;
+  }
+  .occurrence {
+    font-size: 11px;
+    padding: 2px 3px;
+  }
+}

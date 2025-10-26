@@ -47,7 +47,6 @@ export default function MyAccountPage() {
       setBookings(bookingsData); 
     } catch (err) {
       setError(err.message || "Kunde inte hämta dina bokningsdata");
-      console.error("Fel vid hämtning av bokningsdata:", err);
     } finally {
       setLoading(false);
     }
