@@ -13,6 +13,7 @@ import {
 } from "../utils/statistics";
 import MonthlyBookingsLineChart from "../components/stats/MonthlyBookingsLineChart";
 import ActivityDistributionPie from "../components/stats/ActivityDistributionPie";
+import "../styles/Statistics.css";
 
 export default function Statistics() {
   const [bookings, setBookings] = useState([]);
