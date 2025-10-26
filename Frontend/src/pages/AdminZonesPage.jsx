@@ -37,11 +37,8 @@ export default function AdminZonesPage() {
       ]);
       setZones(Array.isArray(zonesData) ? zonesData : []);
       setLocations(Array.isArray(locationsData) ? locationsData : []);
-      console.log("locations", locationsData);
-      console.log("Exempelplats:", locationsData[0]);
       setFilteredZones(Array.isArray(zonesData) ? zonesData : []);
     } catch (err) {
-      console.error("Kunde inte hämta zoner:", err);
       setError("Fel vid hämtning av zoner");
     } finally {
       setLoading(false);
@@ -162,8 +159,7 @@ export default function AdminZonesPage() {
       setEditingZone(null);
       await loadData();
     } catch (err) {
-      console.error("Fel vid sparande av zon:", err);
-      alert("Misslyckades spara zon. Se konsolen för detaljer.");
+      alert("Misslyckades spara zon.");
     }
   };
 
@@ -286,12 +282,6 @@ export default function AdminZonesPage() {
           const isOut = getZoneIsOutdoor(zone);
           const locationName = getZoneLocationName(zone) || "Okänd plats";
 
-          console.log(
-            "zone",
-            zone,
-            "locationName",
-            findLocationNameFromLocations(zone)
-          );
 
           return (
             <div key={getZoneId(zone) ?? name} className="activity-card">

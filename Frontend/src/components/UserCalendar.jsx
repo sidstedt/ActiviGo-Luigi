@@ -82,7 +82,6 @@ useEffect(() => {
 
       setBookings(inWeek);
     } catch (e) {
-      console.error("fetchUserBookings error:", e);
       setError(e?.message || "Kunde inte hämta bokningar");
     } finally {
       setLoading(false);

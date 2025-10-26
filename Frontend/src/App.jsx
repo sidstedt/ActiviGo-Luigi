@@ -23,8 +23,6 @@ import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 import BookingDetailsPage from "./pages/BookingDetailsPage.jsx";
 
 const DashboardHome = () => <HomePage />;
-const AdminDashboard = () => <div>Adminpanel</div>;
-const StaffPanel = () => <div>Personalpanel</div>;
 
 function RoleRoute({ allowed = [], roles = [], children }) {
   if (allowed.length === 0) return children;
@@ -59,26 +57,16 @@ function AppRoutes() {
       <Route path="/" element={<StartPage userRole={userRole} roles={roles} />}>
         <Route index element={<DashboardHome />} />
 
-        <Route path="activities" element={<ActivitiesPage />} />
-        <Route path="bookings" element={<ActivityOccurrencesPage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="users" element={<AdminUsersPage />} />
-        <Route path="statistics" element={<Statistics />} />
-        <Route path="activities" element={<ActivitiesPage />} />
-        <Route path="bookings" element={<ActivityOccurrencesPage />} />
-        <Route path="my-bookings" element={<MyBookingsPage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="my-account" element={<MyAccountPage />} />
-        <Route path="my-bookings/:id" element={<BookingDetailsPage />} />
+  <Route path="activities" element={<ActivitiesPage />} />
+  <Route path="bookings" element={<ActivityOccurrencesPage />} />
+  <Route path="login" element={<LoginPage />} />
+  <Route path="users" element={<AdminUsersPage />} />
+  <Route path="statistics" element={<Statistics />} />
+  <Route path="my-bookings" element={<MyBookingsPage />} />
+  <Route path="my-account" element={<MyAccountPage />} />
+  <Route path="my-bookings/:id" element={<BookingDetailsPage />} />
 
-        <Route
-          path="admin"
-          element={
-            <RoleRoute allowed={["admin"]} roles={roles}>
-              <Navigate to="/" replace />
-            </RoleRoute>
-          }
-        />
+        {/* Ingen separat AdminDashboard, admin routes hanteras nedan */}
         <Route
           path="admin/schedule"
           element={
@@ -111,14 +99,7 @@ function AppRoutes() {
             </RoleRoute>
           }
         />
-        <Route
-          path="staff"
-          element={
-            <RoleRoute allowed={["staff", "admin"]} roles={roles}>
-              <StaffPanel />
-            </RoleRoute>
-          }
-        />
+        {/* Ingen separat StaffPanel, hanteras via roller */}
         <Route
           path="admin/statistics"
           element={
