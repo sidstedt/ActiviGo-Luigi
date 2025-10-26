@@ -1,30 +1,65 @@
-import { useState, useEffect } from "react";
-import "../styles/ActivityModal.css"; // återanvänd samma modal-styling
+import React, { useEffect, useState } from "react";
 
+function getInitialZoneName(initial) {
+  if (!initial) return "";
+  return (
+    initial.zoneName ??
+    initial.name ??
+    initial.Name ??
+    initial.zone_name ??
+    initial.zone ??
+    ""
+  );
+}
 
-export default function ZoneModal({ editing, initialData, onClose, onSave, locations }) {
-  // Stöd för olika namnvarianter (name, zoneName, ZoneName, Name)
-  const getInitialZoneName = (data) =>
-    data.zoneName ?? "";
-  const [zoneName, setZoneName] = useState(getInitialZoneName(initialData));
-  const [isOutdoor, setIsOutdoor] = useState(initialData?.isOutdoor ?? false);
-  const [locationId, setLocationId] = useState(initialData?.locationId || "");
+function getInitialLocationId(initial) {
+  if (!initial) return "";
+  return (
+    initial.locationId ??
+    initial.LocationId ??
+    initial.Location?.id ??
+    initial.LocationId ??
+    ""
+  );
+}
+
+export default function ZoneModal({
+  initial = null,
+  locations = [],
+  onClose,
+  onSave,
+}) {
+  const editing = Boolean(
+    initial && (initial.id ?? initial.Id ?? initial.zoneId ?? initial.ZoneId)
+  );
+
+  const [name, setName] = useState(getInitialZoneName(initial));
+  const [locationId, setLocationId] = useState(getInitialLocationId(initial));
+  const [isOutdoor, setIsOutdoor] = useState(
+    Boolean(initial?.isOutdoor ?? initial?.IsOutdoor ?? false)
+  );
+  const [isActive, setIsActive] = useState(
+    Boolean(initial?.isActive ?? initial?.IsActive ?? true)
+  );
 
   useEffect(() => {
-    if (!initialData && locations?.length > 0 && !locationId) {
-      setLocationId(locations[0].id);
-    }
-  }, [locations, initialData]);
+    setName(getInitialZoneName(initial));
+    setLocationId(getInitialLocationId(initial));
+    setIsOutdoor(Boolean(initial?.isOutdoor ?? initial?.IsOutdoor ?? false));
+    setIsActive(Boolean(initial?.isActive ?? initial?.IsActive ?? true));
+  }, [initial]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!zoneName.trim()) return alert("Zonens namn krävs.");
+    if (!name.trim()) return alert("Zonens namn krävs.");
     if (!locationId) return alert("Välj plats.");
 
     onSave({
-      name: zoneName,
+      id: initial?.id ?? initial?.Id ?? null,
+      name: name,
       isOutdoor,
       locationId: Number(locationId),
+      isActive,
     });
   };
 
@@ -43,8 +78,8 @@ export default function ZoneModal({ editing, initialData, onClose, onSave, locat
             Zonens namn
             <input
               type="text"
-              value={zoneName}
-              onChange={(e) => setZoneName(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
               placeholder="Ange zonens namn"
             />
@@ -57,11 +92,13 @@ export default function ZoneModal({ editing, initialData, onClose, onSave, locat
               onChange={(e) => setLocationId(e.target.value)}
               required
             >
-              {locations.map((loc) => (
-                <option key={loc.id} value={loc.id}>
-                  {loc.name}
-                </option>
-              ))}
+              <option value="">Välj plats</option>
+              {Array.isArray(locations) &&
+                locations.map((loc) => (
+                  <option key={loc.id ?? loc.Id} value={loc.id ?? loc.Id}>
+                    {loc.name ?? loc.Name ?? loc.locationName ?? ""}
+                  </option>
+                ))}
             </select>
           </label>
 
@@ -72,6 +109,15 @@ export default function ZoneModal({ editing, initialData, onClose, onSave, locat
               onChange={(e) => setIsOutdoor(e.target.checked)}
             />
             Utomhus
+          </label>
+
+          <label style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <input
+              type="checkbox"
+              checked={isActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+            />
+            Aktiv
           </label>
 
           <div className="modal-footer">
