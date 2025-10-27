@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchBookingById } from "../services/api"; // antas finnas
+import { fetchBookingById } from "../services/api";
 
 export default function BookingDetailsPage() {
   const { id } = useParams();
@@ -10,7 +10,7 @@ export default function BookingDetailsPage() {
   const [loading, setLoading] = useState(!stateBooking);
 
   useEffect(() => {
-    if (stateBooking) return; // redan laddad via state
+    if (stateBooking) return;
     let ok = true;
     (async () => {
       try {

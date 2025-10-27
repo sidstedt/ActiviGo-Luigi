@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/PaymentModal.css';
 
 export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
-  const [step, setStep] = useState(1); // 1: Payment form, 2: Processing, 3: Success
+  const [step, setStep] = useState(1);
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -12,11 +12,9 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
   });
   const [errors, setErrors] = useState({});
 
-  // Simulera betalningsprocess
   const handlePayment = async (e) => {
     e.preventDefault();
     
-    // Validera formulär
     const newErrors = {};
     if (!paymentData.cardNumber || paymentData.cardNumber.length < 16) {
       newErrors.cardNumber = 'Kortnummer måste vara 16 siffror';
@@ -39,14 +37,11 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
       return;
     }
 
-    // Simulera betalningsprocess
     setStep(2);
     
-    // Simulera API-anrop (2-3 sekunder)
     setTimeout(() => {
       setStep(3);
       
-      // Efter framgång, uppdatera bokningsstatus
       setTimeout(() => {
         onPaymentSuccess(booking.id);
         onClose();
@@ -77,8 +72,7 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
       ...prev,
       [field]: formattedValue
     }));
-    
-    // Rensa fel när användaren börjar skriva
+
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -88,7 +82,7 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
   };
 
   const handleClose = () => {
-    if (step === 2) return; // Förhindra stängning under betalning
+    if (step === 2) return;
     onClose();
   };
 
@@ -108,7 +102,6 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
         </div>
 
         <div className="modal-body">
-          {/* Bokningssammanfattning */}
           <div className="booking-summary">
             <h3>Bokningssammanfattning</h3>
             <div className="summary-row">
@@ -141,7 +134,6 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
             </div>
           </div>
 
-          {/* Steg 1: Betalningsformulär */}
           {step === 1 && (
             <form onSubmit={handlePayment} className="payment-form">
               <div className="form-section">
@@ -237,7 +229,6 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
             </form>
           )}
 
-          {/* Steg 2: Bearbetar betalning */}
           {step === 2 && (
             <div className="payment-processing">
               <div className="processing-spinner">
@@ -254,7 +245,6 @@ export default function PaymentModal({ booking, onClose, onPaymentSuccess }) {
             </div>
           )}
 
-          {/* Steg 3: Betalning lyckades */}
           {step === 3 && (
             <div className="payment-success">
               <div className="success-icon">✅</div>

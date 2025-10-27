@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ZoneModal from "../components/ZoneModal";
 import {
   fetchZones,
@@ -7,15 +7,15 @@ import {
   updateZone,
   deleteZone,
 } from "../services/api";
-import "../styles/ActivitiesPage.css"; // återanvänd samma styling
-import "../styles/ActivityCard.css"; // kort-styling (samma som ActivitiesPage)
+import "../styles/ActivitiesPage.css";
+import "../styles/ActivityCard.css";
 
 export default function AdminZonesPage() {
   const [zones, setZones] = useState([]);
   const [locations, setLocations] = useState([]);
   const [filteredZones, setFilteredZones] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedPlaceType, setSelectedPlaceType] = useState(""); // indoor | outdoor
+  const [selectedPlaceType, setSelectedPlaceType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingZone, setEditingZone] = useState(null);
@@ -45,14 +45,12 @@ export default function AdminZonesPage() {
     }
   }
 
-  // --- Helper: normalize accessors (tolerant mot olika fältnamn) ---
   const getZoneName = (z) =>
     z?.name ?? z?.zoneName ?? z?.ZoneName ?? z?.Name ?? z?.zone?.name ?? "";
 
   const getZoneId = (z) => z?.id ?? z?.zoneId ?? z?.ZoneId ?? z?.Id ?? null;
 
   const getZoneIsOutdoor = (z) =>
-    // prefer explicit booleans if present, otherwise try common fields
     (typeof z?.isOutdoor === "boolean" && z.isOutdoor) ||
     (typeof z?.isOutdoor === "boolean" && !z.isOutdoor)
       ? Boolean(z.isOutdoor)
@@ -75,7 +73,6 @@ export default function AdminZonesPage() {
     z?.location?.Id ??
     null;
 
-  // Lookup location name using several possible shapes for location objects
   const findLocationNameFromLocations = (zone) => {
     if (!zone || !locations?.length) return null;
 
@@ -102,7 +99,7 @@ export default function AdminZonesPage() {
 
   const getZoneLocationName = (z) => {
     return (
-      z?.locationName ?? // ✅ det du nu skickar från backend
+      z?.locationName ??
       z?.LocationName ??
       z?.location?.name ??
       z?.location?.Name ??
@@ -111,7 +108,6 @@ export default function AdminZonesPage() {
     );
   };
 
-  // Filtrering
   useEffect(() => {
     let filtered = [...zones];
 
@@ -211,7 +207,6 @@ export default function AdminZonesPage() {
         </button>
       </header>
 
-      {/* Filter */}
       <div className="filters-section">
         <div className="filters-grid">
           <div className="filter-group">
@@ -275,7 +270,6 @@ export default function AdminZonesPage() {
         </div>
       </div>
 
-      {/* Zon-korten */}
       <div className="activities-grid">
         {filteredZones.map((zone) => {
           const name = getZoneName(zone) || "Namnlös zon";
@@ -289,7 +283,6 @@ export default function AdminZonesPage() {
                 <h3>{name}</h3>
               </div>
               <div className="activity-content">
-                {/* Egenskaper: varje .detail-item är separat så separator och vänster-justering fungerar */}
                 <div className="activity-details">
                   <div className="detail-item">
                     <div className="detail-label">Typ</div>
@@ -322,7 +315,6 @@ export default function AdminZonesPage() {
         })}
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <ZoneModal
           editing={editingZone}

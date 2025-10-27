@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   fetchAllUsers,
   createAdminUser,
@@ -9,7 +9,6 @@ import {
 import "../styles/ActivitiesPage.css";
 import "../styles/ActivityCard.css";
 
-// --- Helpers: robust accessors for returned user shapes ---
 const getUserName = (u) => {
   if (!u) return "";
   const fn = u.firstName ?? u.first_name ?? u.firstname;
@@ -31,7 +30,6 @@ const getUserRoles = (u) => {
 
   let roles = [];
 
-  // Support common property names: roles, Roles, userRoles, rolesList, roleNames, claims
   if (Array.isArray(u.roles) && u.roles.length) {
     roles = u.roles.map(normalizeItem).filter(Boolean);
   } else if (Array.isArray(u.Roles) && u.Roles.length) {
@@ -89,7 +87,6 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Modals / edit state
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -110,7 +107,6 @@ export default function AdminUsersPage() {
       setFilteredUsers(
         users.filter(
           (u) =>
-            // return boolean (was missing return when using { } earlier)
             getUserName(u).toLowerCase().includes(s) ||
             getUserEmail(u).toLowerCase().includes(s) ||
             getUserRoles(u).join(" ").toLowerCase().includes(s)
@@ -122,9 +118,8 @@ export default function AdminUsersPage() {
     try {
       setLoading(true);
       setError(null);
-      const data = await fetchAllUsers(); // GET /api/Admin/users
+      const data = await fetchAllUsers();
 
-      // keep raw list but it's safe to display via accessors
       setUsers(Array.isArray(data) ? data : []);
       setFilteredUsers(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -148,7 +143,6 @@ export default function AdminUsersPage() {
   }
 
   function handleEdit(user) {
-    // normalize for the edit form (keep raw under _raw)
     setEditingUser({
       id: user?.id ?? user?.userId ?? null,
       name: getUserName(user),
@@ -180,7 +174,6 @@ export default function AdminUsersPage() {
       setEditingUser(null);
       await loadUsers();
     } catch (err) {
-      // Stäng modal och försök synka listan utan att logga eller visa onödiga alerts
       setIsEditModalOpen(false);
       setEditingUser(null);
       try {
@@ -199,12 +192,10 @@ export default function AdminUsersPage() {
   async function confirmDelete() {
     if (!deleteTarget) return;
     try {
-      // Försök ta bort på servern
       await deleteAdminUser(deleteTarget.id);
     } catch (err) {
       // ignore errors from server-delete response here (frontend will sync below)
     } finally {
-      // Stäng modal och ta bort användare lokalt (och försök synka med backend)
       setShowDeleteConfirm(false);
       setUsers((prev) => prev.filter((u) => u.id !== deleteTarget.id));
       setDeleteTarget(null);
@@ -220,10 +211,7 @@ export default function AdminUsersPage() {
     setIsDetailsOpen(true);
     setDetailsLoading(true);
     try {
-      // använd redan inläst user (Admin/users innehåller Roles)
       setDetailsUser(user);
-
-      // Hämta bokningar för användaren via query param userId
       const idForBookings = user?.id ?? user?.Id ?? user?.userId;
       const bookings = idForBookings
         ? await fetchUserBookings(idForBookings)
@@ -338,7 +326,6 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      {/* Edit / Create Modal */}
       {isEditModalOpen && editingUser && (
         <EditUserModal
           initial={editingUser}
@@ -350,7 +337,6 @@ export default function AdminUsersPage() {
         />
       )}
 
-      {/* Details modal */}
       {isDetailsOpen && detailsUser && (
         <div className="modal-backdrop">
           <div className="modal large">
@@ -425,7 +411,6 @@ export default function AdminUsersPage() {
         </div>
       )}
 
-      {/* Delete confirm dialog */}
       {showDeleteConfirm && deleteTarget && (
         <div className="modal-backdrop">
           <div className="modal confirm-delete">

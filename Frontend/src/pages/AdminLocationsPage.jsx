@@ -7,7 +7,7 @@ import {
   deleteLocation,
 } from "../services/api";
 import "../styles/ActivitiesPage.css";
-import "../styles/ActivityCard.css"; // återanvänd kort-styling
+import "../styles/ActivityCard.css";
 
 export default function LocationPage() {
   const [locations, setLocations] = useState([]);
@@ -103,7 +103,6 @@ export default function LocationPage() {
         </button>
       </header>
 
-      {/* Filter */}
       <div className="filters-section">
         <div className="filters-grid">
           <div className="filter-group">
@@ -128,7 +127,6 @@ export default function LocationPage() {
         </div>
       </div>
 
-      {/* Plats-korten (samma stil som ActivityCard) */}
       <div className="activities-grid">
         {filteredLocations.map((location) => (
           <div key={location.id} className="activity-card">
@@ -186,7 +184,6 @@ export default function LocationPage() {
         ))}
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <LocationModal
           editing={editingLocation}

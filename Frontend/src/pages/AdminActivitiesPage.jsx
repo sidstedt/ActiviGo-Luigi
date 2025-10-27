@@ -33,12 +33,10 @@ export default function AdminActivitiesPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  // Load all data
   useEffect(() => {
     loadData();
   }, []);
 
-  // Debounce search
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearchTerm(searchTerm), 300);
     return () => clearTimeout(t);
@@ -85,8 +83,6 @@ export default function AdminActivitiesPage() {
     }
   }
 
-  // (Filtrering borttagen — renderar alla aktiviteter direkt)
-
   const clearFilters = () => setSearchTerm("");
 
   const getLocationAddress = (zoneId) =>
@@ -98,7 +94,6 @@ export default function AdminActivitiesPage() {
   };
 
   const handleSaveActivity = async (payloadFromModal) => {
-    // payloadFromModal kommer från ActivityModal.onSave
     const body = {
       name: String(payloadFromModal.name || "Ny aktivitet"),
       description: String(payloadFromModal.description || ""),
@@ -121,10 +116,8 @@ export default function AdminActivitiesPage() {
         await createActivity(body);
       }
 
-      // Lyckats — stäng modal och uppdatera listor
       setIsModalOpen(false);
       setEditingActivity(null);
-      // refresha data så UI visar ny aktivitet
       await loadData();
     } catch (err) {
       alert("Misslyckades spara aktivitet. Se console för mer info.");
@@ -166,9 +159,6 @@ export default function AdminActivitiesPage() {
         </button>
       </header>
 
-      {/* Filter borttaget — visar alla aktiviteter */}
-
-      {/* Aktivitetskorten */}
       <div className="activities-grid">
         {activities.map((activity) => (
           <div key={activity.id} className="activity-card">
@@ -235,7 +225,6 @@ export default function AdminActivitiesPage() {
         ))}
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <ActivityModal
           editing={editingActivity}

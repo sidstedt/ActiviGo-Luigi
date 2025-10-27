@@ -27,13 +27,11 @@ export default function ActivityOccurrencesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Booking confirmation modal state
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedOccurrenceId, setSelectedOccurrenceId] = useState(null);
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingError, setBookingError] = useState("");
 
-  // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedActivity, setSelectedActivity] = useState("");
@@ -60,7 +58,6 @@ export default function ActivityOccurrencesPage() {
     selectedPlace,
   ]);
 
-  // Debounce text search to avoid excessive filtering on every keystroke
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearchTerm(searchTerm), 300);
     return () => clearTimeout(t);
@@ -85,7 +82,6 @@ export default function ActivityOccurrencesPage() {
         fetchCategories(),
       ]);
 
-      // Filter active occurrences
       const now = new Date();
       const activeOccurrences = occurrencesData
         .filter(
@@ -105,7 +101,6 @@ export default function ActivityOccurrencesPage() {
       );
       setActivities(activitiesMap);
 
-      // Load weather data
       const weatherQueries = activeOccurrences
         .filter((o) => o.isOutdoor && o.latitude != null && o.longitude != null)
         .map((o) => ({
@@ -129,7 +124,6 @@ export default function ActivityOccurrencesPage() {
         }
       }
 
-      // Set pre-filtered activity from URL
       const activityId = searchParams.get("activity");
       if (activityId) {
         setSelectedActivity(activityId);
@@ -144,7 +138,6 @@ export default function ActivityOccurrencesPage() {
   const applyFilters = () => {
     let filtered = [...occurrences];
 
-    // Text search
     if (debouncedSearchTerm) {
       filtered = filtered.filter((occurrence) => {
         const activity = activities[occurrence.activityId];
@@ -160,17 +153,14 @@ export default function ActivityOccurrencesPage() {
       });
     }
 
-    // Activity filter
     if (selectedActivity) {
       filtered = filtered.filter(
         (occurrence) => occurrence.activityId === parseInt(selectedActivity)
       );
     }
 
-    // Category filter — be tolerant about how categories are stored (id, categoryId, or numeric index)
     if (selectedCategory) {
       const selRaw = String(selectedCategory);
-      // Try to resolve selected category object (by id/categoryId or by index)
       const selById = categories.find(
         (c) => String(c.id ?? c.categoryId) === selRaw
       );
@@ -184,7 +174,6 @@ export default function ActivityOccurrencesPage() {
         const act = activities[occurrence.activityId];
         if (!act) return false;
 
-        // Raw category value(s) on activity
         const actCatRaw =
           act.categoryId ??
           act.CategoryId ??
@@ -198,22 +187,18 @@ export default function ActivityOccurrencesPage() {
           act.categoryName || act.category?.name || ""
         ).toLowerCase();
 
-        // If activity stores the same id/string as the selected raw value -> match
         if (actCatRaw != null && String(actCatRaw) === selRaw) return true;
 
-        // If activity stored a numeric index into the categories array, resolve it and compare
         if (actCatRaw != null && !isNaN(Number(actCatRaw))) {
           const idx = Number(actCatRaw);
           const catAtIdx = categories[idx];
           if (catAtIdx) {
             const catAtIdxId = String(catAtIdx.id ?? catAtIdx.categoryId ?? "");
             if (catAtIdxId && catAtIdxId === selRaw) return true;
-            // also if selected was an index and matches this index
             if (!isNaN(Number(selRaw)) && Number(selRaw) === idx) return true;
           }
         }
 
-        // If we resolved a selected category object, compare by its id/categoryId or name
         if (selCat) {
           const selId = String(selCat.id ?? selCat.categoryId ?? "");
           if (selId && actCatRaw != null && String(actCatRaw) === selId)
@@ -231,14 +216,12 @@ export default function ActivityOccurrencesPage() {
           if (selName && actCatName && selName === actCatName) return true;
         }
 
-        // Fallback: compare activity category name to selected raw string
         if (actCatName && actCatName === selRaw.toLowerCase()) return true;
 
         return false;
       });
     }
 
-    // Place filter
     if (selectedPlace) {
       if (selectedPlace === "outdoor") {
         filtered = filtered.filter((o) => getOccurrencePlace(o) === "outdoor");
@@ -247,13 +230,11 @@ export default function ActivityOccurrencesPage() {
       }
     }
 
-    // Minst antal platser kvar
     if (minSlots !== "" && !isNaN(Number(minSlots))) {
       const minN = Number(minSlots);
       filtered = filtered.filter((o) => (o.availableSlots ?? 0) >= minN);
     }
 
-    // Date filters
     if (dateFrom) {
       const fromDate = new Date(dateFrom);
       filtered = filtered.filter(
@@ -271,12 +252,9 @@ export default function ActivityOccurrencesPage() {
     setFilteredOccurrences(filtered);
   };
 
-  // derive place (indoor/outdoor) for an occurrence
   const getOccurrencePlace = (occurrence) => {
-    // prefer explicit flag on occurrence
     if (occurrence.isOutdoor === true) return "outdoor";
     if (occurrence.isOutdoor === false) return "indoor";
-    // fallback to zone/location flags
     try {
       const zid = occurrence.zoneId ?? null;
       if (!zid) return null;
@@ -316,9 +294,7 @@ export default function ActivityOccurrencesPage() {
     setMinSlots("");
   };
 
-  // Open confirm modal (auth-gated)
   const openConfirm = (occurrenceId) => {
-    // Require auth; if missing, redirect to login with next back to current page
     const token = localStorage.getItem("accessToken");
     if (!token) {
       const next = encodeURIComponent(
@@ -332,7 +308,6 @@ export default function ActivityOccurrencesPage() {
     setShowConfirm(true);
   };
 
-  // Confirm booking
   const confirmBooking = async () => {
     if (selectedOccurrenceId == null) return;
     setBookingLoading(true);
@@ -340,7 +315,6 @@ export default function ActivityOccurrencesPage() {
     try {
       await createBooking({ activityOccurrenceId: selectedOccurrenceId });
 
-      // Optimistically update available slots for this occurrence
       setOccurrences((prev) =>
         prev.map((o) =>
           o.id === selectedOccurrenceId
@@ -356,7 +330,6 @@ export default function ActivityOccurrencesPage() {
         )
       );
 
-      // Close modal on success
       setShowConfirm(false);
       setSelectedOccurrenceId(null);
     } catch (e) {
@@ -398,11 +371,9 @@ export default function ActivityOccurrencesPage() {
         <p>Hitta och boka aktivitetshändelser</p>
       </header>
 
-      {/* Filter Section */}
       <div className="filters-section">
         <div className="filters-grid">
           <div className="filters-row filters-row--top">
-            {/* Category (moved first) */}
             <div className="filter-group">
               <label htmlFor="category">Kategori</label>
               <select
@@ -423,7 +394,6 @@ export default function ActivityOccurrencesPage() {
               </select>
             </div>
 
-            {/* Activity (second) */}
             <div className="filter-group">
               <label htmlFor="activity">Aktivitet</label>
               <select
@@ -441,7 +411,6 @@ export default function ActivityOccurrencesPage() {
               </select>
             </div>
 
-            {/* Place (third) */}
             <div className="filter-group">
               <label htmlFor="place">Plats</label>
               <select
@@ -456,7 +425,6 @@ export default function ActivityOccurrencesPage() {
               </select>
             </div>
 
-            {/* Minst antal platser kvar */}
             <div className="filter-group">
               <label htmlFor="minSlots">Minst antal platser kvar</label>
               <input
@@ -470,10 +438,8 @@ export default function ActivityOccurrencesPage() {
               />
             </div>
 
-            {/* Clear Filters moved to dates row */}
           </div>
 
-          {/* Dates row - explicit second row (dates + clear button) */}
           <div className="filters-row filters-row--dates">
             <div className="filter-group">
               <label htmlFor="dateFrom">Från datum</label>
@@ -507,7 +473,6 @@ export default function ActivityOccurrencesPage() {
         </div>
       </div>
 
-      {/* Results */}
       <div className="results-section">
         <div className="results-header">
           <h2>
@@ -549,7 +514,6 @@ export default function ActivityOccurrencesPage() {
           </div>
         )}
       </div>
-      {/* Booking confirmation modal */}
       {showConfirm && (
         <BookingConfirmModal
           isOpen={showConfirm}

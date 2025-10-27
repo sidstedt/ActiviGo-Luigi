@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { getCurrentUser, fetchUserBookings } from "../services/api";
 import "../styles/UserCalendar.css";
 
-// Hjälpfunktioner
 function getWeekNumber(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const dayNum = d.getUTCDay() || 7;
@@ -20,7 +19,6 @@ function getMondayOfWeek(year, week) {
   return monday;
 }
 
-/** Hämta start och slut från olika möjliga fältnamn */
 function getStartEnd(booking) {
   const s = booking.startTime || booking.start || booking.from || booking.startsAt;
   const e = booking.endTime || booking.end || booking.to || booking.endsAt;
@@ -41,7 +39,6 @@ export default function UserWeekCalendar() {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedWeek, setSelectedWeek] = useState(getWeekNumber(today));
 
-  // Responsivitet
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -49,7 +46,6 @@ export default function UserWeekCalendar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Hämta användarens bokningar
 useEffect(() => {
   async function load() {
     try {
@@ -64,18 +60,13 @@ useEffect(() => {
 
       const all = await fetchUserBookings();
 
-      // Samma logik som i gamla koden:
       const monday = getMondayOfWeek(selectedYear, selectedWeek);
       const weekStart = new Date(monday);
       const weekEnd = new Date(monday);
       weekEnd.setDate(monday.getDate() + 7);
-
-      // Robust filtrering med UTC-safe datum
       const inWeek = (Array.isArray(all) ? all : []).filter((b) => {
         const { st } = getStartEnd(b);
         if (!st) return false;
-
-        // Normalisera till lokal midnatt för säkrare jämförelse
         const local = new Date(st.getFullYear(), st.getMonth(), st.getDate(), st.getHours(), st.getMinutes());
         return local >= weekStart && local < weekEnd;
       });
@@ -128,7 +119,6 @@ useEffect(() => {
 
       {!loading && (
         <div className="calendar-grid">
-          {/* Header */}
           <div
             className="grid-header"
             style={{
@@ -147,7 +137,6 @@ useEffect(() => {
             ))}
           </div>
 
-          {/* Body */}
           <div
             className="grid-body"
             style={{
@@ -155,7 +144,6 @@ useEffect(() => {
               gridTemplateColumns: isMobile ? "repeat(7, 1fr)" : "80px repeat(7, 1fr)",
             }}
           >
-            {/* Tidskolumn (desktop) */}
             {!isMobile &&
               hours.map((h, i) => (
                 <div
@@ -167,7 +155,6 @@ useEffect(() => {
                 </div>
               ))}
 
-            {/* Tomma celler */}
             {hours.map((_, rowIdx) =>
               weekDays.map((_, dayIdx) => (
                 <div
@@ -181,7 +168,6 @@ useEffect(() => {
               ))
             )}
 
-            {/* Boknings-overlay */}
             {weekDays.map((d, dayIdx) => {
               const dY = d.getFullYear();
               const dM = d.getMonth();

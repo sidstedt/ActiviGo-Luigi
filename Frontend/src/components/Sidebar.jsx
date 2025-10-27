@@ -1,4 +1,3 @@
-// ...imports
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { logout as apiLogout } from "../services/api";
@@ -25,13 +24,9 @@ export default function Sidebar({
     { title: "Bokningar", url: "/bookings", icon: "📅" },
   ];
 
-  // Only for authenticated users
   const authedMenu = [
     { title: "Sök & Boka", url: "/bookings", icon: "📅" },
     { title: "Mina bokningar", url: "/my-bookings", icon: "📋" },
-    // Statistic link
-    // { title: "Statistics", url: "/statistics", icon: "📊" },
-    // { title: "Mitt konto", url: "/account", icon: "👤" },
     { title: "Mitt konto", url: "/my-account", icon: "👤" },
   ];
   const staffExtra = [{ title: "Personalpanel", url: "/staff", icon: "🛠️" }];
@@ -86,7 +81,6 @@ export default function Sidebar({
   return (
     <header className="hm-header" role="banner">
       <div className="hm-bar">
-        {/* Burgarknapp med SVG (inga bilder/alt-texter) */}
         <button
           ref={buttonRef}
           className="hm-burger"
@@ -114,16 +108,13 @@ export default function Sidebar({
           </svg>
         </button>
 
-        {/* Brand i topbaren (behålls) */}
         <NavLink to="/" className="hm-brand" onClick={() => setOpen(false)}>
           {brand}
         </NavLink>
       </div>
 
-      {/* Backdrop */}
       <div className={`hm-backdrop ${open ? "open" : ""}`} />
 
-      {/* Drawer */}
       <nav
         id="hm-drawer"
         className={`hm-drawer ${open ? "open" : ""}`}
@@ -131,8 +122,6 @@ export default function Sidebar({
         ref={panelRef}
       >
         <div className="hm-drawer-header">
-          {/* Ta bort dubblett av brand här för att undvika “ActivityGo” x2 */}
-          {/* <span className="hm-title">{brand}</span> */}
           <span className="sr-only" aria-hidden="true"></span>
           <button
             className="hm-close"

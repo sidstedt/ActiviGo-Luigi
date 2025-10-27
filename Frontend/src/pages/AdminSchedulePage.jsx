@@ -19,7 +19,6 @@ function getWeekNumber(date) {
   return weekNum;
 }
 
-// Returns Date for Monday of ISO week/year
 function getMondayOfWeek(year, week) {
   const simple = new Date(year, 0, 1 + (week - 1) * 7);
   const dow = simple.getDay();
@@ -29,7 +28,7 @@ function getMondayOfWeek(year, week) {
   monday.setHours(0, 0, 0, 0);
   return monday;
 }
-// Weekly calendar (Mon–Sun) 06:00–23:00 with hourly rows and overlays sized by exact duration.
+
 export default function AdminSchedulePage() {
   const [occurrences, setOccurrences] = useState([]);
   const [activities, setActivities] = useState([]);
@@ -37,15 +36,13 @@ export default function AdminSchedulePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Week/year navigation state
   const today = new Date();
   const currentYear = today.getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedWeek, setSelectedWeek] = useState(getWeekNumber(today));
-  // Modal state
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState(null); // occurrence or null
-  const [slotInfo, setSlotInfo] = useState(null); // { date: Date, hour: number, minute: number }
+  const [editing, setEditing] = useState(null);
+  const [slotInfo, setSlotInfo] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -83,9 +80,7 @@ export default function AdminSchedulePage() {
     return m;
   }, [activities]);
 
-  // Build current week days (Mon-Sun) based on selectedYear/selectedWeek
   const weekDays = useMemo(() => {
-    // Get Monday of selected week/year
     const monday = getMondayOfWeek(selectedYear, selectedWeek);
     return [...Array(7)].map((_, i) => {
       const d = new Date(monday);
@@ -94,10 +89,9 @@ export default function AdminSchedulePage() {
     });
   }, [selectedYear, selectedWeek]);
 
-  // Hourly grid and overlay layout
   const startHour = 6;
   const endHour = 22;
-  const ROW_HEIGHT = 48; // px
+  const ROW_HEIGHT = 48;
   const hours = useMemo(
     () =>
       Array.from({ length: endHour - startHour + 1 }, (_, i) => startHour + i),
@@ -157,7 +151,6 @@ export default function AdminSchedulePage() {
     }
   }
 
-  // Week/year dropdowns and navigation
   const yearOptions = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
   const weekOptions = Array.from({ length: 52 }, (_, i) => i + 1);
 
@@ -214,9 +207,7 @@ export default function AdminSchedulePage() {
       </div>
       {error && <div className="error-box">{error}</div>}
       {loading && <div className="loading">Laddar…</div>}
-            {/* 📅 Kalendern */}
       <div className="calendar-grid" role="grid" aria-label="Veckokalender">
-        {/** Håll koll på fönsterbredd för att bestämma om vi ska visa tidkolumnen */}
         {(() => {
           const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
           React.useEffect(() => {
@@ -227,7 +218,6 @@ export default function AdminSchedulePage() {
 
           return (
             <>
-              {/* Grid header */}
               <div
                 className="grid-header"
                 style={{
@@ -247,8 +237,6 @@ export default function AdminSchedulePage() {
                   </div>
                 ))}
               </div>
-
-              {/* Grid body */}
               <div
                 className="grid-body"
                 style={{
@@ -306,8 +294,6 @@ export default function AdminSchedulePage() {
                     </div>
                   ))
                 )}
-
-                {/* Overlay-block (aktiviteter) */}
                 {weekDays.map((d, dayIdx) => {
                   const dY = d.getFullYear();
                   const dM = d.getMonth();
@@ -624,7 +610,6 @@ function toLocalDateString(d) {
   return `${year}-${month}-${day}`;
 }
 
-// Build available 15-min time strings (e.g., '13.00', '13.15') excluding overlaps for same zone/day
 function getAvailableTimes({
   dateStr,
   zoneId,

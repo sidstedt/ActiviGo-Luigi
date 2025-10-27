@@ -11,18 +11,13 @@ export default function ActivitiesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // No search UI: we list all activities directly
-
   useEffect(() => {
     loadData();
   }, []);
 
   useEffect(() => {
-    // Always show all activities (no search/filtering on Activities page)
     setFilteredActivities(Array.isArray(activities) ? activities : []);
   }, [activities]);
-
-  // (removed search debounce — page lists all activities)
 
   const loadData = async () => {
     try {
@@ -45,15 +40,8 @@ export default function ActivitiesPage() {
     }
   };
 
-  // applyFilters removed — page always shows all activities via useEffect above
-
-  // No clearFilters function — this page shows all activities
-
-  // Address resolution via shared helper
   const getLocationAddress = (zoneId) =>
     getLocationAddressByZoneId(zones, locations, zoneId);
-
-  // (no indoor/outdoor helper on this page)
 
   if (loading) {
     return (
@@ -87,7 +75,6 @@ export default function ActivitiesPage() {
         <p>Hitta din perfekta aktivitet</p>
       </header>
 
-      {/* Results */}
       <div className="results-section">
         <div className="activities-grid">
           {filteredActivities.map((activity) => {
@@ -120,7 +107,6 @@ export default function ActivitiesPage() {
                   </p>
 
                   <div className="activity-details">
-                    {/* Address */}
                     <div className="detail-item">
                       <span className="detail-label">Adress:</span>
                       <span className="detail-value">

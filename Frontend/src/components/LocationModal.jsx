@@ -3,15 +3,12 @@ import "../styles/ActivityModal.css";
 
 export default function LocationModal({ editing, initialData, onClose, onSave }) {
   const [name, setName] = useState(initialData?.name || "");
-  // Dela upp adressen i tre fält
   const [street, setStreet] = useState(initialData?.street || "");
   const [number, setNumber] = useState(initialData?.number || "");
   const [city, setCity] = useState(initialData?.city || "");
 
-  // Om initialData har address (sträng), försök splitta till fält
   React.useEffect(() => {
     if (initialData?.address && (!street && !number && !city)) {
-      // Försök splitta "Gatan 1, Stad"
       const [streetAndNumber, cityPart] = initialData.address.split(",");
       if (streetAndNumber) {
         const match = streetAndNumber.trim().match(/^(.*?)(\d+.*)$/);
@@ -32,7 +29,6 @@ export default function LocationModal({ editing, initialData, onClose, onSave })
     if (!street.trim()) return alert("Gatunamn krävs.");
     if (!number.trim()) return alert("Gatunummer krävs.");
     if (!city.trim()) return alert("Postort krävs.");
-    // Slå ihop till address-sträng för backend
     const address = `${street} ${number}, ${city}`;
     onSave({
       name,
