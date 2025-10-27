@@ -180,9 +180,6 @@ namespace ActiviGo.WebApi.Controllers
                     });
                 }
 
-                // INTE nödvändig i JWT-scenario (kan kasta)
-                // await _signInManager.RefreshSignInAsync(user);
-
                 return Ok(new { message = "Lösenordet är uppdaterat." });
             }
             catch (Exception ex)
@@ -196,7 +193,5 @@ namespace ActiviGo.WebApi.Controllers
                 });
             }
         }
-
-
         }
 }

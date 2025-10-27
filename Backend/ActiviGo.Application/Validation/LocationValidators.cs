@@ -5,7 +5,7 @@ namespace ActiviGo.Application.Validation
 {
     public sealed class LocationCreateDtoValidator : AbstractValidator<LocationCreateDto>
     {
-        public LocationCreateDtoValidator()
+        public LocationCreateDtoValidator()//Validation for location creation DTO
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Namn är obligatoriskt.")

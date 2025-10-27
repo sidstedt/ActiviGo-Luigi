@@ -2,9 +2,8 @@
 
 namespace ActiviGo.Domain.Interfaces
 {
-    public interface IActivityRepository : IGenericRepository<Activity>
+    public interface IActivityRepository : IGenericRepository<Activity> //Repository interface for Activity entity.
     {
-        // staff scope
         Task<IEnumerable<Activity>> GetByStaffAsync(Guid staffId, CancellationToken ct);
     }
 }

@@ -5,7 +5,7 @@ namespace ActiviGo.Application.Validation
 {
     public sealed class ActivityOccurrenceCreateDtoValidator : AbstractValidator<ActivityOccurrenceCreateDto>
     {
-        public ActivityOccurrenceCreateDtoValidator()
+        public ActivityOccurrenceCreateDtoValidator()//Validation for activityOccurrence creation DTO
         {
             RuleFor(x => x.StartTime)
                 .NotEmpty().WithMessage("StartTime är obligatoriskt.")
@@ -27,7 +27,7 @@ namespace ActiviGo.Application.Validation
     }
     public sealed class ActivityOccurrenceUpdateDtoValidator : AbstractValidator<ActivityOccurrenceUpdateDto>
     {
-        public ActivityOccurrenceUpdateDtoValidator()
+        public ActivityOccurrenceUpdateDtoValidator()//Validation for activityOccurrence update DTO
         {
             RuleFor(x => x.StartTime)
                 .NotEmpty().WithMessage("StartTime är obligatoriskt.");

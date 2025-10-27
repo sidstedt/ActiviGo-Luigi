@@ -13,7 +13,6 @@ namespace ActiviGo.Domain.Interfaces
         Task<bool> CancelBookingAsync(Guid userId, int bookingId, CancellationToken ct);
         Task<int> GetActiveBookingCountAsync(int occurrenceId, CancellationToken ct);
 
-        // Staff scope
         Task<List<Booking>> GetBookingsForOccurrenceAsync(int occurrenceId, CancellationToken ct);
         Task<List<Booking>> GetAllBookingsAdminAsync(CancellationToken ct);
 

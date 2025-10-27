@@ -82,7 +82,6 @@ namespace ActiviGo.Infrastructure.Repositories
                 .CountAsync(ct);
         }
 
-        // Staff scope
         public async Task<List<Booking>> GetBookingsForOccurrenceAsync(int occurrenceId, CancellationToken ct)
         {
             return await _ctx.Bookings
@@ -107,7 +106,5 @@ namespace ActiviGo.Infrastructure.Repositories
                 .ToListAsync(ct);
 
         }
-
-
     }
 }

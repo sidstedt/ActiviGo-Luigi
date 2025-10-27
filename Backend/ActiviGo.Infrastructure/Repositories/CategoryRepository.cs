@@ -45,7 +45,6 @@ namespace ActiviGo.Infrastructure.Repositories
                 .Include(c => c.Activities)
                 .FirstOrDefaultAsync(c => c.Id == categoryId);
         }
-
         public async Task RemoveActivityFromCategoryAsync(int categoryId, int activityId)
         {
             var category = await _dbSet

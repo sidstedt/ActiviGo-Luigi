@@ -149,8 +149,6 @@ public class BookingService : IBookingService
         _logger.LogInformation("Bokning avbokad: UserId={UserId} BookingId={BookingId}", userId, bookingId);
         return true;
     }
-
-    // Staff scope
     public async Task<List<BookingDto>?> GetBookingsForOccurrenceAsync(int occurrenceId, Guid staffId, CancellationToken ct)
     {
         _logger.LogDebug("Staff bokningslista: StaffId={StaffId} OccurrenceId={OccurrenceId}", staffId, occurrenceId);

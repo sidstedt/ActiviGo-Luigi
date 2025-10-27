@@ -18,8 +18,7 @@ namespace ActiviGo.Application.Services
             _uow = uow;
         }
 
-        // staff scope
-        public async Task<IEnumerable<ActivityResponseDto>> GetByStaffAsync(Guid staffId, CancellationToken ct)
+        public async Task<IEnumerable<ActivityResponseDto>> GetByStaffAsync(Guid staffId, CancellationToken ct)//Retrieves a collection of activities associated with a specific staff member.
         {
             var activities = await _uow.Activity.GetByStaffAsync(staffId, ct);
             return _mapper.Map<IEnumerable<ActivityResponseDto>>(activities);

@@ -5,7 +5,7 @@ namespace ActiviGo.Application.Validation
 {
     public sealed class ActivityCreateDtoValidator : AbstractValidator<ActivityCreateDto>
     {
-        public ActivityCreateDtoValidator()
+        public ActivityCreateDtoValidator()//Validation for activity creation DTO
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name är obligatoriskt.")
@@ -36,9 +36,9 @@ namespace ActiviGo.Application.Validation
                 .WithMessage("Om StaffId anges får den inte vara tom (Guid.Empty).");
         }
     }
-    public sealed class ActivityUpdateDtoValidator : AbstractValidator<ActivityUpdateDto>
+    public sealed class ActivityUpdateDtoValidator : AbstractValidator<ActivityUpdateDto>//Validation for activity update DTO
     {
-        public ActivityUpdateDtoValidator()
+        public ActivityUpdateDtoValidator()//Validation for activity update DTO
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name är obligatoriskt.")

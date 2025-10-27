@@ -7,7 +7,7 @@ namespace ActiviGo.Application.Mapping
 {
     public class ActivityOccurrenceProfile : Profile
     {
-        public ActivityOccurrenceProfile()
+        public ActivityOccurrenceProfile() //Mappings for ActivityOccurrence
         {
             CreateMap<ActivityOccurrenceCreateDto, ActivityOccurrence>();
             CreateMap<ActivityOccurrenceUpdateDto, ActivityOccurrence>();

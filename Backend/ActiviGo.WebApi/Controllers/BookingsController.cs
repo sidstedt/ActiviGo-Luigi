@@ -45,7 +45,7 @@ namespace ActiviGo.WebApi.Controllers
             }
             catch (Exception)
             {
-                // Fallback to avoid leaking server details; logs should capture the stack.
+                // Fallback to avoid leaking server details
                 return StatusCode(500, new { message = "Ett oväntat fel uppstod vid bokning." });
             }
         }
@@ -59,7 +59,7 @@ namespace ActiviGo.WebApi.Controllers
         }
 
         // ---------------------------
-        // Read all bookings for user (or specific user if ID provided)
+        // Read all bookings for user
         // ---------------------------
         [HttpGet("UserGetBookings")]
         [Authorize(Roles = "Admin, Staff, User")]

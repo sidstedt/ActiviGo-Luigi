@@ -8,7 +8,6 @@ namespace ActiviGo.Application.Interfaces
     {
         Task<ICollection<ActivityOccurrenceResponseDto>> GetAvailableOccurrencesByActivityIdAsync(int activityId);
 
-        // staff scope
         Task<IEnumerable<ActivityOccurrenceResponseDto>> GetByStaffAsync(Guid staffId, DateTime? from, DateTime? to, CancellationToken ct);
     }
 
