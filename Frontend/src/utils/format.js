@@ -1,4 +1,4 @@
-// Shared date/time formatting helpers (Swedish locale)
+// Date/time formatting helpers (Swedish locale)
 
 export function formatDateShort(dateString) {
   const d = new Date(dateString);

@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import "../styles/ActivityModal.css"; // återanvänd samma modal-styling
-
+import "../styles/ActivityModal.css";
 
 export default function ZoneModal({ editing, initialData, onClose, onSave, locations }) {
-  // Stöd för olika namnvarianter (name, zoneName, ZoneName, Name)
   const getInitialZoneName = (data) =>
     data?.zoneName ?? "";
   const [zoneName, setZoneName] = useState(getInitialZoneName(initialData));

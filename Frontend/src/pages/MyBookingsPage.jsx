@@ -10,7 +10,7 @@ export default function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState("all"); // all, upcoming, past, cancelled
+  const [filter, setFilter] = useState("all");
   const [showDetails, setShowDetails] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showPayment, setShowPayment] = useState(false);
@@ -41,7 +41,7 @@ export default function MyBookingsPage() {
 
     try {
       await cancelBooking(bookingId);
-      await loadBookings(); // Reload bookings
+  await loadBookings();
     } catch (err) {
       alert("Kunde inte avboka aktiviteten: " + err.message);
     }
@@ -68,10 +68,8 @@ export default function MyBookingsPage() {
 
   const handlePaymentSuccess = async (bookingId) => {
     try {
-      // Simulera API-anrop för att bekräfta bokning
       await confirmBooking(bookingId);
       
-      // Uppdatera lokal state
       setBookings(prevBookings => 
         prevBookings.map(booking => 
           booking.id === bookingId 
@@ -79,8 +77,6 @@ export default function MyBookingsPage() {
             : booking
         )
       );
-      
-      // Visa bekräftelse
       alert('Bokning bekräftad! Du kommer att få en bekräftelse via e-post.');
     } catch (err) {
       alert('Ett fel uppstod vid bekräftelse: ' + err.message);
@@ -108,8 +104,6 @@ export default function MyBookingsPage() {
     }
   };
 
-  // formatting and status handling are in BookingCard
-
   if (loading) {
     return (
       <div className="my-bookings-page">
@@ -136,7 +130,6 @@ export default function MyBookingsPage() {
   }
 
   const filteredBookings = getFilteredBookings();
-  // Precompute counts to align with the filter logic and avoid duplicate conditions
   const now = new Date();
   const upcomingCount = bookings.filter(b => new Date(b.startTime) > now && b.status !== "Cancelled" && b.status !== "Canceled").length;
   const pastCount = bookings.filter(b => new Date(b.startTime) <= now || b.status === "Completed").length;
@@ -149,7 +142,6 @@ export default function MyBookingsPage() {
         <p>Hantera dina aktivitetsbokningar</p>
       </header>
 
-      {/* Filter Tabs */}
       <div className="filter-tabs">
         <button 
           className={`filter-tab ${filter === "all" ? "active" : ""}`}
@@ -177,7 +169,6 @@ export default function MyBookingsPage() {
         </button>
       </div>
 
-      {/* Bookings List */}
       <div className="bookings-section">
         {filteredBookings.length === 0 ? (
           <div className="no-bookings">
@@ -232,7 +223,6 @@ export default function MyBookingsPage() {
   );
 }
 function BookingDetailsModal({ booking, onClose }) {
-  // Stäng på ESC
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);

@@ -1,4 +1,4 @@
-/* Sidebar.css - styles the left navigation bar (matches provided screenshots) */
+
 :root {
   --sb-bg: #ffffff;
   --sb-text: #1f2937;
@@ -9,7 +9,6 @@
   --sb-border: #e5e7eb;
 }
 
-/* Ensure the whole app uses a left sidebar layout */
 .app-layout {
   --sb-width: 260px;
   display: grid;
@@ -100,11 +99,9 @@
   font-weight: 600;
 }
 
-/* Collapsed mode shows bullets only; tooltips can be added later */
 .nav-item.is-collapsed { justify-content: center; padding: 0; }
 .nav-item.is-collapsed span + span { opacity: 0; transform: translateX(-4px); }
 
-/* Body container to the right of sidebar */
 .app-body {
   background: linear-gradient(120deg, #16a34a 0%, #22c55e 100%);
   overflow: auto;

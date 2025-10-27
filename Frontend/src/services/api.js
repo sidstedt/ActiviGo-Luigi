@@ -13,42 +13,35 @@ async function apiRequest(endpoint, method = 'GET', data = null, skipAuth = fals
     headers: { 'Content-Type': 'application/json' },
   };
 
-  // Lägg på token om vi inte hoppar över auth
   if (!skipAuth) {
     const token = localStorage.getItem('accessToken');
     if (token) config.headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // Body för POST/PUT/PATCH
   if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
     config.body = JSON.stringify(data);
   }
 
   const url = `${API_BASE_URL}/${endpoint}`;
 
-  // VIKTIGT: 'let' (inte 'const') så vi kan göra retry på 401
   let response = await fetch(url, config);
 
-  // Auto-refresh vid 401 (om inte skipAuth), försök EN gång till
   if (response.status === 401 && !skipAuth) {
     try {
       const refreshed = await refreshAccessToken();
       if (refreshed) {
         const newToken = localStorage.getItem('accessToken');
         if (newToken) config.headers['Authorization'] = `Bearer ${newToken}`;
-        response = await fetch(url, config); // retry
+        response = await fetch(url, config);
       }
     } catch (err) {
-      // Ignorera -> faller igenom till felhantering nedan
     }
   }
 
-  // 204 No Content
   if (response.status === 204) {
     return null;
   }
 
-  // Förbättrad felhantering (visar Identity-fel/ModelState)
   if (!response.ok) {
     let bodyText = '';
     try { bodyText = await response.text(); } catch (e) {}
@@ -72,7 +65,6 @@ async function apiRequest(endpoint, method = 'GET', data = null, skipAuth = fals
   return response.json();
 }
 
-
 // ============================================
 // ACTIVITIES
 // ============================================
@@ -92,7 +84,6 @@ export async function deleteActivity(id) {
   return apiRequest(`Activities/${id}`, 'DELETE');
 }
 
-
 // ============================================
 // ACTIVITY OCCURRENCES
 // ============================================
@@ -101,12 +92,10 @@ export async function fetchActivityOccurrences() {
 }
 
 export async function createActivityOccurrence(data) {
-  // data: { startTime, durationMinutes?, activityId, zoneId? }
   return apiRequest('ActivityOccurrence', 'POST', data);
 }
 
 export async function updateActivityOccurrence(id, data) {
-  // data: { startTime, endTime, durationMinutes, activityId, zoneId, isActive }
   return apiRequest(`ActivityOccurrence/${id}`, 'PUT', data);
 }
 
@@ -114,7 +103,6 @@ export async function updateActivityOccurrence(id, data) {
 // WEATHER
 // ============================================
 export async function fetchWeatherForecastBatch(queries) {
-  // queries: [{ occurrenceId, latitude, longitude, at }]
   return apiRequest('Weather/forecast', 'POST', queries, true);
 }
 
@@ -122,7 +110,6 @@ export async function fetchWeatherForecastBatch(queries) {
 // BOOKINGS
 // ============================================
 export async function fetchUserBookings(userId) {
-  // If userId provided, call endpoint with query param; otherwise call generic endpoint
   const endpoint = userId
     ? `Bookings/UserGetBookings?userId=${encodeURIComponent(userId)}`
     : "Bookings/UserGetBookings";
@@ -142,7 +129,6 @@ export async function cancelBooking(id) {
 }
 
 export async function confirmBooking(id) {
-  // Använd riktig backend-endpoint för att bekräfta bokning
   return apiRequest(`Bookings/${id}`, 'PUT', { status: 'Confirmed' });
 }
 
@@ -154,10 +140,8 @@ export async function fetchAdminBookings() {
 // ============================================
 // CATEGORIES
 // ============================================
-// Categories (unused currently)
 export async function fetchCategories()
 { return apiRequest('Category'); }
-// export async function fetchCategoriesWithActivities() { return apiRequest('Category/withActivities'); }
 
 // ============================================
 // ZONES
@@ -178,10 +162,6 @@ export async function deleteZone(id) {
   return apiRequest(`Zone/${id}`, 'DELETE')
 }
 
-// Zones (unused currently)
-// export async function fetchZonesWithRelations() { return apiRequest('Zone/withRelations'); }
-// export async function fetchZonesByLocation(locationId) { return apiRequest(`Zone/location/${locationId}`); }
-
 // ============================================
 // STAFF
 // ============================================
@@ -193,15 +173,12 @@ export async function fetchStaff() {
 // AUTH
 // ============================================
 
-// Login
 export async function login(email, password) {
   const data = await apiRequest('Auth/login', 'POST', { email, password }, true);
   
-  // Store tokens
   localStorage.setItem('accessToken', data.accessToken);
   localStorage.setItem('refreshToken', data.refreshToken);
   
-  // Decode token for user info
   const decoded = jwtDecode(data.accessToken);
   const roles = (decoded.roles?.split(',') || []).map(r => String(r).trim().toLowerCase());
   const firstName = decoded.given_name || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]; 
@@ -221,7 +198,6 @@ export async function login(email, password) {
   return { ...data, user };
 }
 
-// Logout
 export function logout() {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
@@ -229,7 +205,6 @@ export function logout() {
   window.location.href = '/';
 }
 
-// Refresh Access Token
 export async function refreshAccessToken() {
   const refreshToken = localStorage.getItem('refreshToken');
   if (!refreshToken) return false;
@@ -245,13 +220,11 @@ export async function refreshAccessToken() {
   }
 }
 
-// Current user (from token or cache)
 export function getCurrentUser() {
   const token = localStorage.getItem('accessToken');
   if (token) {
     try {
       const decoded = jwtDecode(token);
-      // roles may be a comma string, or an array under 'role'
       let roles = [];
       if (decoded.roles) {
         roles = String(decoded.roles).split(',').map(r => String(r).trim().toLowerCase()).filter(Boolean);
@@ -309,18 +282,13 @@ export async function deleteLocation(id) {
   return apiRequest(`Location/${id}`, 'DELETE');
 }
 
-// (unused) export async function fetchLocationById(id) { return apiRequest(`Location/${id}`); }
-
 // ============================================
 // USERS
 // ============================================
-
-// Register new user
 export async function registerUser(userData) {
   return apiRequest('Auth/register-user', 'POST', userData, true);
 }
 
-// Forgot Password
 export async function forgotPassword(email) {
   return apiRequest('Users/forgot-password', 'POST', {
     email,
@@ -328,7 +296,6 @@ export async function forgotPassword(email) {
   }, true);
 }
 
-// Reset Password
 export async function resetPassword(email, token, newPassword) {
   return apiRequest('Users/reset-password', 'POST', {
     email,
@@ -337,16 +304,11 @@ export async function resetPassword(email, token, newPassword) {
   }, true);
 }
 
-//Change password
 export async function changePassword(currentPassword, newPassword, confirmPassword) {
-  // Skicka flera alias som många backends accepterar
   const payload = {
-    // vanliga namn
     currentPassword,
     newPassword,
     confirmPassword,
-
-    // alias som vissa DTO:er använder
     oldPassword: currentPassword,
     confirmNewPassword: confirmPassword
   };
@@ -354,9 +316,8 @@ export async function changePassword(currentPassword, newPassword, confirmPasswo
   return apiRequest('Users/change-password', 'POST', payload);
 }
 
-// --- USERS (admin) ---
 export async function fetchUsers() {
-  return apiRequest("Users"); // GET /api/Users
+  return apiRequest("Users");
 }
 
 // ============================================
@@ -372,7 +333,6 @@ export async function fetchUserById(id) {
   return apiRequest(`Admin/users/${id}`);
 }
 
-// Admin: skapa, uppdatera, ta bort användare
 export async function createAdminUser(userData) {
   return apiRequest("Admin/users", "POST", userData);
 }

@@ -140,14 +140,12 @@
   color: #065f46;
 }
 
-/* Tom vy (Empty view) */
 .empty {
   padding: 12px;
   text-align: center;
   color: #6b7280;
 }
 
-/* Mobilanpassning */
 @media (max-width: 768px) {
   .grid-header,
   .grid-body {
