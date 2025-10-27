@@ -1,12 +1,5 @@
-// Backup of previous StartPage.jsx
-// Date: 2025-10-17
-// This file was created automatically to preserve the previous dashboard implementation.
-// Notera: Du behöver INTE omsluta detta i <script type="text/babel">
-// eftersom du länkade filen med det attributet i index.html.
 import "../styles/Dashboard.css";
 import { useState, useEffect, useMemo } from 'react';
-
-// --- START: Simulerad API-tjänst ---
 
 const mockActivities = [
     { id: 1, name: "CrossFit-Passet", description: "Högintensivt pass med fokus på styrka och kondition.", date: "Idag, 18:00", location: "Huvudsalen", capacity: 20, bookedCount: 15 },
@@ -47,8 +40,6 @@ async function bookActivity(activityId) {
         name: mockActivity.name 
     };
 }
-// --- SLUT: Simulerad API-tjänst ---
-
 
 const StatCard = ({ title, value, icon, linkText, onClick }) => (
     <div className="stat-card"> 
@@ -226,14 +217,12 @@ function DashboardPage() {
     return (
         <div id="app-container">
 
-            {/* Bokningsmeddelande (Toast) */}
             {bookingMessage && (
                 <div className={`toast-message ${bookingMessage.type}`}>
                     {bookingMessage.text}
                 </div>
             )}
 
-            {/* 1. Header: Topp-bar */}
             <header id="main-header">
                 <div className="logo">
                     <span className="logo-highlight">Activity</span>Go
@@ -246,16 +235,11 @@ function DashboardPage() {
                         className="menu-button"
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                     >
-                        {/* Burgar-ikon */}
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
             </header>
-
-            {/* 2. Main Layout: Sidomeny + Huvudinnehåll */}
             <div id="main-layout">
-
-                {/* Sidebar: Navigering */}
                 <nav id="sidebar" className={isSidebarOpen ? 'open' : ''}>
                     
                     <div className="nav-group">
@@ -272,14 +256,9 @@ function DashboardPage() {
                         ))}
                     </div>
                 </nav>
-
-                {/* 3. Main Content Area: Din startsida/Dashboard */}
                 <main id="main-content">
                     <div className="content-wrapper">
-                        
-                        {/* Välkomstbanner */}
                         <div className="welcome-banner">
-                            
                             <div className="banner-content">
                                 <h1 className="banner-title">
                                     Välkommen, <span className="highlight-text">{userName}!</span> 
@@ -292,8 +271,6 @@ function DashboardPage() {
                                 </button>
                             </div>
                         </div>
-
-                        {/* Statistik / Genvägar */}
                         <div className="stat-grid">
                             <StatCard 
                                 title="Mina Bokningar" 
@@ -317,8 +294,6 @@ function DashboardPage() {
                                 onClick={() => {}}
                             />
                         </div>
-
-                        {/* Aktivitetssektion */}
                         <h2 className="section-title">Populära & Kommande Aktiviteter</h2>
                         {activitiesContent}
 
@@ -328,7 +303,5 @@ function DashboardPage() {
         </div>
     );
 }
-
-// Rendera applikationen till DOM-trädet
 
 export default DashboardPage;

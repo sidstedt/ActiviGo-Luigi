@@ -1,4 +1,4 @@
-// Shared helpers for statistics
+// Statistics helpers
 
 export const Tableau10 = [
   "#4e79a7",
@@ -20,7 +20,7 @@ export function hexToRgba(hex, alpha) {
   }
 }
 
-// Bookings helpers
+// Booking helpers
 export function getBookingDate(booking) {
   const candidates = [
     booking?.date,
