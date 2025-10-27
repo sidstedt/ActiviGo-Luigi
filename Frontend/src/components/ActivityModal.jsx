@@ -54,7 +54,6 @@ export default function ActivityModal({
     }
   }, []);
 
-  // räkna fram lediga tider och auto-välj första om ingen giltig tid är satt
   useEffect(() => {
     const times = getAvailableTimes({
       dateStr,
@@ -103,7 +102,6 @@ export default function ActivityModal({
     const dayEndHour = 22;
     const pad = (n) => String(n).padStart(2, "0");
 
-    // generera kandidat-tider (15 min intervall)
     const candidateTimes = [];
     for (let h = dayStartHour; h < dayEndHour; h++) {
       for (let m = 0; m < 60; m += 15) {
@@ -111,7 +109,6 @@ export default function ActivityModal({
       }
     }
 
-    // samla konflikter för samma zon (och inte det som redigeras)
     const conflicts = (occurrences || [])
       .filter((o) => Number(o.zoneId) === Number(zoneId) && o.id !== editingId)
       .map((o) => {
@@ -125,7 +122,7 @@ export default function ActivityModal({
             ? new Date(start.getTime() + Number(o.durationMinutes) * 60000)
             : null;
         } else if (start) {
-          end = new Date(start.getTime() + 30 * 60000); // fallback 30 min
+          end = new Date(start.getTime() + 30 * 60000);
         }
         return start && end ? { start, end } : null;
       })
@@ -142,9 +139,7 @@ export default function ActivityModal({
     const available = candidateTimes.filter((t) => {
       const start = new Date(`${dateStr}T${t}:00`);
       const end = new Date(start.getTime() + Number(durationMinutes) * 60000);
-      // reject if end is after allowed dayEndLimit
       if (end.getTime() > dayEndLimit.getTime()) return false;
-      // reject if start before day start (safety)
       if (start.getTime() < dateStartLimit.getTime()) return false;
       return !isConflict(start.getTime(), end.getTime());
     });
@@ -211,8 +206,6 @@ export default function ActivityModal({
               onChange={(e) => setImageUrl(e.target.value)}
             />
           </div>
-
-          {/* Optional quick preview */}
           {!!imageUrl && (
             <div className="form-row">
               <img

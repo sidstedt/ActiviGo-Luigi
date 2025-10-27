@@ -1,16 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
-// Importera fetchUserBookings från din befintliga API-tjänst
 import { fetchUserBookings } from "../services/api"; 
 import "../styles/MyAccountPage.css"; 
 import Modal from "../components/Modal";
 import { changePassword } from "../services/api";
 
 const COST_THRESHOLD = 1000;
-/**
- * Hjälpfunktion för att formatera valuta till svensk standard (SEK).
- * @param {number|string} amount 
- * @returns {string} Formaterad valuta
- */
+
 const formatCurrency = (amount) => {
     const numericAmount = parseFloat(amount);
     if (isNaN(numericAmount)) return "0.00";
@@ -76,16 +71,11 @@ export default function MyAccountPage() {
       }
     };
 
-  /**
-   * Beräknar den totala kostnaden för alla aktiviteter 
-   * som INTE har status "Cancelled" eller "Canceled".
-   */
   const totalCost = useMemo(() => {
     if (!Array.isArray(bookings) || bookings.length === 0) {
       return 0;
     }
 
-    // Filtrera bort avbokade bokningar och summera kostnaden för resten
     const sum = bookings
       .filter(booking => 
 
@@ -93,8 +83,6 @@ export default function MyAccountPage() {
         booking.status !== "Canceled"
       )
       .reduce((total, booking) => {
-        // Hämta priset. 
-        // Lägger till en kontroll för att hantera null/undefined om det behövs.
         const cost = parseFloat(booking.price || 0); 
         return total + cost;
       }, 0);
@@ -111,8 +99,6 @@ export default function MyAccountPage() {
       }
     }
   }, [loading, totalCost]);
-
-  // --- Renderingslogik för laddning och fel ---
 
   if (loading) {
     return (
@@ -138,8 +124,6 @@ export default function MyAccountPage() {
       </div>
     );
   }
-
-  // --- Huvudrendering ---
 
   return (
     <div className="my-profile-page">

@@ -12,7 +12,6 @@ export default function AppModal({ title, children, onClose }) {
   }, []);
 
   const handleMouseDown = (e) => {
-    // ⬇️ matcha nya klassnamnet
     if (e.target.closest(".app-modal")) {
       mouseDownInside.current = true;
     } else {

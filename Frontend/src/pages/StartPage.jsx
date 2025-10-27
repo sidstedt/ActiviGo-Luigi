@@ -3,7 +3,6 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import "../styles/StartPage.css";
 import { getCurrentUser } from "../services/api";
-// Static layout: Sidebar + body (Outlet). No CSS or API logic here.
 export default function StartPage({ userRole = "guest", roles = [] }) {
   const [collapsed, setCollapsed] = React.useState(false);
   const [userName, setUserName] = React.useState("");
@@ -14,7 +13,6 @@ export default function StartPage({ userRole = "guest", roles = [] }) {
         if (user && user.username) {
             setUserName(user.username);
         } else {
-      // Om token/användare finns men inget namn kunde utläsas
         setUserName("Användare");
 }
 

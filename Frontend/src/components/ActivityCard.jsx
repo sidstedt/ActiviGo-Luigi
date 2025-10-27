@@ -22,7 +22,6 @@ const ActivityCard = ({
   const hasAvailableSlots = occurrence.availableSlots > 0;
   const isFullyBooked = occurrence.availableSlots === 0;
 
-  //fetch image url
   const imageUrl =
     (typeof propImageUrl === "string" && propImageUrl) ||
     occurrence?.imageUrl ||
@@ -32,7 +31,6 @@ const ActivityCard = ({
 
   return (
     <div className="activity-card">
-      {/* image url */}
       {imageUrl && (
         <div className="card-image">
           <img
@@ -69,7 +67,6 @@ const ActivityCard = ({
 
       {/* Innehåll med info */}
       <div className="card-content">
-        {/* Adress */}
         {address && (
           <div className="card-info-row">
             <svg
@@ -150,7 +147,6 @@ const ActivityCard = ({
 
       {/* Footer med väder + boka knapp */}
       <div className="card-footer">
-        {/* Väder (endast om utomhus och forecast finns) */}
         <div className="card-footer-left">
           {occurrence.isOutdoor && forecast && (
             <WeatherBadge forecast={forecast} />

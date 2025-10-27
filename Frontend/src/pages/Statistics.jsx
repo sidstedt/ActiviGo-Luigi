@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   fetchAdminBookings,
   fetchUserBookings,
@@ -23,7 +23,6 @@ export default function Statistics() {
   const [bookingsPerMonth, setBookingsPerMonth] = useState(Array(12).fill(0));
   const [selectedYear, setSelectedYear] = useState(null);
 
-  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -109,8 +108,6 @@ export default function Statistics() {
   return (
     <div style={{ padding: "2rem" }}>
       <h1>Statistik</h1>
-
-      {/* Översikt */}
       <div style={{ marginBottom: "2rem" }}>
         <h2>Översikt</h2>
         <p>
@@ -120,12 +117,9 @@ export default function Statistics() {
           Totalt antal pass/tillfällen: <strong>{totalOccurrences}</strong>
         </p>
       </div>
-
-      {/* Bokningar per månad */}
       <div style={{ marginBottom: "2rem" }}>
         <h2>Bokningar per månad {selectedYear ? `(${selectedYear})` : ""}</h2>
 
-        {/* Årsval */}
         {(() => {
           const years = Array.from(
             new Set(
@@ -159,10 +153,7 @@ export default function Statistics() {
           palette={Tableau10}
         />
       </div>
-
       <ActivityDistributionPie activityOccurrences={activityOccurrences} />
-
-      {/* Pass/tillfällen */}
       <div style={{ marginBottom: "2rem" }}></div>
     </div>
   );

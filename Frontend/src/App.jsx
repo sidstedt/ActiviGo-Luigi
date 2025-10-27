@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Routes,
   Route,
@@ -12,7 +11,6 @@ import ActivitiesPage from "./pages/ActivitiesPage.jsx";
 import ActivityOccurrencesPage from "./pages/ActivityOccurrencesPage.jsx";
 import MyBookingsPage from "./pages/MyBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
-// imported statistics page
 import Statistics from "./pages/Statistics.jsx";
 import AdminSchedulePage from "./pages/AdminSchedulePage.jsx";
 import AdminActivitiesPage from "./pages/AdminActivitiesPage.jsx";
@@ -66,7 +64,6 @@ function AppRoutes() {
   <Route path="my-account" element={<MyAccountPage />} />
   <Route path="my-bookings/:id" element={<BookingDetailsPage />} />
 
-        {/* Ingen separat AdminDashboard, admin routes hanteras nedan */}
         <Route
           path="admin/schedule"
           element={
@@ -99,7 +96,6 @@ function AppRoutes() {
             </RoleRoute>
           }
         />
-        {/* Ingen separat StaffPanel, hanteras via roller */}
         <Route
           path="admin/statistics"
           element={
