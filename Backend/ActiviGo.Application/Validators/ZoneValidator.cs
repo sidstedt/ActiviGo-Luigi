@@ -6,7 +6,7 @@ namespace ActiviGo.Application.Validators
 {
     public class ZoneValidator : AbstractValidator<ZoneDto>
     {
-        public ZoneValidator()
+        public ZoneValidator()//Validation for zone DTO
         {
             RuleFor(z => z.Name)
                 .NotEmpty().WithMessage("Zone name is required.")

@@ -27,6 +27,5 @@ namespace ActiviGo.Infrastructure.Repositories
 
             return await query.FirstOrDefaultAsync(l => l.Id == id);
         }
-
     }
 }

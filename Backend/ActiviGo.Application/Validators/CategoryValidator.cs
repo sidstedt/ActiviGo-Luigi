@@ -5,7 +5,7 @@ namespace ActiviGo.Application.Validators
 {
     public class CategoryValidator : AbstractValidator <CreateCategoryDto>
     {
-        public CategoryValidator()
+        public CategoryValidator()//Validation for category creation DTO
         {
             RuleFor(c => c.Name)
                 .NotEmpty().WithMessage("Category name is required.")

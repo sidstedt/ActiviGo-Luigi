@@ -5,7 +5,6 @@ namespace ActiviGo.Application.DTOs
     // Client -> API query for a weather forecast
     public class WeatherQueryDto
     {
-        // Optional: to correlate response with an occurrence in the UI
         public int? OccurrenceId { get; set; }
 
         [Required]
@@ -14,7 +13,6 @@ namespace ActiviGo.Application.DTOs
         [Required]
         public double Longitude { get; set; }
 
-        // Point-in-time to get forecast for (UTC recommended)
         [Required]
         public DateTime At { get; set; }
     }

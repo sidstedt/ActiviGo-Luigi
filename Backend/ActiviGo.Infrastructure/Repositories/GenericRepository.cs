@@ -8,7 +8,6 @@ namespace ActiviGo.Infrastructure.Repositories
     {
         protected readonly ActiviGoDbContext _context;
         protected readonly DbSet<T> _dbSet;
-
         public GenericRepository(ActiviGoDbContext context)
         {
             _context = context;

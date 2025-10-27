@@ -38,10 +38,9 @@ namespace ActiviGo.WebApi.Auth
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), // subject
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // for ASP.NET NameIdentifier
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
-                // Prefer full name if available
                 new Claim(ClaimTypes.Name, string.IsNullOrWhiteSpace(fullName) ? (user.UserName ?? user.Email ?? string.Empty) : fullName),
                 new Claim(ClaimTypes.GivenName, firstName),
                 new Claim(ClaimTypes.Surname, lastName)

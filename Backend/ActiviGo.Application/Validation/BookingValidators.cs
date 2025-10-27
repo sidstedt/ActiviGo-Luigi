@@ -5,7 +5,7 @@ namespace ActiviGo.Application.Validation
 {
     public sealed class BookingDtoValidator : AbstractValidator<BookingDto>
     {
-        public BookingDtoValidator()
+        public BookingDtoValidator()//Validation for booking DTO
         {
             RuleFor(b => b.Id).GreaterThan(0);
             RuleFor(b => b.UserId).NotEmpty();

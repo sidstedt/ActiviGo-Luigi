@@ -2,7 +2,7 @@
 
 namespace ActiviGo.Domain.Interfaces
 {
-    public interface IActivityOccurrenceRepository
+    public interface IActivityOccurrenceRepository //IRepository for ActivityOccurrence
     : IGenericRepository<ActivityOccurrence>
     {
         Task<bool> CheckZoneAvailabilityAsync(int zoneId, DateTime startTime, DateTime endTime);
@@ -10,7 +10,6 @@ namespace ActiviGo.Domain.Interfaces
         Task<ICollection<ActivityOccurrence>> GetOccurrencesByActivityIdAsync(int activityId);
         Task<ActivityOccurrence?> GetActivityOccurrenceByIdAsync(int activityOccurrenceId, CancellationToken ct);
 
-        // Staff scope
         Task<IEnumerable<ActivityOccurrence>> GetByStaffAsync(Guid staffId, DateTime? from, DateTime? to, CancellationToken ct);
     }
 

@@ -73,28 +73,5 @@ namespace ActiviGo.WebApi.Controllers
             await _category.RemoveActivityFromCategory(categoryId, activityId);
             return Ok("Removed Successfully");
         }
-
-        //[Authorize(Roles = "Admin")]
-        //[HttpPut]
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(400)]
-        //public async Task<IActionResult> CreateCategory( [FromBody] CreateCategoryDto dto)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
-        //    var created = await _category.CreateAsync(dto);
-        //    return Ok(created);
-        //}
-
-        //[Authorize(Roles = "Admin")]
-        //[HttpPut]
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(400)]
-        //public async Task<IActionResult> UpdateCategory(int id,[FromBody] CategoryUpdateDto dto)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
-
-        //    var updated = await _category.UpdateAsync(id, dto);
-        //    return Ok(updated);
-        //}
     }
 }

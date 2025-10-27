@@ -1,6 +1,6 @@
 ﻿namespace ActiviGo.Application.DTOs
 {
-    //category read dto?
+    
     public class CategoryDto
     {
         public int CategoryId { get; set; }

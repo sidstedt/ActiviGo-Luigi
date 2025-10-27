@@ -6,7 +6,7 @@ namespace ActiviGo.Application.Mapping
 {
     public class ActivityProfile : Profile
     {
-        public ActivityProfile()
+        public ActivityProfile()//Acticity-mappings
         {
             CreateMap<ActivityCreateDto, Activity>();
 

@@ -32,11 +32,9 @@ namespace ActiviGo.WebApi.Controllers
             _activityOccurrenceService = activityOccurrenceService;
         }
 
-        // -------------------------------------------------------------------
-        // Hämta alla användare (valfritt filtrerat på roll)
-        // -------------------------------------------------------------------
+
         [HttpGet("users")]
-        public async Task<ActionResult> GetAllUsers([FromQuery] string? role = null)
+        public async Task<ActionResult> GetAllUsers([FromQuery] string? role = null)//Hämta alla användare, med valfri filtrering på roll
         {
             var users = await _userManager.Users.ToListAsync();
             var userList = new List<object>();
@@ -86,9 +84,7 @@ namespace ActiviGo.WebApi.Controllers
             return BadRequest(result.Errors);
         }
 
-        // -------------------------------------------------------------------
-        // Uppdatera användare (ex. namn, e-post, aktiv status)
-        // -------------------------------------------------------------------
+        // Uppdatera användare 
         [HttpPut("users/{userId}")]
         public async Task<IActionResult> UpdateUser(Guid userId, [FromBody] UpdateUserRequest request)
         {
@@ -110,7 +106,7 @@ namespace ActiviGo.WebApi.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            // Uppdatera roller (om skickade)
+            // Uppdatera roller 
             if (request.Roles != null)
             {
                 var currentRoles = await _userManager.GetRolesAsync(user);
@@ -129,9 +125,8 @@ namespace ActiviGo.WebApi.Controllers
             return Ok($"Användaren '{user.Email}' har uppdaterats.");
         }
 
-        // -------------------------------------------------------------------
+
         // Ta bort användare
-        // -------------------------------------------------------------------
         [HttpDelete("users/{userId}")]
         public async Task<IActionResult> DeleteUser(Guid userId)
         {

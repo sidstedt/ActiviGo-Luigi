@@ -26,12 +26,9 @@ namespace ActiviGo.Infrastructure.Repositories
 
         public ICategoryRepository Category => _category ??= new CategoryRepository(_context);
 
-        //public IUserRepository => _user ??= new UserRepository(_context);
 
         public IZoneRepository Zone => _zone ??= new ZoneRepository(_context);
         public ILocationRepository Location => _location ??= new LocationRepository(_context);
-
-
 
         public async Task<int> SaveChangesAsync()
         {
